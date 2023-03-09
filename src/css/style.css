@@ -8,7 +8,7 @@ body {
 }
 
 .navbar-custom {
-    background-color: #20c997;
+    background-color: #00BCD4;
 }
 
 .navbar > .navbar-brand {
@@ -62,4 +62,64 @@ body {
 
 .sidebar ul li span {
     margin-left: 15px;
+}
+
+.dropdown-nav {
+    z-index: 999;
+    overflow-y: visible;
+}
+
+.dropdown > .dropdown-toggle {
+    margin-right: 200px;
+}
+
+.dropdown-menu {
+    position: absolute !important;
+}
+
+.navbar > h2 {
+    margin-left: 20px;
+}
+
+.accordion-button > .text-muted {
+    margin-left: 20px;
+}
+
+.status {
+    font-size: 0.8rem;
+    height: 1rem;
+    width: 90px;
+}
+
+.high-priority {
+    background-color: purple;
+    width: 70px;
+    margin-right: 20px;
+}
+
+.info-container {
+    width: 90%;
+}
+
+.big {
+    font-size: 1.4rem;
+}
+
+.small {
+    font-size: 1.2rem;
+    margin-right: 10px;
+    color: gray;
+}
+
+.notes {
+    font-size: 0.9rem;
+}
+
+.project-todo {
+    margin-top: 10px;
+}
+
+.todo-circle {
+    margin: 0 15px;
+    cursor: pointer;
 }
