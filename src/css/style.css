@@ -91,10 +91,17 @@ body {
     width: 90px;
 }
 
-.high-priority {
-    background-color: purple;
+.priority {
     width: 70px;
     margin-right: 20px;
+}
+
+.high-priority {
+    background-color: purple;
+}
+
+.md-priority {
+    background-color: orange;
 }
 
 .info-container {
@@ -103,6 +110,7 @@ body {
 
 .big {
     font-size: 1.4rem;
+    width: 300px;
 }
 
 .small {
@@ -122,4 +130,21 @@ body {
 .todo-circle {
     margin: 0 15px;
     cursor: pointer;
+}
+
+.project-link {
+    cursor: pointer;
+}
+
+.due-date {
+    margin-left: 30px;
+}
+
+.buttons-container {
+    margin-right: 40px;
+}
+
+.badge-pos {
+    top: 25%;
+    left: 75%;
 }

@@ -14,14 +14,18 @@
 </head>
 <body>
     <nav class="navbar navbar-custom navbar-expand-md d-flex justify-content-between flex-nowrap sticky-top">
-        <a href="#" class="navbar-brand logo-font"><i class="bi bi-check2-circle"></i>ToDo</a>
+        <a href="#" class="navbar-brand logo-font text-light"><i class="bi bi-check2-circle"></i>ToDo</a>
         <form class="form-inline d-flex w-50">
             <button class="btn my-2 my-sm-0" type="submit"><i class="bi bi-search"></i></button>
             <input class="form-control mr-sm-2 rounded-pill" type="search" placeholder="Search" aria-label="Search">
         </form>
-        <div class="icons d-flex flex-nowrap">
+        <div class="icons d-flex flex-nowrap text-light">
             <i class="bi bi-plus-lg"></i>
-            <i class="bi bi-bell-fill"></i>
+            <i class="bi bi-bell-fill position-relative">
+                <span class="position-absolute badge-pos translate-middle p-2 bg-danger rounded-circle">
+                    <span class="visually-hidden">New alerts</span>
+                </span>
+            </i>
             <i class="bi bi-gear-fill"></i>
         </div>
     </nav>
@@ -97,10 +101,10 @@
                   <h2 class="accordion-header" id="flush-headingOne">
                     <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseOne" aria-expanded="false" aria-controls="flush-collapseOne">
                       <div class="d-flex"><i class="bi bi-circle small"></i><span class="big">Chores</span></div>
-                      <div class="info-container d-flex justify-content-around">
-                        <div class="text-muted">Today</div>
+                      <div class="info-container d-flex justify-content-between">
+                        <div class="text-muted due-date">Today</div>
                         <div class="buttons-container d-flex">
-                            <div class="status high-priority rounded-pill text-light text-center">High</div>
+                            <div class="status priority high-priority rounded-pill text-light text-center">High</div>
                             <div class="status bg-info rounded-pill text-light text-center">In Progress</div>
                         </div>
                       </div>
@@ -113,27 +117,47 @@
                         <div class="project-todo"><i class="bi bi-circle todo-circle"></i><span>Take out the garbage</span></div>
                         <div class="project-todo"><i class="bi bi-circle todo-circle"></i><span>Wash the dishes</span></div>
                         <div class="project-todo"><i class="bi bi-circle todo-circle"></i><span>Walk the dog</span></div>
+                        <div class="text-muted text-end project-link">Go to project page</div>
                     </div>
                   </div>
                 </div>
                 <div class="accordion-item">
                   <h2 class="accordion-header" id="flush-headingTwo">
                     <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseTwo" aria-expanded="false" aria-controls="flush-collapseTwo">
-                      Accordion Item #2
+                        <div class="d-flex"><i class="bi bi-circle small"></i><span class="big">Write a Book</span></div>
+                        <div class="info-container d-flex justify-content-between">
+                            <div class="text-muted due-date">March 8</div>
+                            <div class="buttons-container d-flex">
+                                <div class="status bg-danger rounded-pill text-light text-center">Overdue</div>
+                        </div>
+                      </div>
                     </button>
                   </h2>
                   <div id="flush-collapseTwo" class="accordion-collapse collapse" aria-labelledby="flush-headingTwo" data-bs-parent="#accordionFlushExample">
-                    <div class="accordion-body">Placeholder content for this accordion, which is intended to demonstrate the <code>.accordion-flush</code> class. This is the second item's accordion body. Let's imagine this being filled with some actual content.</div>
+                    <div class="accordion-body">
+                        Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptates rerum unde qui nihil quas ullam eligendi tempora necessitatibus harum quidem.
+                        <div class="text-muted text-end project-link">Go to project page</div>
+                    </div>
                   </div>
                 </div>
                 <div class="accordion-item">
                   <h2 class="accordion-header" id="flush-headingThree">
                     <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseThree" aria-expanded="false" aria-controls="flush-collapseThree">
-                      Accordion Item #3
+                        <div class="d-flex"><i class="bi bi-circle small"></i><span class="big">Work</span></div>
+                        <div class="info-container d-flex justify-content-between">
+                            <div class="text-muted due-date">March 12</div>
+                            <div class="buttons-container d-flex">
+                                <div class="status priority md-priority rounded-pill text-light text-center">Medium</div>
+                                <div class="status bg-transparent rounded-pill text-light text-center"></div>
+                        </div>
+                      </div>
                     </button>
                   </h2>
                   <div id="flush-collapseThree" class="accordion-collapse collapse" aria-labelledby="flush-headingThree" data-bs-parent="#accordionFlushExample">
-                    <div class="accordion-body">Placeholder content for this accordion, which is intended to demonstrate the <code>.accordion-flush</code> class. This is the third item's accordion body. Nothing more exciting happening here in terms of content, but just filling up the space to make it look, at least at first glance, a bit more representative of how this would look in a real-world application.</div>
+                    <div class="accordion-body">
+                        Lorem ipsum dolor sit amet, consectetur adipisicing elit. Dolorem nemo quidem harum libero vel illo, cum veritatis ratione.
+                        <div class="text-muted text-end project-link">Go to project page</div>
+                    </div>
                   </div>
                 </div>
         </div>
