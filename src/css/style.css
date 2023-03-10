@@ -41,12 +41,12 @@ body {
 }
 
 .content {
-    width: 83%;
+    width: 81%;
     overflow: auto;
 }
 
 .sidebar {
-    width: 17%;
+    width: 19%;
     background-color: #ECEFF1;
 }
 
@@ -70,7 +70,7 @@ body {
 }
 
 .dropdown > .dropdown-toggle {
-    margin-right: 200px;
+    margin-right: 30px;
 }
 
 .dropdown-menu {
