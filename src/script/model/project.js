@@ -1,4 +1,4 @@
-import { format } from 'date-fns';
+import { compareAsc, format } from 'date-fns';
 
 class Project {
     constructor(title, description, dueDate, priority, status, notes, todos) {
@@ -10,7 +10,7 @@ class Project {
         this.status = status;
         this.notes = notes;
         this.todos = todos;
-        this.dateAdded = format(new Date(), "yyyy-MM-dd'T'HH:mm:ss.SSS");
+        this.dateAdded = new Date(), "yyyy-MM-dd'T'HH:mm:ss.SSS";
     }
 
     get title() {
@@ -74,7 +74,13 @@ class Project {
     }
 
     set status(newStatus) {
-        this._status = newStatus;
+        if (this._status !== 'Completed' || newStatus !== 'Completed') {
+            if (compareAsc(this._dueDate, new Date()) === -1) {
+                this._status = 'Overdue';
+            }
+        } else {
+            this._status = newStatus;
+        }
     }
 
     set notes(newNotes) {
@@ -82,7 +88,14 @@ class Project {
     }
 
     set todos(newTodos) {
-        this._todos = newTodos;
+        if (newTodos === undefined) {
+            this._todos = newTodos;
+        } else {
+            for (let i = 0; i < newTodos.length; i++) {
+                newTodos[i].projectParent = this._id;
+            }
+            this._todos = newTodos;
+        }
     }
 
     set dateAdded(date) {
