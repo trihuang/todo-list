@@ -10,7 +10,7 @@ class Project {
         this.status = status;
         this.notes = notes;
         this.todos = todos;
-        this.dateAdded = new Date(), "yyyy-MM-dd'T'HH:mm:ss.SSS";
+        this.dateAdded = new Date();
     }
 
     get title() {

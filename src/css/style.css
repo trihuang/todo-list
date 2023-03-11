@@ -25,8 +25,9 @@ body {
     margin-right: 20px;
 }
 
-.icons > i {
-    margin: 0 15px;
+.icons > i, 
+.icons > .dropdown {
+    margin: 0 20px;
     cursor: pointer;
 }
 
@@ -36,11 +37,11 @@ body {
 }
 
 .sidebar,
-.content {
+.content-box {
     height: 100%;
 }
 
-.content {
+.content-box {
     width: 81%;
     overflow: auto;
 }
@@ -97,11 +98,11 @@ body {
 }
 
 .high-priority {
-    background-color: purple;
+    background-color: #512DA8;
 }
 
 .md-priority {
-    background-color: orange;
+    background-color: #FF6F00;
 }
 
 .info-container {
@@ -147,4 +148,29 @@ body {
 .badge-pos {
     top: 25%;
     left: 75%;
+}
+
+.bg-notification {
+    background-color: #E0E0E0;
+}
+
+.divider {
+    border: 1px solid #F5F5F5;
+}
+
+.bg-notification > li > a {
+    color: #4F4F4F;
+}
+
+.width {
+    width: 325px;
+}
+
+.remaining-width {
+    width: calc(100% - 355px);
+}
+
+.sub-todo {
+    margin-left: 30px;
+    width: 295px;
 }

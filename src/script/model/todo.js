@@ -3,12 +3,12 @@ import Project from './project';
 //format(new Date(), "yyyy-MM-dd'T'HH:mm:ss.SSS")
 
 class Todo extends Project {
-    constructor(title, description, dueDate, priority, status, notes, todos, projectParentID, todoParentID) {
+    constructor(title, description, dueDate, priority, status, notes, todos) {
         super(title, description, dueDate, priority, status, notes, todos);
         this.id = crypto.randomUUID();
         this.dateAdded = new Date();
-        this.projectParent = projectParentID;
-        this.todoParent = todoParentID;
+        this.projectParent = undefined;
+        this.todoParent = undefined;
     }
 
     get dateAdded() {
@@ -47,6 +47,7 @@ class Todo extends Project {
     }
 
     addTodo(todo) {
+        if (this._todoParent !== undefined) return;
         let todoList;
         if (this._todos === undefined) {
             todoList = [];
