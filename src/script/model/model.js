@@ -26,6 +26,15 @@ class Model {
         this.projectsOnDisplay = [];
         this.todosOnDisplay = [];
         this.deletedProjects = [];
+
+        /*
+        console.log(projectThree.id);
+        console.log(projectThreeTodoThree.id);
+        console.log(projectThreeTodoThreeSubOne.projectParent);
+        console.log(projectThreeTodoThreeSubOne.todoParent);
+        console.log(projectThreeTodoThreeSubTwo.projectParent);
+        console.log(projectThreeTodoThreeSubTwo.todoParent);
+        */
     }
 
     get projects() {

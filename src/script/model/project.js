@@ -49,42 +49,44 @@ class Project {
         return this._dateAdded;
     }
 
-    set title(newTitle) {
-        newTitle = newTitle.trim();
-        if (newTitle === '') {
+    set title(title) {
+        title = title.trim();
+        if (title === '') {
             alert('Please enter a title.');
         }
-        this._title = newTitle;
+        this._title = title;
     }
 
-    set id(newID) {
-        this._id = newID;
+    set id(id) {
+        this._id = id;
     }
 
-    set description(newDescription) {
-        this._description = newDescription;
+    set description(description) {
+        this._description = description;
     }
 
-    set dueDate(newDueDate) {
-        this._dueDate = newDueDate;
+    set dueDate(date) {
+        if (date === undefined) {
+            alert('Please enter a due date.');
+        }
+        this._dueDate = date;
     }
 
-    set priority(newPriority) {
-        this._priority = newPriority;
+    set priority(priority) {
+        this._priority = priority;
     }
 
     set status(newStatus) {
+        this._status = newStatus;
         if (this._status !== 'Completed' || newStatus !== 'Completed') {
             if (compareAsc(this._dueDate, new Date()) === -1) {
                 this._status = 'Overdue';
             }
-        } else {
-            this._status = newStatus;
-        }
+        } 
     }
 
-    set notes(newNotes) {
-        this._notes = newNotes;
+    set notes(notes) {
+        this._notes = notes;
     }
 
     set todos(newTodos) {
@@ -93,6 +95,11 @@ class Project {
         } else {
             for (let i = 0; i < newTodos.length; i++) {
                 newTodos[i].projectParent = this._id;
+                if (newTodos[i].todos !== undefined) {
+                    for (let j = 0; j < newTodos[i].todos.length; j++) {
+                        newTodos[i].todos[j].projectParent = this._id;
+                    }
+                }
             }
             this._todos = newTodos;
         }
@@ -106,10 +113,13 @@ class Project {
         let todoList;
         if (this._todos === undefined) {
             todoList = [];
+            todo.projectParent = this._id;
+            todo.updateTodosParents(todo.todos);
             todoList.push(todo);
             this._todos = todoList;
         } else {
             todo.projectParent = this._id;
+            todo.updateTodosParents(todo.todos);
             this._todos.push(todo);
         }
     }
