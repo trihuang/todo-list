@@ -7,7 +7,7 @@ class Model {
         const projectOneTodoOne = new Todo('Take out the garbage', '', undefined, 'None', 'None', '', undefined);
         const projectOneTodoTwo = new Todo('Wash the dishes', '', undefined, 'None', 'None', '', undefined);
         const projectOneTodoThree = new Todo('Walk the dog', '', undefined, 'None', 'None', '', undefined);
-        const projectOne = new Project('Chores', 'Things that need to be done around the house.', new Date(2023, 2, 12), 'High', 'In Progress', 'Do not leave them until tomorrow!', [projectOneTodoOne, projectOneTodoTwo, projectOneTodoThree]);
+        const projectOne = new Project('Chores', 'Things that need to be done around the house.', new Date(), 'High', 'In Progress', 'Do not leave them until tomorrow!', [projectOneTodoOne, projectOneTodoTwo, projectOneTodoThree]);
 
         const projectTwo = new Project('Write a Letter', 'Grandma is waiting for a reply.', new Date(2023, 2, 8), 'None', 'None', '', undefined);
         
@@ -17,7 +17,7 @@ class Model {
         const projectThreeTodoThreeSubTwo = new Todo('Create slides', '', undefined, 'None', 'None', '', undefined); 
         const projectThreeTodoThree = new Todo('Prepare presentation', '', undefined, 'None', 'In Progress', '', [projectThreeTodoThreeSubOne, projectThreeTodoThreeSubTwo]);
         const projectThreeTodoFour = new Todo('Meeting with clients', 'Product showcase.', new Date(2023, 2, 20), 'None', 'None', '', undefined);
-        const projectThree = new Project('Work', 'Some things to take care of.', new Date(2023, 2, 20), 'None', 'None', '', [projectThreeTodoOne, projectThreeTodoTwo, projectThreeTodoThree, projectThreeTodoFour]);
+        const projectThree = new Project('Work', 'Some things to take care of.', new Date(2023, 2, 20), 'Medium', 'None', '', [projectThreeTodoOne, projectThreeTodoTwo, projectThreeTodoThree, projectThreeTodoFour]);
 
 
         const projectFour = new Project('Photography', 'Going on a trip to the national park to take photos!', new Date(2023, 3, 15), 'None', 'None', '', undefined);
@@ -26,7 +26,7 @@ class Model {
         this.itemsOnDisplay = [];
         this.deletedItems = [];
 
-        console.log(this.filterByPriority(this.projects));
+        console.log(this.filterByStatus(this._projects, 'Overdue'));
         /*
         console.log(projectThree.id);
         console.log(projectThreeTodoThree.id);
@@ -192,45 +192,20 @@ class Model {
     }
 
     filterByPriority(array, priority) {
-        // TODO
         if (priority === undefined) {
             // projects or todos with both priority flags
-            const tasksWithPriority = array.filter((item) => item.priority !== 'None');
-            console.log(tasksWithPriority);
+            return array.filter((item) => item.priority !== 'None');
         } else if (priority === 'Medium') {
-            // projects or todos with medium priority
+            return array.filter((item) => item.priority === 'Medium');
         } else if (priority === 'High') {
-            // projects or todos with high priority
+            return array.filter((item) => item.priority === 'High');
+        } else if (priority === 'None') {
+            return array.filter((item) => item.priority === 'None');
         }
-        // return projects or todos
-    }
-
-    filterProjectsByPriority(projects, priority) {
-        this.filterByPriority(projects, priority);
-        // update projectsOnDisplay, todosOnDisplay
-        // return filtered projects
-    }
-
-    filterTodosByPriority(todos, priority) {
-        this.filterByPriority(todos, priority);
-        // update todosOnDisplay, projectsOnDisplay
-        // return filtered todos
     }
 
     filterByStatus(array, status) {
-        // TODO
-    }
-
-    filterProjectsByStatus(projects, status) {
-        this.filterByStatus(projects, status);
-        // update projectsOnDisplay, todosOnDisplay
-        // return filtered projects
-    }
-
-    filterTodosByStatus(todos, status) {
-        this.filterByStatus(todos, status);
-        // update todosOnDisplay, projectsOnDisplay
-        // return filtered todos
+        return array.filter((item) => item.status === `${status}`);
     }
 
     filterByTitle(text) {
