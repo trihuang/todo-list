@@ -1,4 +1,4 @@
-import { isSameDay } from 'date-fns';
+import { isSameDay, isSameWeek, isSameMonth, compareAsc } from 'date-fns';
 import Project from './project';
 import Todo from './todo';
 
@@ -11,13 +11,13 @@ class Model {
 
         const projectTwo = new Project('Write a Letter', 'Grandma is waiting for a reply.', new Date(2023, 2, 8), 'None', 'None', '', undefined);
         
-        const projectThreeTodoOne = new Todo('Submit report', '', new Date(2023, 2, 14), 'None', 'None', '', undefined);
-        const projectThreeTodoTwo = new Todo('Meeting with boss', '', new Date(2023, 2, 15), 'High', 'None', 'This is a very important meeting!', undefined);
-        const projectThreeTodoThreeSubOne = new Todo('Gather data', '', new Date(), 'Medium', 'In Progress', 'Need more information.', undefined);
+        const projectThreeTodoOne = new Todo('Submit report', '', new Date(2023, 2, 9), 'None', 'None', '', undefined);
+        const projectThreeTodoTwo = new Todo('Meeting with boss', '', new Date(2023, 2, 9), 'High', 'None', 'This is a very important meeting!', undefined);
+        const projectThreeTodoThreeSubOne = new Todo('Gather data', '', new Date(2023, 2, 9), 'Medium', 'In Progress', 'Need more information.', undefined);
         const projectThreeTodoThreeSubTwo = new Todo('Create slides', '', undefined, 'None', 'None', '', undefined); 
         const projectThreeTodoThree = new Todo('Prepare presentation', '', undefined, 'None', 'In Progress', '', [projectThreeTodoThreeSubOne, projectThreeTodoThreeSubTwo]);
         const projectThreeTodoFour = new Todo('Meeting with clients', 'Product showcase.', new Date(2023, 2, 20), 'None', 'None', '', undefined);
-        const projectThree = new Project('Work', 'Some things to take care of.', new Date(2023, 2, 20), 'Medium', 'None', '', [projectThreeTodoOne, projectThreeTodoTwo, projectThreeTodoThree, projectThreeTodoFour]);
+        const projectThree = new Project('Work', 'Some things to take care of.', new Date(2023, 2, 20), 'None', 'None', '', [projectThreeTodoOne, projectThreeTodoTwo, projectThreeTodoThree, projectThreeTodoFour]);
 
 
         const projectFour = new Project('Photography', 'Going on a trip to the national park to take photos!', new Date(2023, 3, 15), 'None', 'None', '', undefined);
@@ -26,7 +26,7 @@ class Model {
         this.itemsOnDisplay = [];
         this.deletedItems = [];
 
-        console.log(this.filterByToday([projectThreeTodoThreeSubTwo]));
+        console.log(this.filterByPriority(this.projects));
         /*
         console.log(projectThree.id);
         console.log(projectThreeTodoThree.id);
@@ -124,24 +124,79 @@ class Model {
     }
 
     // Return an array of projects with due dates this week and projects with todos and sub todos that have due dates this week
-    filterByThisWeek() {
-        // TODO
+    filterByThisWeek(array) {
+        const dueThisWeek = array.filter((item) => isSameWeek(item.dueDate, new Date()));
+        const remainingArray = array.filter((item) => !isSameWeek(item.dueDate, new Date())).filter((item) => item.todos !== undefined);
+
+        for (let i = 0; i < remainingArray.length; i++) {
+            const todosDueThisWeek = remainingArray[i].todos.filter((todo) => isSameWeek(todo.dueDate, new Date()));
+            if (todosDueThisWeek.length > 0) {
+                dueThisWeek.push(remainingArray[i]);
+            } else {
+                const remainingTodosArray = remainingArray[i].todos.filter((todo) => !isSameWeek(todo.dueDate, new Date())).filter((todo) => todo.todos !== undefined);
+                for (let j = 0; j < remainingTodosArray.length; j++) {
+                    const subTodosDueThisWeek = remainingTodosArray[j].todos.filter((todo) => isSameWeek(todo.dueDate, new Date()));
+                    if (subTodosDueThisWeek.length > 0) {
+                        dueThisWeek.push(remainingArray[i]);
+                    }
+                }
+            }
+        }
+        return dueThisWeek;
     }
 
     // Return an array of projects with due dates this month and projects with todos and sub todos that have due dates this month
-    filterByThisMonth() {
-        // TODO
+    filterByThisMonth(array) {
+        const dueThisMonth = array.filter((item) => isSameMonth(item.dueDate, new Date()));
+        const remainingArray = array.filter((item) => !isSameMonth(item.dueDate, new Date())).filter((item) => item.todos !== undefined);
+
+        for (let i = 0; i < remainingArray.length; i++) {
+            const todosDueThisMonth = remainingArray[i].todos.filter((todo) => isSameMonth(todo.dueDate, new Date()));
+            if (todosDueThisMonth.length > 0) {
+                dueThisMonth.push(remainingArray[i]);
+            } else {
+                const remainingTodosArray = remainingArray[i].todos.filter((todo) => !isSameMonth(todo.dueDate, new Date())).filter((todo) => todo.todos !== undefined);
+                for (let j = 0; j < remainingTodosArray.length; j++) {
+                    const subTodosDueThisMonth = remainingTodosArray[j].todos.filter((todo) => isSameMonth(todo.dueDate, new Date()));
+                    if (subTodosDueThisMonth.length > 0) {
+                        dueThisMonth.push(remainingArray[i]);
+                    }
+                }
+            }
+        }
+        return dueThisMonth;
     }
 
     // Return an array of projects that are overdue and projects with todos and sub todos that are overdue
-    filterByOverdue() {
+    filterByOverdue(array) {
         // TODO
+        const overdue = array.filter((item) => (compareAsc(item.dueDate, new Date()) === -1) && !isSameDay(item.dueDate, new Date()));
+        const remainingArray = array.filter((item) => !((compareAsc(item.dueDate, new Date()) === -1) && !isSameDay(item.dueDate, new Date()))).filter((item) => item.todos !== undefined);
+        
+        for (let i = 0; i < remainingArray.length; i++) {
+            const overdueTodos = remainingArray[i].todos.filter((todo) => (compareAsc(todo.dueDate, new Date()) === -1) && !isSameDay(todo.dueDate, new Date()));
+            if (overdueTodos.length > 0) {
+                overdue.push(remainingArray[i]);
+            } else {
+                const remainingTodosArray = remainingArray[i].todos.filter((todo) => !((compareAsc(todo.dueDate, new Date()) === -1) && !isSameDay(todo.dueDate, new Date()))).filter((item) => item.todos !== undefined);
+                for (let j = 0; j < remainingTodosArray.length; j++) {
+                    const overdueSubTodos = remainingTodosArray[j].todos.filter((todo) => (compareAsc(todo.dueDate, new Date()) === -1) && !isSameDay(todo.dueDate, new Date()));
+                    if (overdueSubTodos.length > 0) {
+                        overdue.push(remainingArray[i]);
+                    }
+                }
+            }
+        }
+        return overdue;
+        // TODO: update status if necessary?
     }
 
     filterByPriority(array, priority) {
         // TODO
         if (priority === undefined) {
             // projects or todos with both priority flags
+            const tasksWithPriority = array.filter((item) => item.priority !== 'None');
+            console.log(tasksWithPriority);
         } else if (priority === 'Medium') {
             // projects or todos with medium priority
         } else if (priority === 'High') {

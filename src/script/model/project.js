@@ -1,4 +1,4 @@
-import { compareAsc, format } from 'date-fns';
+import { compareAsc } from 'date-fns';
 
 class Project {
     constructor(title, description, dueDate, priority, status, notes, todos) {
