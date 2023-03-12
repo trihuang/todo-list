@@ -7,6 +7,7 @@ class Todo extends Project {
         super(title, description, dueDate, priority, status, notes, todos);
         this.projectParent = undefined;
         this.todoParent = undefined;
+        this.isProject = false;
     }
 
     get todos() {

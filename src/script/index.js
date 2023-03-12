@@ -10,9 +10,6 @@ import Controller from './controller/controller';
 
 //console.log(format(new Date(2014, 1, 11), 'MMM d'));
 
-//const model = new Model();
-//console.log(model.projects);
-
 const app = new Controller(new Model(), new View());
 
 // Some tests
@@ -24,11 +21,3 @@ const proj = new Project('Project 1', 'boo', new Date(), 'High', 'In Progress', 
 todo1.todos = [subTodo1, subSubTodo];
 
 proj.todos = [todo1];
-
-console.log(todo1.id);
-console.log(todo1.projectParent);
-
-console.log(subTodo1.projectParent);
-console.log(subTodo1.todoParent);
-console.log(subSubTodo.projectParent);
-console.log(subSubTodo.todoParent);

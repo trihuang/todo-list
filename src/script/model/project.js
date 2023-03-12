@@ -11,6 +11,7 @@ class Project {
         this.notes = notes;
         this.todos = todos;
         this.dateAdded = new Date();
+        this.isProject = true;
     }
 
     get title() {
@@ -47,6 +48,10 @@ class Project {
 
     get dateAdded() {
         return this._dateAdded;
+    }
+
+    get isProject() {
+        return this._isProject;
     }
 
     set title(title) {
@@ -107,6 +112,10 @@ class Project {
 
     set dateAdded(date) {
         this._dateAdded = date;
+    }
+
+    set isProject(bool) {
+        this._isProject = bool;
     }
 
     addTodo(todo) {

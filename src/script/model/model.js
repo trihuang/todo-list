@@ -23,9 +23,8 @@ class Model {
         const projectFour = new Project('Photography', 'Going on a trip to the national park to take photos!', new Date(2023, 3, 15), 'None', 'None', '', undefined);
 
         this.projects = [projectOne, projectTwo, projectThree, projectFour];
-        this.projectsOnDisplay = [];
-        this.todosOnDisplay = [];
-        this.deletedProjects = [];
+        this.itemsOnDisplay = [];
+        this.deletedItems = [];
 
         /*
         console.log(projectThree.id);
@@ -41,46 +40,60 @@ class Model {
         return this._projects;
     }
 
-    get projectsOnDisplay() {
-        return this._projectsOnDisplay;
+    get itemsOnDisplay() {
+        return this._itemsOnDisplay;
     }
 
-    get todosOnDisplay() {
-        return this._todosOnDisplay;
-    }
-
-    get deletedProjects() {
-        return this._deletedProjects;
+    get deletedItems() {
+        return this._deletedItems;
     }
 
     set projects(projects) {
         return this._projects = projects;
     }
 
-    set projectsOnDisplay(projects) {
-        return this._projectsOnDisplay = projects;
+    set itemsOnDisplay(items) {
+        return this._itemsOnDisplay = items;
     }
 
-    set todosOnDisplay(todos) {
-        return this._todosOnDisplay = todos;
+    set deletedItems(items) {
+        return this._deletedItems = items;
     }
 
-    set deletedProjects(projects) {
-        return this._deletedProjects = projects;
-    }
-
-    createProject() {
-        // TODO
+    createProject(title, description, dueDate, priority, status, notes, todos) {
+        const project = new Project(title, description, dueDate, priority, status, notes, todos);
+        this.addProject(project);
+        return project;
     }
 
     addProject(project) {
         this._projects.push(project);
     }
 
+    removeItem(item) {
+        if (item.isProject) {
+            this.removeProject(item);
+        } else {
+            this.removeTodo(item);
+        }
+        this._deletedItems.push(item);
+    }
+
     removeProject(project) {
         const index = this._projects.indexOf(project);
         this._projects.splice(index, 1);
-        // TODO move to trash
+    }
+
+    removeTodo(todo) {
+        let parentProject = this._projects.filter((project) => project.id === todo.projectParent);
+        parentProject = parentProject[0];
+        if (todo.todoParent === undefined) {
+            parentProject.removeTodo(todo);
+        } else {
+            let parentTodo = parentProject.todos.filter((task) => task.id === todo.todoParent);
+            parentTodo = parentTodo[0];
+            parentTodo.removeTodo(todo);
+        }
     }
 
     // Return an array of projects with due date today and projects with todos that have due dates today
@@ -208,12 +221,13 @@ class Model {
         // TODO
     }
 
-    recoverfromTrash() {
+    recoverfromTrash(item) {
         // TODO
     }
 
-    deletefromTrash() {
-        // TODO
+    deletefromTrash(item) {
+        const index = this._deletedItems.indexOf(item);
+        this._deletedItems.splice(index, 1);
     }
 }
 
