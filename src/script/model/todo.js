@@ -14,8 +14,8 @@ class Todo extends Project {
         return this._todos;
     }
 
-    get dateAdded() {
-        return this._dateAdded;
+    get dueDate() {
+        return this._dueDate;
     }
 
     get projectParent() {
@@ -38,10 +38,6 @@ class Todo extends Project {
             this.updateTodosParents(newTodos)
             this._todos = newTodos;
         }
-    }
-
-    set dateAdded(date) {
-        this._dateAdded = date;
     }
 
     set projectParent(projectID) {
