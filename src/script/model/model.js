@@ -4,28 +4,29 @@ import Todo from './todo';
 
 class Model {
     constructor() {
+        // Initialize some projects
         const projectOneTodoOne = new Todo('Take out the garbage', '', undefined, 'None', 'None', '', undefined);
         const projectOneTodoTwo = new Todo('Wash the dishes', '', undefined, 'None', 'None', '', undefined);
         const projectOneTodoThree = new Todo('Walk the dog', '', undefined, 'None', 'None', '', undefined);
         const projectOne = new Project('Chores', 'More and more chores that need to be done around the house.', new Date(), 'High', 'In Progress', 'Do not leave them until tomorrow!', [projectOneTodoOne, projectOneTodoTwo, projectOneTodoThree]);
 
-        const projectTwo = new Project('Write a Letter', 'Grandma is waiting for a reply.', new Date(2023, 2, 8), 'None', 'None', '', undefined);
+        const projectTwo = new Project('Write a Letter', 'Grandma is waiting for a reply.', new Date(2024, 2, 9), 'None', 'None', '', undefined);
         
-        const projectThreeTodoOne = new Todo('Submit report', 'choose a subject', new Date(2023, 2, 9), 'None', 'None', '', undefined);
-        const projectThreeTodoTwo = new Todo('Meeting with boss', '', new Date(2023, 2, 9), 'High', 'None', 'This is a very important meeting!', undefined);
-        const projectThreeTodoThreeSubOne = new Todo('Gather data CHOOCHOO', '', new Date(2023, 2, 9), 'Medium', 'In Progress', 'Need more information.', undefined);
+        const projectThreeTodoOne = new Todo('Submit report', 'choose a subject', new Date(2023, 2, 10), 'None', 'None', '', undefined);
+        const projectThreeTodoTwo = new Todo('Meeting with boss', '', new Date(2023, 2, 10), 'High', 'None', 'This is a very important meeting!', undefined);
+        const projectThreeTodoThreeSubOne = new Todo('Gather data CHOOCHOO', '', new Date(2024, 2, 9), 'Medium', 'In Progress', 'Need more information.', undefined);
         const projectThreeTodoThreeSubTwo = new Todo('Create slides', '', undefined, 'None', 'None', '', undefined); 
         const projectThreeTodoThree = new Todo('Prepare presentation', '', undefined, 'None', 'In Progress', '', [projectThreeTodoThreeSubOne, projectThreeTodoThreeSubTwo]);
         const projectThreeTodoFour = new Todo('Meeting with clients', 'Product showcase.', new Date(2023, 2, 20), 'None', 'None', '', undefined);
         const projectThree = new Project('Work', 'Some things to take care of.', new Date(2023, 2, 20), 'Medium', 'None', '', [projectThreeTodoOne, projectThreeTodoTwo, projectThreeTodoThree, projectThreeTodoFour]);
 
-        const projectFourTodoOne = new Todo('Choose camera to bring', 'choochoochoo', undefined, 'None', 'None', '', undefined);
+        const projectFourTodoOne = new Todo('Choose camera to bring', 'choochoochoo', new Date(2024, 2, 9), 'None', 'None', '', undefined);
         const projectFour = new Project('Photography', 'Going on a trip to the national park to take photos!', new Date(2023, 3, 15), 'None', 'None', '', [projectFourTodoOne]);
 
         this.projects = [projectOne, projectTwo, projectThree, projectFour];
         this.deletedItems = [];
 
-        console.log(this.filterByDescription(this._projects, 'Need to be'));
+        console.log(this.search(this._projects, 'cho'));
         /*
         console.log(projectThree.id);
         console.log(projectThreeTodoThree.id);
@@ -47,7 +48,7 @@ class Model {
     set projects(projects) {
         return this._projects = projects;
     }
-    
+
     set deletedItems(items) {
         return this._deletedItems = items;
     }
@@ -331,15 +332,212 @@ class Model {
         return parentArray;
     }
 
-    // Search for projects and todos with the specified due date and their sub todos' due date
-    filterByDueDate(array, date) {
-        // TODO
+    // Search for projects and todos with the specified date in their due date and their sub todos' due date
+    filterByDate(array, date) {
+        const searchDate = date.toLowerCase();
+        const parentArray = array.filter((item) => {
+            if (item.dueDate !== undefined) {
+                return format(item.dueDate, 'MMM d').toLowerCase() === searchDate || format(item.dueDate, 'MMMM d').toLowerCase() === searchDate;
+            }
+        });
+        const remainingArray = array.filter((item) => {
+            if (item.dueDate !== undefined) {
+                return !(format(item.dueDate, 'MMM d').toLowerCase() === searchDate || format(item.dueDate, 'MMMM d').toLowerCase() === searchDate);
+            } else {
+                return true;
+            }
+        }).filter((item) => item.todos !== undefined);
+
+        for (let i = 0; i < remainingArray.length; i++) {
+            const todos = remainingArray[i].todos.filter((todo) => {
+                if (todo.dueDate !== undefined) {
+                    return format(todo.dueDate, 'MMM d').toLowerCase() === searchDate || format(todo.dueDate, 'MMMM d').toLowerCase() === searchDate;
+                }
+            });
+            if (todos.length > 0) {
+                parentArray.push(remainingArray[i]);
+            } else {
+                const remainingTodos = remainingArray[i].todos.filter((todo) => {
+                    if (todo.dueDate !== undefined) {
+                        return !(format(todo.dueDate, 'MMM d').toLowerCase() === searchDate || format(todo.dueDate, 'MMMM d').toLowerCase() === searchDate);
+                    } else {
+                        return true;
+                    }
+                }).filter((todo) => todo.todos !== undefined);
+
+                for (let j = 0; j < remainingTodos.length; j++) {
+                    const subTodos = remainingTodos[j].todos.filter((todo) => {
+                        if (todo.dueDate !== undefined) {
+                            return format(todo.dueDate, 'MMM d').toLowerCase() === searchDate || format(todo.dueDate, 'MMMM d').toLowerCase() === searchDate;
+                        }
+                    });
+                    if (subTodos.length > 0) {
+                        parentArray.push(remainingArray[i]);
+                    }
+                }
+            }
+        }
+        return parentArray;
     }
 
-    search(text) {
-        // TODO
+    filterByYear(array, year) {
+        const parentArray = array.filter((item) => {
+            if (item.dueDate !== undefined) {
+                return format(item.dueDate, 'yyyy').includes(year);
+            }
+        });
+        const remainingArray = array.filter((item) => {
+            if (item.dueDate !== undefined) {
+                return !(format(item.dueDate, 'yyyy').includes(year));
+            } else {
+                return true;
+            }
+        }).filter((item) => item.todos !== undefined);
+
+        for (let i = 0; i < remainingArray.length; i++) {
+            const todos = remainingArray[i].todos.filter((todo) => {
+                if (todo.dueDate !== undefined) {
+                    return format(todo.dueDate, 'yyyy').includes(year);
+                }
+            });
+            if (todos.length > 0) {
+                parentArray.push(remainingArray[i]);
+            } else {
+                const remainingTodos = remainingArray[i].todos.filter((todo) => {
+                    if (todo.dueDate !== undefined) {
+                        return !(format(todo.dueDate, 'yyyy').includes(year));
+                    } else {
+                        return true;
+                    }
+                }).filter((todo) => todo.todos !== undefined);
+
+                for (let j = 0; j < remainingTodos.length; j++) {
+                    const subTodos = remainingTodos[j].todos.filter((todo) => {
+                        if (todo.dueDate !== undefined) {
+                            return format(todo.dueDate, 'yyyy').includes(year);
+                        }
+                    });
+                    if (subTodos.length > 0) {
+                        parentArray.push(remainingArray[i]);
+                    }
+                }
+            }
+        }
+        return parentArray;
+    }
+
+    filterByMonth(array, month) {
+        const searchMonth = month.toLowerCase();
+        const parentArray = array.filter((item) => {
+            if (item.dueDate !== undefined) {
+                return format(item.dueDate, 'MMMM').toLowerCase().includes(searchMonth);
+            }
+        });
+        const remainingArray = array.filter((item) => {
+            if (item.dueDate !== undefined) {
+                return !(format(item.dueDate, 'MMMM').toLowerCase().includes(searchMonth));
+            } else {
+                return true;
+            }
+        }).filter((item) => item.todos !== undefined);
+
+        for (let i = 0; i < remainingArray.length; i++) {
+            const todos = remainingArray[i].todos.filter((todo) => {
+                if (todo.dueDate !== undefined) {
+                    return format(todo.dueDate, 'MMMM').toLowerCase().includes(searchMonth);
+                }
+            });
+            if (todos.length > 0) {
+                parentArray.push(remainingArray[i]);
+            } else {
+                const remainingTodos = remainingArray[i].todos.filter((todo) => {
+                    if (todo.dueDate !== undefined) {
+                        return !(format(todo.dueDate, 'MMMM').toLowerCase().includes(searchMonth));
+                    } else {
+                        return true;
+                    }
+                }).filter((todo) => todo.todos !== undefined);
+
+                for (let j = 0; j < remainingTodos.length; j++) {
+                    const subTodos = remainingTodos[j].todos.filter((todo) => {
+                        if (todo.dueDate !== undefined) {
+                            return format(todo.dueDate, 'MMMM').toLowerCase().includes(searchMonth);
+                        }
+                    });
+                    if (subTodos.length > 0) {
+                        parentArray.push(remainingArray[i]);
+                    }
+                }
+            }
+        }
+        return parentArray;
+    }
+
+    filterByDay(array, day) {
+        const parentArray = array.filter((item) => {
+            if (item.dueDate !== undefined) {
+                return format(item.dueDate, 'd') === day;
+            }
+        });
+        const remainingArray = array.filter((item) => {
+            if (item.dueDate !== undefined) {
+                return format(item.dueDate, 'd') !== day;
+            } else {
+                return true;
+            }
+        }).filter((item) => item.todos !== undefined);
+
+        for (let i = 0; i < remainingArray.length; i++) {
+            const todos = remainingArray[i].todos.filter((todo) => {
+                if (todo.dueDate !== undefined) {
+                    return format(todo.dueDate, 'd') === day;
+                }
+            });
+            if (todos.length > 0) {
+                parentArray.push(remainingArray[i]);
+            } else {
+                const remainingTodos = remainingArray[i].todos.filter((todo) => {
+                    if (todo.dueDate !== undefined) {
+                        return format(todo.dueDate, 'd') !== day;
+                    } else {
+                        return true;
+                    }
+                }).filter((todo) => todo.todos !== undefined);
+
+                for (let j = 0; j < remainingTodos.length; j++) {
+                    const subTodos = remainingTodos[j].todos.filter((todo) => {
+                        if (todo.dueDate !== undefined) {
+                            return format(todo.dueDate, 'd') === day;
+                        }
+                    });
+                    if (subTodos.length > 0) {
+                        parentArray.push(remainingArray[i]);
+                    }
+                }
+            }
+        }
+        return parentArray;
+    }
+
+    search(array, text) {
+        let filteredProjects = [];
         if (text === undefined) return;
-        // TODO: update projects / todos on display in controller
+        const titleArray = this.filterByTitle(array, text);
+        const descriptionArray = this.filterByDescription(array, text);
+        const notesArray = this.filterByNotes(array, text);
+        const dateArray = this.filterByDate(array, text);
+        const yearArray = this.filterByYear(array, text);
+        const monthArray = this.filterByMonth(array, text);
+        const dayArray = this.filterByDay(array, text);
+        filteredProjects = filteredProjects.concat(titleArray);
+        filteredProjects = filteredProjects.concat(descriptionArray);
+        filteredProjects = filteredProjects.concat(notesArray);
+        filteredProjects = filteredProjects.concat(dateArray);
+        filteredProjects = filteredProjects.concat(yearArray);
+        filteredProjects = filteredProjects.concat(monthArray);
+        filteredProjects = filteredProjects.concat(dayArray);
+        const filteredSet = [...new Set(filteredProjects.flat())];
+        return filteredSet;
     }
 
     sortByTitleAsc() {
