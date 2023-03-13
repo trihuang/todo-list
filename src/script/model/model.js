@@ -14,7 +14,7 @@ class Model {
         
         const projectThreeTodoOne = new Todo('Submit report', 'choose a subject', undefined, 'None', 'None', '', undefined);
         const projectThreeTodoTwo = new Todo('Meeting with boss', '', new Date(2023, 2, 10), 'High', 'None', 'This is a very important meeting!', undefined);
-        const projectThreeTodoThreeSubOne = new Todo('Gather data CHOOCHOO', '', new Date(2024, 2, 9), 'Medium', 'In Progress', 'Need more information.', undefined);
+        const projectThreeTodoThreeSubOne = new Todo('Gather data', '', new Date(2024, 2, 9), 'Medium', 'In Progress', 'Need more information.', undefined);
         const projectThreeTodoThreeSubTwo = new Todo('Create slides', '', undefined, 'None', 'None', '', undefined); 
         const projectThreeTodoThree = new Todo('Prepare presentation', '', undefined, 'None', 'In Progress', '', [projectThreeTodoThreeSubOne, projectThreeTodoThreeSubTwo]);
         const projectThreeTodoFour = new Todo('Meeting with clients', 'Product showcase.', new Date(2023, 2, 20), 'None', 'None', '', undefined);
@@ -25,8 +25,6 @@ class Model {
 
         this.projects = [projectOne, projectTwo, projectThree, projectFour];
         this.deletedItems = [];
-
-        console.log(this.sortByDateAddedDesc(this._projects));
     }
 
     get projects() {
@@ -535,7 +533,7 @@ class Model {
     }
 
     sortByTitleAsc(array) {
-        return array.sort((a,b) => {
+        return array.sort((a, b) => {
             const titleA = a.title.toLowerCase();
             const titleB = b.title.toLowerCase();
             return titleA.localeCompare(titleB);
@@ -543,7 +541,7 @@ class Model {
     }
 
     sortByTitleDesc(array) {
-        return array.sort((a,b) => {
+        return array.sort((a, b) => {
             const titleA = a.title.toLowerCase();
             const titleB = b.title.toLowerCase();
             return titleB.localeCompare(titleA);
@@ -551,7 +549,7 @@ class Model {
     }
 
     sortByDueDateAsc(array) {
-        return array.sort((a,b) => {
+        return array.sort((a, b) => {
             if (a.dueDate === undefined) {
                 return -1;
             } else if (b.dueDate === undefined) {
@@ -563,7 +561,7 @@ class Model {
     }
 
     sortByDueDateDesc(array) {
-        return array.sort((a,b) => {
+        return array.sort((a, b) => {
             if (b.dueDate === undefined) {
                 return -1;
             } else if (a.dueDate === undefined) {
@@ -575,27 +573,27 @@ class Model {
     }
 
     sortByPriorityAsc(array) {
-        // TODO
+        return array.sort((a, b) => a.convertPriority() > b.convertPriority() ? 1 : -1);
     }
 
     sortByPriorityDesc(array) {
-        // TODO
+        return array.sort((a, b) => a.convertPriority() > b.convertPriority() ? -1 : 1);
     }
 
     sortByStatusAsc(array) {
-        // TODO
+        return array.sort((a, b) => a.convertStatus() > b.convertStatus() ? 1 : -1);
     }
 
     sortByStatusDesc(array) {
-        // TODO
+        return array.sort((a, b) => a.convertStatus() > b.convertStatus() ? -1 : 1);
     }
 
     sortByDateAddedAsc(array) {
-        return array.sort((a,b) => compareAsc(a.dateAdded, b.dateAdded));
+        return array.sort((a, b) => compareAsc(a.dateAdded, b.dateAdded));
     }
 
     sortByDateAddedDesc(array) {
-        return array.sort((a,b) => compareDesc(a.dateAdded, b.dateAdded));
+        return array.sort((a, b) => compareDesc(a.dateAdded, b.dateAdded));
     }
 
     recoverfromTrash(item) {

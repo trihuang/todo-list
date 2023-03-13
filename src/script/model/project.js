@@ -137,6 +137,26 @@ class Project {
         const index = this._todos.indexOf(todo);
         this._todos.splice(index, 1);
     }
+
+    convertPriority() {
+        const priority = this._priority;
+        if (priority === 'High') {
+            return 2;
+        } else if (priority === 'Medium') {
+            return 1;
+        } else return 0;
+    }
+
+    convertStatus() {
+        const status = this._status;
+        if (status === 'Completed') {
+            return 3;
+        } else if (status === 'In Progress') {
+            return 2;
+        } else if (status === 'Overdue') {
+            return 1;
+        } else return 0;
+    }
 }
 
 export { Project as default }
