@@ -16,7 +16,7 @@ class Controller {
     }
 
     initializeProjectsPage(projects) {
-        this.view.displayProjects(projects);
+        this.view.displayItems(projects);
     }
 
     handleLogoEventListener() {

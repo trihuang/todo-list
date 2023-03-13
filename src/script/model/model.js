@@ -10,7 +10,7 @@ class Model {
         const projectOneTodoThree = new Todo('Walk the dog', '', undefined, 'None', 'None', '', undefined);
         const projectOne = new Project('Chores', 'More and more chores that need to be done around the house.', new Date(), 'High', 'In Progress', 'Do not leave them until tomorrow!', [projectOneTodoOne, projectOneTodoTwo, projectOneTodoThree]);
 
-        const projectTwo = new Project('Write a Letter', 'Grandma is waiting for a reply.', new Date(2024, 2, 9), 'None', 'None', '', undefined);
+        const projectTwo = new Project('Write a Letter', 'Grandma is waiting for a reply.', new Date(2023, 2, 9), 'None', 'None', '', undefined);
         
         const projectThreeTodoOne = new Todo('Submit report', 'choose a subject', undefined, 'None', 'None', '', undefined);
         const projectThreeTodoTwo = new Todo('Meeting with boss', '', new Date(2023, 2, 10), 'High', 'None', 'This is a very important meeting!', undefined);

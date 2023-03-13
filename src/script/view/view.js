@@ -1,3 +1,5 @@
+import { isSameDay, isSameYear, format } from 'date-fns';
+
 class View {
     constructor() {
         this.addSideBarEventListeners();
@@ -11,7 +13,7 @@ class View {
         const logo = document.querySelector('.navbar-brand');
         logo.addEventListener('click', event => {
             this.displayProjectsHeader();
-            this.displayProjects(projects);
+            this.displayItems(projects);
         });
     }
 
@@ -76,17 +78,144 @@ class View {
         header.textContent = 'Projects';
     }
 
-    displayProjects(projects) {
-        // TODO
-        console.log('display projects');
+    displayItems(items) {
+        const content = document.getElementById('content');
+        const accordion = document.createElement('div');
+        accordion.classList.add('accordion');
+        accordion.classList.add('accordion-flush');
+        accordion.setAttribute('id', 'itemAccordion');
+
+        for (let i = 0; i < items.length; i++) {
+            let accordionItem = this.displayItem(items[i]);
+            accordion.appendChild(accordionItem);
+        }
+        content.appendChild(accordion);
     }
 
-    displayProject(project) {
-        // TODO: make accordion
+    displayItem(item) {
+        const accordionItem = document.createElement('div');
+        accordionItem.classList.add('accordion-item');
+
+        // Accordion header
+        const accordionHeader = document.createElement('h2');
+        accordionHeader.classList.add('accordion-header');
+        accordionHeader.setAttribute('id', `header${item.id}`);
+
+        const accordionButton = document.createElement('button');
+        accordionButton.classList.add('accordion-button');
+        accordionButton.classList.add('collapsed');
+        accordionButton.setAttribute('type', 'button');
+        accordionButton.setAttribute('data-bs-toggle', 'collapse');
+        accordionButton.setAttribute('data-bs-target', `#item${item.id}`);
+        accordionButton.setAttribute('aria-controls', `item${item.id}`);
+        accordionButton.setAttribute('aria-expanded', 'false');
+
+        const title = document.createElement('div');
+        title.classList.add('d-flex');
+        const checkCircle = document.createElement('i');
+        checkCircle.classList.add('bi');
+        checkCircle.classList.add('bi-circle');
+        checkCircle.classList.add('small');
+        title.appendChild(checkCircle);
+        const name = document.createElement('span');
+        name.classList.add('big');
+        name.textContent = item.title;
+        title.appendChild(name);
+        accordionButton.appendChild(title);
+
+        const infoContainer = document.createElement('div');
+        infoContainer.classList.add('info-container');
+        infoContainer.classList.add('d-flex');
+        infoContainer.classList.add('justify-content-between');
+
+        const date = document.createElement('div');
+        date.classList.add('text-muted');
+        date.classList.add('date');
+        if (isSameDay(item.dueDate, new Date())) {
+            date.textContent = 'Today';
+        } else if (!isSameYear(item.dueDate, new Date())) {
+            date.textContent = format(item.dueDate, 'MMM d yyyy');
+        } else {
+            date.textContent = format(item.dueDate, 'MMM d');
+        }
+        infoContainer.appendChild(date);
+
+        const buttonsContainer = document.createElement('div');
+        buttonsContainer.classList.add('buttons-container');
+        buttonsContainer.classList.add('d-flex');
+
+        const priorityButton = document.createElement('div');
+        priorityButton.classList.add('status');
+        priorityButton.classList.add('priority');
+        priorityButton.classList.add('rounded-pill');
+        priorityButton.classList.add('text-light');
+        priorityButton.classList.add('text-center');
+
+        if (item.priority === 'None') {
+            priorityButton.classList.add('bg-transparent');
+        } else if (item.priority === 'Medium') {
+            priorityButton.classList.add('md-priority');
+            priorityButton.textContent = 'Medium';
+        } else if (item.priority === 'High') {
+            priorityButton.classList.add('high-priority');
+            priorityButton.textContent = 'High';
+        }
+        buttonsContainer.appendChild(priorityButton);
+
+        const statusButton = document.createElement('div');
+        statusButton.classList.add('status');
+        statusButton.classList.add('rounded-pill');
+        statusButton.classList.add('text-light');
+        statusButton.classList.add('text-center');
+
+        if (item.status === 'None') {
+            statusButton.classList.add('bg-transparent');
+        } else if (item.status === 'Overdue') {
+            statusButton.classList.add('bg-danger');
+            statusButton.textContent = 'Overdue';
+        } else if (item.status === 'In Progress') {
+            statusButton.classList.add('bg-info');
+            statusButton.textContent = 'In Progress';
+        } else if (item.status === 'Completed') {
+            statusButton.classList.add('bg-success');
+            statusButton.textContent = 'Completed';
+        }
+        buttonsContainer.appendChild(statusButton);
+
+        infoContainer.appendChild(buttonsContainer);
+        accordionButton.appendChild(infoContainer);
+        accordionHeader.appendChild(accordionButton);
+        accordionItem.appendChild(accordionHeader);
+
+        // Accordion body
+        const accordionContent = document.createElement('div');
+        accordionContent.setAttribute('id', `item${item.id}`);
+        accordionContent.classList.add('accordion-collapse');
+        accordionContent.classList.add('collapse');
+        accordionContent.setAttribute('data-bs-parent', '#itemAccordion');
+        accordionContent.setAttribute('aria-labelledby', `header${item.id}`);
+
+        const accordionBody = document.createElement('div');
+        accordionBody.classList.add('accordion-body');
+        //TODO
+
+        if (item.isProject) {
+            const link = document.createElement('div');
+            link.classList.add('text-muted');
+            link.classList.add('text-end');
+            link.classList.add('project-link');
+            link.textContent = 'Go to project page';
+            accordionBody.appendChild(link);
+        }
+
+        accordionContent.appendChild(accordionBody);
+        accordionItem.appendChild(accordionContent);
+        return accordionItem;
     }
 
-    displayTodosHeader() {
-        // TODO
+    displayTodosHeader(projectTitle) {
+        const header = document.querySelector('.navbar > h2');
+        header.textContent = `${projectTitle}`;
     }
 
     displayTodos(todos) {
