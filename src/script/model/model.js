@@ -1,4 +1,4 @@
-import { isSameDay, isSameWeek, isSameMonth, compareAsc, format } from 'date-fns';
+import { isSameDay, isSameWeek, isSameMonth, compareAsc, compareDesc, format } from 'date-fns';
 import Project from './project';
 import Todo from './todo';
 
@@ -12,7 +12,7 @@ class Model {
 
         const projectTwo = new Project('Write a Letter', 'Grandma is waiting for a reply.', new Date(2024, 2, 9), 'None', 'None', '', undefined);
         
-        const projectThreeTodoOne = new Todo('Submit report', 'choose a subject', new Date(2023, 2, 10), 'None', 'None', '', undefined);
+        const projectThreeTodoOne = new Todo('Submit report', 'choose a subject', undefined, 'None', 'None', '', undefined);
         const projectThreeTodoTwo = new Todo('Meeting with boss', '', new Date(2023, 2, 10), 'High', 'None', 'This is a very important meeting!', undefined);
         const projectThreeTodoThreeSubOne = new Todo('Gather data CHOOCHOO', '', new Date(2024, 2, 9), 'Medium', 'In Progress', 'Need more information.', undefined);
         const projectThreeTodoThreeSubTwo = new Todo('Create slides', '', undefined, 'None', 'None', '', undefined); 
@@ -26,14 +26,7 @@ class Model {
         this.projects = [projectOne, projectTwo, projectThree, projectFour];
         this.deletedItems = [];
 
-        /*
-        console.log(projectThree.id);
-        console.log(projectThreeTodoThree.id);
-        console.log(projectThreeTodoThreeSubOne.projectParent);
-        console.log(projectThreeTodoThreeSubOne.todoParent);
-        console.log(projectThreeTodoThreeSubTwo.projectParent);
-        console.log(projectThreeTodoThreeSubTwo.todoParent);
-        */
+        console.log(this.sortByDateAddedDesc(this._projects));
     }
 
     get projects() {
@@ -541,44 +534,68 @@ class Model {
         return filteredSet;
     }
 
-    sortByTitleAsc() {
+    sortByTitleAsc(array) {
+        return array.sort((a,b) => {
+            const titleA = a.title.toLowerCase();
+            const titleB = b.title.toLowerCase();
+            return titleA.localeCompare(titleB);
+        });
+    }
+
+    sortByTitleDesc(array) {
+        return array.sort((a,b) => {
+            const titleA = a.title.toLowerCase();
+            const titleB = b.title.toLowerCase();
+            return titleB.localeCompare(titleA);
+        });
+    }
+
+    sortByDueDateAsc(array) {
+        return array.sort((a,b) => {
+            if (a.dueDate === undefined) {
+                return -1;
+            } else if (b.dueDate === undefined) {
+                return 1;
+            } else {
+                return compareAsc(a.dueDate, b.dueDate);
+            }
+        });
+    }
+
+    sortByDueDateDesc(array) {
+        return array.sort((a,b) => {
+            if (b.dueDate === undefined) {
+                return -1;
+            } else if (a.dueDate === undefined) {
+                return 1;
+            } else {
+                return compareDesc(a.dueDate, b.dueDate);
+            }
+        });
+    }
+
+    sortByPriorityAsc(array) {
         // TODO
     }
 
-    sortByTitleDesc() {
+    sortByPriorityDesc(array) {
         // TODO
     }
 
-    sortByDueDateAsc() {
+    sortByStatusAsc(array) {
         // TODO
     }
 
-    sortByDueDateDesc() {
+    sortByStatusDesc(array) {
         // TODO
     }
 
-    sortByPriorityAsc() {
-        // TODO
+    sortByDateAddedAsc(array) {
+        return array.sort((a,b) => compareAsc(a.dateAdded, b.dateAdded));
     }
 
-    sortByPriorityDesc() {
-        // TODO
-    }
-
-    sortByStatusAsc() {
-        // TODO
-    }
-
-    sortByStatusDesc() {
-        // TODO
-    }
-
-    sortByDateAddedAsc() {
-        // TODO
-    }
-
-    sortByDateAddedDesc() {
-        // TODO
+    sortByDateAddedDesc(array) {
+        return array.sort((a,b) => compareDesc(a.dateAdded, b.dateAdded));
     }
 
     recoverfromTrash(item) {
