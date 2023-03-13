@@ -1,4 +1,4 @@
-import { isSameDay, isSameWeek, isSameMonth, compareAsc } from 'date-fns';
+import { isSameDay, isSameWeek, isSameMonth, compareAsc, format } from 'date-fns';
 import Project from './project';
 import Todo from './todo';
 
@@ -7,26 +7,25 @@ class Model {
         const projectOneTodoOne = new Todo('Take out the garbage', '', undefined, 'None', 'None', '', undefined);
         const projectOneTodoTwo = new Todo('Wash the dishes', '', undefined, 'None', 'None', '', undefined);
         const projectOneTodoThree = new Todo('Walk the dog', '', undefined, 'None', 'None', '', undefined);
-        const projectOne = new Project('Chores', 'Things that need to be done around the house.', new Date(), 'High', 'In Progress', 'Do not leave them until tomorrow!', [projectOneTodoOne, projectOneTodoTwo, projectOneTodoThree]);
+        const projectOne = new Project('Chores', 'More and more chores that need to be done around the house.', new Date(), 'High', 'In Progress', 'Do not leave them until tomorrow!', [projectOneTodoOne, projectOneTodoTwo, projectOneTodoThree]);
 
         const projectTwo = new Project('Write a Letter', 'Grandma is waiting for a reply.', new Date(2023, 2, 8), 'None', 'None', '', undefined);
         
-        const projectThreeTodoOne = new Todo('Submit report', '', new Date(2023, 2, 9), 'None', 'None', '', undefined);
+        const projectThreeTodoOne = new Todo('Submit report', 'choose a subject', new Date(2023, 2, 9), 'None', 'None', '', undefined);
         const projectThreeTodoTwo = new Todo('Meeting with boss', '', new Date(2023, 2, 9), 'High', 'None', 'This is a very important meeting!', undefined);
-        const projectThreeTodoThreeSubOne = new Todo('Gather data', '', new Date(2023, 2, 9), 'Medium', 'In Progress', 'Need more information.', undefined);
+        const projectThreeTodoThreeSubOne = new Todo('Gather data CHOOCHOO', '', new Date(2023, 2, 9), 'Medium', 'In Progress', 'Need more information.', undefined);
         const projectThreeTodoThreeSubTwo = new Todo('Create slides', '', undefined, 'None', 'None', '', undefined); 
         const projectThreeTodoThree = new Todo('Prepare presentation', '', undefined, 'None', 'In Progress', '', [projectThreeTodoThreeSubOne, projectThreeTodoThreeSubTwo]);
         const projectThreeTodoFour = new Todo('Meeting with clients', 'Product showcase.', new Date(2023, 2, 20), 'None', 'None', '', undefined);
         const projectThree = new Project('Work', 'Some things to take care of.', new Date(2023, 2, 20), 'Medium', 'None', '', [projectThreeTodoOne, projectThreeTodoTwo, projectThreeTodoThree, projectThreeTodoFour]);
 
-
-        const projectFour = new Project('Photography', 'Going on a trip to the national park to take photos!', new Date(2023, 3, 15), 'None', 'None', '', undefined);
+        const projectFourTodoOne = new Todo('Choose camera to bring', 'choochoochoo', undefined, 'None', 'None', '', undefined);
+        const projectFour = new Project('Photography', 'Going on a trip to the national park to take photos!', new Date(2023, 3, 15), 'None', 'None', '', [projectFourTodoOne]);
 
         this.projects = [projectOne, projectTwo, projectThree, projectFour];
-        this.itemsOnDisplay = [];
         this.deletedItems = [];
 
-        console.log(this.filterByStatus(this._projects, 'Overdue'));
+        console.log(this.filterByDescription(this._projects, 'Need to be'));
         /*
         console.log(projectThree.id);
         console.log(projectThreeTodoThree.id);
@@ -41,10 +40,6 @@ class Model {
         return this._projects;
     }
 
-    get itemsOnDisplay() {
-        return this._itemsOnDisplay;
-    }
-
     get deletedItems() {
         return this._deletedItems;
     }
@@ -52,11 +47,7 @@ class Model {
     set projects(projects) {
         return this._projects = projects;
     }
-
-    set itemsOnDisplay(items) {
-        return this._itemsOnDisplay = items;
-    }
-
+    
     set deletedItems(items) {
         return this._deletedItems = items;
     }
@@ -208,42 +199,154 @@ class Model {
         return array.filter((item) => item.status === `${status}`);
     }
 
-    filterByTitle(text) {
-        // TODO
-        console.log(`filter titles with ${text}`);
+    // Search for projects and todos with the search term in their titles and their sub todos' titles
+    filterByTitle(array, text) {
+        const searchTerm = text.toLowerCase();
+        const parentArray = array.filter((item) => {
+            let title = item.title;
+            title = title.toLowerCase();
+            return title.includes(searchTerm);
+        });
+        const remainingArray = array.filter((item) => {
+            let title = item.title;
+            title = title.toLowerCase();
+            return !title.includes(searchTerm);
+        }).filter((item) => item.todos !== undefined);
+        
+        for (let i = 0; i < remainingArray.length; i++) {
+            const todos = remainingArray[i].todos.filter((todo) => {
+                let title = todo.title;
+                title = title.toLowerCase();
+                return title.includes(searchTerm);
+            });
+            if (todos.length > 0) {
+                parentArray.push(remainingArray[i]);
+            } else {
+                const remainingTodos = remainingArray[i].todos.filter((todo) => {
+                    let title = todo.title;
+                    title = title.toLowerCase();
+                    return !title.includes(searchTerm);
+                }).filter((item) => item.todos !== undefined);
+
+                for (let j = 0; j < remainingTodos.length; j++) {
+                    const subTodos = remainingTodos[j].todos.filter((todo) => {
+                        let title = todo.title;
+                        title = title.toLowerCase();
+                        return title.includes(searchTerm);
+                    });
+                    if (subTodos.length > 0) {
+                        parentArray.push(remainingArray[i]);
+                    }
+                }
+            }
+        }
+        return parentArray;
     }
 
-    filterByDescription(text) {
-        // TODO
-        console.log(`filter description with ${text}`);
+    // Search for projects and todos with the search term in their descriptions and their sub todos' descriptions
+    filterByDescription(array, text) {
+        const searchTerm = text.toLowerCase();
+        const parentArray = array.filter((item) => {
+            let description = item.description;
+            description = description.toLowerCase();
+            return description.includes(searchTerm);
+        });
+        const remainingArray = array.filter((item) => {
+            let description = item.description;
+            description = description.toLowerCase();
+            return !description.includes(searchTerm);
+        }).filter((item) => item.todos !== undefined);
+        
+        for (let i = 0; i < remainingArray.length; i++) {
+            const todos = remainingArray[i].todos.filter((todo) => {
+                let description = todo.description;
+                description = description.toLowerCase();
+                return description.includes(searchTerm);
+            });
+            if (todos.length > 0) {
+                parentArray.push(remainingArray[i]);
+            } else {
+                const remainingTodos = remainingArray[i].todos.filter((todo) => {
+                    let description = todo.description;
+                    description = description.toLowerCase();
+                    return !description.includes(searchTerm);
+                }).filter((item) => item.todos !== undefined);
+
+                for (let j = 0; j < remainingTodos.length; j++) {
+                    const subTodos = remainingTodos[j].todos.filter((todo) => {
+                        let description = todo.description;
+                        description = description.toLowerCase();
+                        return description.includes(searchTerm);
+                    });
+                    if (subTodos.length > 0) {
+                        parentArray.push(remainingArray[i]);
+                    }
+                }
+            }
+        }
+        return parentArray;
     }
 
-    filterByNotes(text) {
-        // TODO
-        console.log(`filter notes with ${text}`);
+    // Search for projects and todos with the search term in their notes and their sub todos' notes
+    filterByNotes(array, text) {
+        const searchTerm = text.toLowerCase();
+        const parentArray = array.filter((item) => {
+            let notes = item.notes;
+            notes = notes.toLowerCase();
+            return notes.includes(searchTerm);
+        });
+        const remainingArray = array.filter((item) => {
+            let notes = item.notes;
+            notes = notes.toLowerCase();
+            return !notes.includes(searchTerm);
+        }).filter((item) => item.todos !== undefined);
+        
+        for (let i = 0; i < remainingArray.length; i++) {
+            const todos = remainingArray[i].todos.filter((todo) => {
+                let notes = todo.notes;
+                notes = notes.toLowerCase();
+                return notes.includes(searchTerm);
+            });
+            if (todos.length > 0) {
+                parentArray.push(remainingArray[i]);
+            } else {
+                const remainingTodos = remainingArray[i].todos.filter((todo) => {
+                    let notes = todo.notes;
+                    notes = notes.toLowerCase();
+                    return !notes.includes(searchTerm);
+                }).filter((item) => item.todos !== undefined);
+
+                for (let j = 0; j < remainingTodos.length; j++) {
+                    const subTodos = remainingTodos[j].todos.filter((todo) => {
+                        let notes = todo.notes;
+                        notes = notes.toLowerCase();
+                        return notes.includes(searchTerm);
+                    });
+                    if (subTodos.length > 0) {
+                        parentArray.push(remainingArray[i]);
+                    }
+                }
+            }
+        }
+        return parentArray;
     }
 
-    filterByDate(date) {
+    // Search for projects and todos with the specified due date and their sub todos' due date
+    filterByDueDate(array, date) {
         // TODO
-        console.log(`filter dates with ${date}`);
     }
 
     search(text) {
         // TODO
         if (text === undefined) return;
-        console.log(text);
-        this.filterByTitle(text);
-        this.filterByDescription(text);
-        this.filterByNotes(text);
-        this.filterByDate(text);
-        // update projects / todos on display and return the filtered array
+        // TODO: update projects / todos on display in controller
     }
 
-    sortByPriorityAsc() {
+    sortByTitleAsc() {
         // TODO
     }
 
-    sortByPriorityDesc() {
+    sortByTitleDesc() {
         // TODO
     }
 
@@ -255,11 +358,19 @@ class Model {
         // TODO
     }
 
-    sortByTitleAsc() {
+    sortByPriorityAsc() {
         // TODO
     }
 
-    sortByTitleDesc() {
+    sortByPriorityDesc() {
+        // TODO
+    }
+
+    sortByStatusAsc() {
+        // TODO
+    }
+
+    sortByStatusDesc() {
         // TODO
     }
 
