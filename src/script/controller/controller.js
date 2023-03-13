@@ -12,7 +12,6 @@ class Controller {
         // Add event listeners that depend on the model
         this.handleLogoEventListener();
         this.handleSearchBarEventListeners();
-        console.log(this.model.projects);
     }
 
     initializeProjectsPage(projects) {

@@ -174,3 +174,29 @@ body {
     margin-left: 30px;
     width: 295px;
 }
+
+.subheading {
+    margin-left: 15px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+.todos-page {
+    margin-left: 30px;
+}
+
+.icon-size {
+    margin: 10px 20px;
+    font-size: 1.25rem;
+    cursor: pointer;
+}
+
+.todo-icon {
+    font-size: 1.25rem;
+}
+
+.nothing {
+    height: 500px;
+    font-size: 2.5rem;
+    color: #BDBDBD
+}

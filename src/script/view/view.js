@@ -69,6 +69,7 @@ class View {
 
     toggleCheckCircle() {
         // TODO
+        // When checked, also update status to complete; when unchecked, remove complete status
     }
 
     // Display the pages and their elements
@@ -130,7 +131,7 @@ class View {
 
         const date = document.createElement('div');
         date.classList.add('text-muted');
-        date.classList.add('date');
+        date.classList.add('due-date');
 
         if (item.dueDate !== undefined) {
             if (isSameDay(item.dueDate, new Date())) {
@@ -237,6 +238,18 @@ class View {
             link.classList.add('project-link');
             link.textContent = 'Go to project page';
             accordionBody.appendChild(link);
+        } else {
+            const link = document.createElement('div');
+            link.classList.add('text-muted');
+            link.classList.add('text-end');
+            link.classList.add('project-link');
+            const editIcon = document.createElement('i');
+            editIcon.classList.add('bi');
+            editIcon.classList.add('bi-pencil-square');
+            editIcon.classList.add('text-muted');
+            editIcon.classList.add('todo-icon');
+            link.appendChild(editIcon);
+            accordionBody.appendChild(link);
         }
 
         accordionContent.appendChild(accordionBody);
@@ -335,21 +348,175 @@ class View {
         return projectTodo;
     }
 
-    displayTodosHeader(projectTitle) {
+    displayTodosHeader(project) {
         const header = document.querySelector('.navbar > h2');
-        header.textContent = projectTitle;
+        const title = document.createElement('span');
+        title.textContent = project.title;
+        header.appendChild(title);
+
+        const date = document.createElement('span');
+        date.classList.add('text-muted');
+        date.classList.add('due-date');
+        date.classList.add('big');
+        
+        if (isSameDay(project.dueDate, new Date())) {
+            date.textContent = 'Today';
+        } else if (!isSameYear(project.dueDate, new Date())) {
+            date.textContent = format(project.dueDate, 'MMMM d, yyyy');
+        } else {
+            date.textContent = format(project.dueDate, 'MMMM d');
+        }
+        header.appendChild(date);
+
+        const buttonsContainer = document.createElement('span');
+        buttonsContainer.classList.add('buttons-container');
+        buttonsContainer.classList.add('d-inline-flex');
+        buttonsContainer.classList.add('todos-page');
+
+        const priorityButton = document.createElement('div');
+        priorityButton.classList.add('status');
+        priorityButton.classList.add('priority');
+        priorityButton.classList.add('rounded-pill');
+        priorityButton.classList.add('text-light');
+        priorityButton.classList.add('text-center');
+
+        if (project.priority === 'None') {
+            priorityButton.classList.add('bg-transparent');
+        } else if (project.priority === 'Medium') {
+            priorityButton.classList.add('md-priority');
+            priorityButton.textContent = 'Medium';
+        } else if (project.priority === 'High') {
+            priorityButton.classList.add('high-priority');
+            priorityButton.textContent = 'High';
+        }
+        buttonsContainer.appendChild(priorityButton);
+
+        const statusButton = document.createElement('div');
+        statusButton.classList.add('status');
+        statusButton.classList.add('rounded-pill');
+        statusButton.classList.add('text-light');
+        statusButton.classList.add('text-center');
+
+        if (project.status === 'None') {
+            statusButton.classList.add('bg-transparent');
+        } else if (project.status === 'Overdue') {
+            statusButton.classList.add('bg-danger');
+            statusButton.textContent = 'Overdue';
+        } else if (project.status === 'In Progress') {
+            statusButton.classList.add('bg-info');
+            statusButton.textContent = 'In Progress';
+        } else if (project.status === 'Completed') {
+            statusButton.classList.add('bg-success');
+            statusButton.textContent = 'Completed';
+        }
+        buttonsContainer.appendChild(statusButton);
+        header.appendChild(buttonsContainer);
+
+        const content = document.getElementById('content');
+        const divider1 = document.createElement('div');
+        divider1.classList.add('w-100');
+        divider1.classList.add('border');
+        content.appendChild(divider1);
+
+        const flexContainer = document.createElement('div');
+        flexContainer.classList.add('d-flex');
+        flexContainer.classList.add('justify-content-between');
+        const subheading = document.createElement('div');
+        subheading.classList.add('subheading');
+
+        const description = document.createElement('h4');
+        if (project.description !== undefined) {
+            description.textContent = project.description;
+        }
+
+        const notes = document.createElement('h6');
+        if (project.notes !== undefined) {
+            notes.textContent = project.notes;
+        }
+        subheading.appendChild(description);
+        subheading.appendChild(notes);
+        flexContainer.appendChild(subheading);
+
+        const editIcon = document.createElement('i');
+        editIcon.classList.add('bi');
+        editIcon.classList.add('bi-pencil-square');
+        editIcon.classList.add('text-muted');
+        editIcon.classList.add('icon-size');
+        flexContainer.appendChild(editIcon);
+        content.appendChild(flexContainer);
+
+        const divider2 = document.createElement('div');
+        divider2.classList.add('w-100');
+        divider2.classList.add('border');
+        content.appendChild(divider2);
     }
 
-    displayTodos(todos) {
-        // TODO
-    }
+    displayTrashPage(removedItems) {
+        const header = document.querySelector('.navbar > h2');
+        header.textContent = 'Trash';
 
-    displayTrashPage() {
-        // TODO
+        const content = document.getElementById('content');
+        const divider1 = document.createElement('div');
+        divider1.classList.add('w-100');
+        divider1.classList.add('border');
+        content.appendChild(divider1);
+
+        if (removedItems.length === 0) {
+            const nothing = document.createElement('div');
+            nothing.classList.add('nothing');
+            nothing.classList.add('d-flex');
+            nothing.classList.add('justify-content-center');
+            nothing.classList.add('align-items-center');
+            const text = document.createElement('span');
+            text.textContent = 'There is nothing here';
+            nothing.appendChild(text);
+            content.appendChild(nothing);
+        } else {
+            const removedProjects = removedItems.filter((item) => item.isProject);
+            if (removedProjects.length > 0) {
+                const projectsHeading = document.createElement('h4');
+                projectsHeading.classList.add('subheading');
+                projectsHeading.textContent = 'Projects';
+                content.appendChild(projectsHeading);
+                const divider2 = document.createElement('div');
+                divider2.classList.add('w-100');
+                divider2.classList.add('border');
+                content.appendChild(divider2);
+                this.displayItems(removedProjects);
+                }
+            const removedTodos = removedItems.filter((item) => !item.isProject);
+            if (removedTodos.length > 0) {
+                const todosHeading = document.createElement('h4');
+                todosHeading.classList.add('subheading');
+                todosHeading.textContent = 'Todos';
+                const divider3 = document.createElement('div');
+                divider3.classList.add('w-100');
+                divider3.classList.add('border');
+                content.appendChild(divider3);
+                content.appendChild(todosHeading);
+                const divider4 = document.createElement('div');
+                divider4.classList.add('w-100');
+                divider4.classList.add('border');
+                content.appendChild(divider4);
+
+                this.displayItems(removedTodos);
+            }
+        }
     }
 
     clearContent() {
-        // TODO
+       const content = document.getElementById('content');
+       while (content.firstChild) {
+        content.removeChild(content.firstChild);
+       }
+    }
+
+    clearHeader() {
+        const header = document.querySelector('.navbar > h2');
+        header.textContent = '';
+        while (header.firstChild) {
+          header.removeChild(header.firstChild);
+        }
     }
 }
 
