@@ -26,7 +26,6 @@ class Model {
         this.projects = [projectOne, projectTwo, projectThree, projectFour];
         this.deletedItems = [];
 
-        console.log(this.search(this._projects, 'cho'));
         /*
         console.log(projectThree.id);
         console.log(projectThreeTodoThree.id);
@@ -84,12 +83,14 @@ class Model {
     removeTodo(todo) {
         let parentProject = this._projects.filter((project) => project.id === todo.projectParent);
         parentProject = parentProject[0];
+        const projectIndex = this._projects.indexOf(parentProject);
         if (todo.todoParent === undefined) {
-            parentProject.removeTodo(todo);
+            this._projects[projectIndex].removeTodo(todo);
         } else {
             let parentTodo = parentProject.todos.filter((task) => task.id === todo.todoParent);
             parentTodo = parentTodo[0];
-            parentTodo.removeTodo(todo);
+            const todoIndex = this._projects[projectIndex].todos.indexOf(parentTodo);
+            this._projects[projectIndex].todos[todoIndex].removeTodo(todo);
         }
     }
 
@@ -581,7 +582,21 @@ class Model {
     }
 
     recoverfromTrash(item) {
-        // TODO
+        if (item.isProject) {
+            this.addProject(item);
+        } else {
+            let parentProject = this._projects.filter((project) => project.id === item.projectParent);
+            parentProject = parentProject[0];
+            if (item.todoParent === undefined) {
+                parentProject.addTodo(item);
+            } else {
+                let parentTodo = parentProject.todos.filter((todo) => todo.id === item.todoParent);
+                parentTodo = parentTodo[0];
+                parentTodo.addTodo(item);
+            }
+        }
+        const index = this._deletedItems.indexOf(item);
+        this._deletedItems.splice(index, 1);
     }
 
     deletefromTrash(item) {

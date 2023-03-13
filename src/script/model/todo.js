@@ -31,7 +31,7 @@ class Todo extends Project {
 
     set todos(newTodos) {
         // cannot allow a todo to have sub todos if it is already a sub todo (i.e. it has a todo parent)
-        if (this._todoParent !== undefined) {
+        if (this._todoParent !== undefined && this._todoParent !== this._id) {
             return;
         } else {
             this.updateTodosParents(newTodos)
