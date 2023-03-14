@@ -119,11 +119,36 @@ class View {
 
     // Add event listeners and bind handlers in the projects and todos
 
-    addProjectEventListener() {
-        // TODO
+    bindProjectLinkEventListener(handler) {
+        document.querySelector('body').addEventListener('click', event => {
+            if (event.target.classList.contains('bi-arrow-right-circle')) {
+                const projectID = event.target.getAttribute('data-id');
+                handler(projectID);
+            }
+        });
     }
 
-    addChecklistEventListeners() {
+    // TODO: CHANGE
+    bindEditIconEventListener(handler) {
+        document.querySelector('body').addEventListener('click', event => {
+            if (event.target.classList.contains('bi-pencil-square')) {
+                //const projectID = event.target.getAttribute('data-id');
+                //handler(projectID);
+            }
+        });
+    }
+
+    // TODO: CHANGE
+    bindRecycleIconEventListener(handler) {
+        document.querySelector('body').addEventListener('click', event => {
+            if (event.target.classList.contains('bi-recycle')) {
+                //const projectID = event.target.getAttribute('data-id');
+                //handler(projectID);
+            }
+        });
+    }
+
+    bindCheckCircleEventListeners() {
         // TODO
     }
 
@@ -139,9 +164,10 @@ class View {
         header.textContent = 'Projects';
     }
 
-    displayItems(items, isProjectsPage) {
+    displayItems(items, isProjectsPage, isTrashPage) {
         const content = document.getElementById('content');
 
+        if (items === undefined) return;
         if (items.length === 0) {
             const nothing = this.makeNothing();
             content.appendChild(nothing);
@@ -154,13 +180,13 @@ class View {
         accordion.setAttribute('id', 'itemAccordion');
 
         for (let i = 0; i < items.length; i++) {
-            let accordionItem = this.displayItem(items[i], isProjectsPage);
+            let accordionItem = this.displayItem(items[i], isProjectsPage, isTrashPage);
             accordion.appendChild(accordionItem);
         }
         content.appendChild(accordion);
     }
 
-    displayItem(item, isProjectsPage) {
+    displayItem(item, isProjectsPage, isTrashPage) {
         const accordionItem = document.createElement('div');
         accordionItem.classList.add('accordion-item');
 
@@ -259,17 +285,26 @@ class View {
             link.classList.add('text-muted');
             link.classList.add('text-end');
 
-        if (item.isProject) {
+        if (isTrashPage) {
+            const recycle = document.createElement('i');
+            recycle.classList.add('bi');
+            recycle.classList.add('bi-recycle');
+            recycle.classList.add('todo-icon');
+            //recycle.setAttribute('data-id', `${item.id}`);
+            link.appendChild(recycle);
+        } else if (item.isProject) {
             const arrow = document.createElement('i');
             arrow.classList.add('bi');
             arrow.classList.add('bi-arrow-right-circle');
             arrow.classList.add('todo-icon');
+            arrow.setAttribute('data-id', `${item.id}`);
             link.appendChild(arrow);
         } else {
             const editIcon = document.createElement('i');
             editIcon.classList.add('bi');
             editIcon.classList.add('bi-pencil-square');
             editIcon.classList.add('todo-icon');
+            //editIcon.setAttribute('data-id', `${item.id}`);
             link.appendChild(editIcon);
         }
         accordionBody.appendChild(link);
@@ -381,7 +416,7 @@ class View {
         content.appendChild(divider);
     }
 
-    displayTrashPage(removedItems) {
+    displayTrashPage(removedItems, isTrashPage) {
         const header = document.querySelector('.navbar > h2');
         header.textContent = 'Trash';
 
@@ -401,7 +436,7 @@ class View {
                 content.appendChild(projectsHeading);
                 divider = this.makeDivider();
                 content.appendChild(divider);
-                this.displayItems(removedProjects, true);
+                this.displayItems(removedProjects, true, isTrashPage);
                 }
             const removedTodos = removedItems.filter((item) => !item.isProject);
             if (removedTodos.length > 0) {
@@ -414,7 +449,7 @@ class View {
                 divider = this.makeDivider();
                 content.appendChild(divider);
 
-                this.displayItems(removedTodos, false);
+                this.displayItems(removedTodos, false, isTrashPage);
             }
         }
     }
