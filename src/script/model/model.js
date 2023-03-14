@@ -28,8 +28,19 @@ class Model {
         const projectFourTodoTwo = new Todo('Buy a suitcase', '', new Date(), 'High', 'None', '', undefined);
         const projectFour = new Project('Photography', 'Going on a trip to the national park to take photos!', new Date(2023, 3, 15), 'None', 'None', '', [projectFourTodoOne, projectFourTodoTwo]);
 
+        const trashProjectTodoOne = new Todo('Buy seeds', '', undefined, 'None', 'None', '', undefined);
+        const trashProjectOne = new Project('Gardening', 'blah blah', new Date(2023, 4, 8), 'Medium', 'In Progress', '', [trashProjectTodoOne]);
+
+        const trashProjectTwoTodoSubOne = new Todo('Take notes', '', undefined, 'Medium', 'None', '', undefined)
+        const trashProjectTwoTodoOne = new Todo('Research topics', '', undefined, 'None', 'None', '', [trashProjectTwoTodoSubOne]);
+        const trashProjectTwo = new Project('Write a Book', '', new Date(), 'None', 'In Progress', '', [trashProjectTwoTodoOne]);
+
+        const trashTodoSubOne = new Todo('Time myself', '', undefined, 'None', 'None', '', undefined);
+        const trashTodoOne = new Todo('Go for a run', 'Get fit.', new Date(2023, 2, 5), 'None', 'Completed', '', [trashTodoSubOne]);
+        const trashTodoTwo = new Todo('Foster a cat', '', new Date(2023, 5, 5), 'None', 'None', '', undefined);
+
         this.projects = [projectOne, projectTwo, projectThree, projectFour];
-        this.deletedItems = [];
+        this.deletedItems = [trashTodoOne, trashProjectOne, trashProjectTwo, trashTodoTwo];
     }
 
     get projects() {
@@ -194,7 +205,7 @@ class Model {
     }
 
     filterByStatus(array, status) {
-        return array.filter((item) => item.status === `${status}`);
+        return array.filter((item) => item.status === status);
     }
 
     // Search for projects and todos with the search term in their titles and their sub todos' titles

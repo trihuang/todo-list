@@ -31,6 +31,9 @@ class Controller {
         this.handleOverdueEventListeners();
         this.handleTrashEventListeners();
 
+        this.handleFilterByPriorityEventListeners();
+        this.handleFilterByStatusEventListeners();
+
         this.handleProjectLinkEventListener();
     }
 
@@ -200,6 +203,34 @@ class Controller {
         this.view.displayTrashPage(this.itemsOnDisplay, this.isTrashPage);
     }
 
+    // Filter handlers
+
+    handleFilterByPriorityEventListeners() {
+        this.view.bindFilterByPriorityEventListeners(this.handleFilterByPriorityDisplay);
+    }
+
+    handleFilterByPriorityDisplay = (priority) => {
+        const filteredItems = this.model.filterByPriority(this.itemsOnDisplay, priority);
+        if (this.isTrashPage) {
+            this.updateTrashView(filteredItems, this.isTrashPage);
+        } else {
+            this.updateContentView(filteredItems, this.isProjectsPage, this.isTrashPage);
+        }
+    }
+
+    handleFilterByStatusEventListeners() {
+        this.view.bindFilterByStatusEventListeners(this.handleFilterByStatusDisplay);
+    }
+
+    handleFilterByStatusDisplay = (status) => {
+        const filteredItems = this.model.filterByStatus(this.itemsOnDisplay, status);
+        if (this.isTrashPage) {
+            this.updateTrashView(filteredItems, this.isTrashPage);
+        } else {
+            this.updateContentView(filteredItems, this.isProjectsPage, this.isTrashPage);
+        }
+    }
+
     // Project and todo handlers
 
     handleProjectLinkEventListener() {
@@ -229,6 +260,17 @@ class Controller {
         this.view.clearContent();
         this.view.displayTodosHeader(project);
         this.view.displayItems(project.todos, isProjectsPage, isTrashPage);
+    }
+
+    updateTrashView(items, isTrashPage) {
+        this.view.clearHeader();
+        this.view.clearContent();
+        this.view.displayTrashPage(items, isTrashPage);
+    }
+
+    updateContentView(items, isProjectsPage, isTrashPage) {
+        this.view.clearContent();
+        this.view.displayItems(items, isProjectsPage, isTrashPage);
     }
 }
 

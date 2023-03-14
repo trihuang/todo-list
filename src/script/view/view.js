@@ -117,6 +117,38 @@ class View {
         // TODO
     }
 
+    bindFilterByPriorityEventListeners(handler) {
+        const highPriority = document.querySelector('#filterDropdown + .dropdown-menu > .dropdown-item:nth-of-type(5)');
+        const mediumPriority = document.querySelector('#filterDropdown + .dropdown-menu > .dropdown-item:nth-of-type(6)');
+        const noPriority = document.querySelector('#filterDropdown + .dropdown-menu > .dropdown-item:nth-of-type(7)');
+
+        highPriority.addEventListener('click', event => {
+            handler('High');
+        });
+        mediumPriority.addEventListener('click', event => {
+            handler('Medium')
+        });
+        noPriority.addEventListener('click', event => {
+            handler('None')
+        });
+    }
+
+    bindFilterByStatusEventListeners(handler) {
+        const completed = document.querySelector('#filterDropdown + .dropdown-menu > .dropdown-item:nth-of-type(8)');
+        const inProgress = document.querySelector('#filterDropdown + .dropdown-menu > .dropdown-item:nth-of-type(9)');
+        const notYetStarted = document.querySelector('#filterDropdown + .dropdown-menu > .dropdown-item:nth-of-type(10)');
+
+        completed.addEventListener('click', event => {
+            handler('Completed');
+        });
+        inProgress.addEventListener('click', event => {
+            handler('In Progress');
+        });
+        notYetStarted.addEventListener('click', event => {
+            handler('None');
+        });
+    }
+
     // Add event listeners and bind handlers in the projects and todos
 
     bindProjectLinkEventListener(handler) {
