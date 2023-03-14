@@ -18,8 +18,17 @@ class Controller {
         // Add event listeners
         this.handleLogoEventListener();
         this.handleHomeEventListener();
+
         this.handleSearchBarEventListeners();
+
         this.handleImportantEventListeners();
+        this.handleTodayEventListeners();
+        this.handleThisWeekEventListeners();
+        this.handleThisMonthEventListeners();
+        this.handleCompletedEventListeners();
+        this.handleInProgressEventListeners();
+        this.handleOverdueEventListeners();
+        this.handleTrashEventListeners();
     }
 
     get itemsOnDisplay() {
@@ -76,6 +85,84 @@ class Controller {
         this._itemsOnDisplay = importantProjects;
         this._isProjectsPage = true;
         this.updateProjectsView(this.itemsOnDisplay, this.isProjectsPage);
+    }
+
+    handleTodayEventListeners() {
+        this.view.bindTodayEventListener(this.handleDisplayTodayPage);
+    }
+
+    handleDisplayTodayPage = () => {
+        const todayProjects = this.model.filterByToday(this.model.projects);
+        this._itemsOnDisplay = todayProjects;
+        this._isProjectsPage = true;
+        this.updateProjectsView(this.itemsOnDisplay, this.isProjectsPage);
+    }
+
+    handleThisWeekEventListeners() {
+        this.view.bindThisWeekEventListener(this.handleDisplayThisWeekPage);
+    }
+
+    handleDisplayThisWeekPage = () => {
+        const thisWeekProjects = this.model.filterByThisWeek(this.model.projects);
+        this._itemsOnDisplay = thisWeekProjects;
+        this._isProjectsPage = true;
+        this.updateProjectsView(this.itemsOnDisplay, this.isProjectsPage);
+    }
+
+    handleThisMonthEventListeners() {
+        this.view.bindThisMonthEventListener(this.handleDisplayThisMonthPage);
+    }
+
+    handleDisplayThisMonthPage = () => {
+        const thisMonthProjects = this.model.filterByThisMonth(this.model.projects);
+        this._itemsOnDisplay = thisMonthProjects;
+        this._isProjectsPage = true;
+        this.updateProjectsView(this.itemsOnDisplay, this.isProjectsPage);
+    }
+
+    handleCompletedEventListeners() {
+        this.view.bindCompletedEventListener(this.handleDisplayCompletedPage);
+    }
+
+    handleDisplayCompletedPage = () => {
+        const completedProjects = this.model.filterByStatus(this.model.projects, 'Completed');
+        this._itemsOnDisplay = completedProjects;
+        this._isProjectsPage = true;
+        this.updateProjectsView(this.itemsOnDisplay, this.isProjectsPage);
+    }
+
+    handleInProgressEventListeners() {
+        this.view.bindInProgressEventListener(this.handleDisplayInProgressPage);
+    }
+
+    handleDisplayInProgressPage = () => {
+        const projectsInProgress = this.model.filterByStatus(this.model.projects, 'In Progress');
+        this._itemsOnDisplay = projectsInProgress;
+        this._isProjectsPage = true;
+        this.updateProjectsView(this.itemsOnDisplay, this.isProjectsPage);
+    }
+
+    handleOverdueEventListeners() {
+        this.view.bindOverdueEventListener(this.handleDisplayOverduePage);
+    }
+
+    handleDisplayOverduePage = () => {
+        const overdueProjects = this.model.filterByOverdue(this.model.projects);
+        this._itemsOnDisplay = overdueProjects;
+        this._isProjectsPage = true;
+        this.updateProjectsView(this.itemsOnDisplay, this.isProjectsPage);
+    }
+
+    handleTrashEventListeners() {
+        this.view.bindTrashEventListener(this.handleDisplayTrashPage);
+    }
+
+    handleDisplayTrashPage = () => {
+        this.view.clearHeader();
+        this.view.clearContent();
+        this._itemsOnDisplay = this.model.deletedItems;
+        this._isProjectsPage = false;
+        this.view.displayTrashPage(this.itemsOnDisplay);
     }
 
     handleCreateProjectBtn() {

@@ -59,31 +59,52 @@ class View {
     }
 
     bindTodayEventListener(handler) {
-        // TODO
+        const todayIcon = document.querySelector('.sidebar > ul:nth-of-type(3) > li > i');
+        const todayLabel = document.querySelector('.sidebar > ul:nth-of-type(3) > li > span');
+        todayIcon.addEventListener('click', handler);
+        todayLabel.addEventListener('click', handler);
     }
 
     bindThisWeekEventListener(handler) {
-        // TODO
+        const weekIcon = document.querySelector('.sidebar > ul:nth-of-type(4) > li > i');
+        const weekLabel = document.querySelector('.sidebar > ul:nth-of-type(4) > li > span');
+        weekIcon.addEventListener('click', handler);
+        weekLabel.addEventListener('click', handler);
     }
 
     bindThisMonthEventListener(handler) {
-        // TODO
+        const monthIcon = document.querySelector('.sidebar > ul:nth-of-type(5) > li > i');
+        const monthLabel = document.querySelector('.sidebar > ul:nth-of-type(5) > li > span');
+        monthIcon.addEventListener('click', handler);
+        monthLabel.addEventListener('click', handler);
     }
 
     bindCompletedEventListener(handler) {
-        // TODO
+        const completedIcon = document.querySelector('.sidebar > ul:nth-of-type(6) > li > i');
+        const completedLabel = document.querySelector('.sidebar > ul:nth-of-type(6) > li > span');
+        completedIcon.addEventListener('click', handler);
+        completedLabel.addEventListener('click', handler);
     }
 
     bindInProgressEventListener(handler) {
-        // TODO
+        const inProgressIcon = document.querySelector('.sidebar > ul:nth-of-type(7) > li > i');
+        const inProgressLabel = document.querySelector('.sidebar > ul:nth-of-type(7) > li > span');
+        inProgressIcon.addEventListener('click', handler);
+        inProgressLabel.addEventListener('click', handler);
     }
 
     bindOverdueEventListener(handler) {
-        // TODO
+        const overdueIcon = document.querySelector('.sidebar > ul:nth-of-type(8) > li > i');
+        const overdueLabel = document.querySelector('.sidebar > ul:nth-of-type(8) > li > span');
+        overdueIcon.addEventListener('click', handler);
+        overdueLabel.addEventListener('click', handler);
     }
 
     bindTrashEventListener(handler) {
-        // TODO
+        const trashIcon = document.querySelector('.sidebar > ul:nth-of-type(9) > li > i');
+        const trashLabel = document.querySelector('.sidebar > ul:nth-of-type(9) > li > span');
+        trashIcon.addEventListener('click', handler);
+        trashLabel.addEventListener('click', handler);
     }
 
     // Add event listeners and bind handlers for filter and sort
