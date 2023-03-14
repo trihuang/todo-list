@@ -20,7 +20,7 @@ class Model {
         const projectThreeTodoFour = new Todo('Meeting with clients', 'Product showcase.', new Date(2023, 2, 20), 'None', 'None', '', undefined);
         const projectThree = new Project('Work', 'Some things to take care of.', new Date(2023, 2, 20), 'Medium', 'None', '', [projectThreeTodoOne, projectThreeTodoTwo, projectThreeTodoThree, projectThreeTodoFour]);
 
-        const projectFourTodoOne = new Todo('Choose camera to bring', 'choochoochoo', new Date(2024, 2, 9), 'None', 'None', '', undefined);
+        const projectFourTodoOne = new Todo('Choose camera to bring', 'choochoochoo', new Date(2023, 2, 9), 'None', 'None', '', undefined);
         const projectFour = new Project('Photography', 'Going on a trip to the national park to take photos!', new Date(2023, 3, 15), 'None', 'None', '', [projectFourTodoOne]);
 
         this.projects = [projectOne, projectTwo, projectThree, projectFour];
@@ -36,11 +36,11 @@ class Model {
     }
 
     set projects(projects) {
-        return this._projects = projects;
+        this._projects = projects;
     }
 
     set deletedItems(items) {
-        return this._deletedItems = items;
+        this._deletedItems = items;
     }
 
     createProject(title, description, dueDate, priority, status, notes, todos) {

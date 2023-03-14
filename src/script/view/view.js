@@ -13,7 +13,7 @@ class View {
         const logo = document.querySelector('.navbar-brand');
         logo.addEventListener('click', event => {
             this.displayProjectsHeader();
-            this.displayItems(projects);
+            this.displayItems(projects, true);
         });
     }
 
@@ -79,21 +79,28 @@ class View {
         header.textContent = 'Projects';
     }
 
-    displayItems(items) {
+    displayItems(items, isProjectsPage) {
         const content = document.getElementById('content');
+
+        if (items.length === 0) {
+            const nothing = this.makeNothing();
+            content.appendChild(nothing);
+            return;
+        }
+
         const accordion = document.createElement('div');
         accordion.classList.add('accordion');
         accordion.classList.add('accordion-flush');
         accordion.setAttribute('id', 'itemAccordion');
 
         for (let i = 0; i < items.length; i++) {
-            let accordionItem = this.displayItem(items[i]);
+            let accordionItem = this.displayItem(items[i], isProjectsPage);
             accordion.appendChild(accordionItem);
         }
         content.appendChild(accordion);
     }
 
-    displayItem(item) {
+    displayItem(item, isProjectsPage) {
         const accordionItem = document.createElement('div');
         accordionItem.classList.add('accordion-item');
 
@@ -219,45 +226,43 @@ class View {
         if (item.todos !== undefined) {
             let task;
             for (let i = 0; i < item.todos.length; i++) {
-                task = this.displayTodo(item.todos[i]);
+                task = this.displayTodo(item.todos[i], isProjectsPage);
                 accordionBody.appendChild(task);
 
                 if (item.todos[i].todos !== undefined) {
                     for (let j = 0; j < item.todos[i].todos.length; j++) {
-                        task = this.displayTodo(item.todos[i].todos[j]);
+                        task = this.displayTodo(item.todos[i].todos[j], isProjectsPage);
                         accordionBody.appendChild(task);
                     }
                 }
             }
         }
 
+        const link = document.createElement('div');
+            link.classList.add('text-muted');
+            link.classList.add('text-end');
+
         if (item.isProject) {
-            const link = document.createElement('div');
-            link.classList.add('text-muted');
-            link.classList.add('text-end');
-            link.classList.add('project-link');
-            link.textContent = 'Go to project page';
-            accordionBody.appendChild(link);
+            const arrow = document.createElement('i');
+            arrow.classList.add('bi');
+            arrow.classList.add('bi-arrow-right-circle');
+            arrow.classList.add('todo-icon');
+            link.appendChild(arrow);
         } else {
-            const link = document.createElement('div');
-            link.classList.add('text-muted');
-            link.classList.add('text-end');
-            link.classList.add('project-link');
             const editIcon = document.createElement('i');
             editIcon.classList.add('bi');
             editIcon.classList.add('bi-pencil-square');
-            editIcon.classList.add('text-muted');
             editIcon.classList.add('todo-icon');
             link.appendChild(editIcon);
-            accordionBody.appendChild(link);
         }
+        accordionBody.appendChild(link);
 
         accordionContent.appendChild(accordionBody);
         accordionItem.appendChild(accordionContent);
         return accordionItem;
     }
 
-    displayTodo(todo) {
+    displayTodo(todo, isProjectsPage) {
         const projectTodo = document.createElement('div');
         projectTodo.classList.add('project-todo');
 
@@ -265,7 +270,7 @@ class View {
         title.classList.add('width');
         title.classList.add('d-inline-block');
 
-        if (todo.todoParent !== undefined) {
+        if (todo.todoParent !== undefined && isProjectsPage) {
             title.classList.add('sub-todo');
         }
 
@@ -275,6 +280,7 @@ class View {
         icon.classList.add('todo-circle');
         title.appendChild(icon);
         const name = document.createElement('span');
+        name.classList.add('name');
         name.textContent = todo.title;
         title.appendChild(name);
         projectTodo.appendChild(title);
@@ -413,10 +419,8 @@ class View {
         header.appendChild(buttonsContainer);
 
         const content = document.getElementById('content');
-        const divider1 = document.createElement('div');
-        divider1.classList.add('w-100');
-        divider1.classList.add('border');
-        content.appendChild(divider1);
+        //let divider = this.makeDivider();
+        //content.appendChild(divider);
 
         const flexContainer = document.createElement('div');
         flexContainer.classList.add('d-flex');
@@ -424,7 +428,7 @@ class View {
         const subheading = document.createElement('div');
         subheading.classList.add('subheading');
 
-        const description = document.createElement('h4');
+        const description = document.createElement('h5');
         if (project.description !== undefined) {
             description.textContent = project.description;
         }
@@ -445,10 +449,8 @@ class View {
         flexContainer.appendChild(editIcon);
         content.appendChild(flexContainer);
 
-        const divider2 = document.createElement('div');
-        divider2.classList.add('w-100');
-        divider2.classList.add('border');
-        content.appendChild(divider2);
+        let divider = this.makeDivider();
+        content.appendChild(divider);
     }
 
     displayTrashPage(removedItems) {
@@ -456,20 +458,11 @@ class View {
         header.textContent = 'Trash';
 
         const content = document.getElementById('content');
-        const divider1 = document.createElement('div');
-        divider1.classList.add('w-100');
-        divider1.classList.add('border');
-        content.appendChild(divider1);
+        let divider = this.makeDivider();
+        content.appendChild(divider);
 
         if (removedItems.length === 0) {
-            const nothing = document.createElement('div');
-            nothing.classList.add('nothing');
-            nothing.classList.add('d-flex');
-            nothing.classList.add('justify-content-center');
-            nothing.classList.add('align-items-center');
-            const text = document.createElement('span');
-            text.textContent = 'There is nothing here';
-            nothing.appendChild(text);
+            const nothing = this.makeNothing();
             content.appendChild(nothing);
         } else {
             const removedProjects = removedItems.filter((item) => item.isProject);
@@ -478,30 +471,43 @@ class View {
                 projectsHeading.classList.add('subheading');
                 projectsHeading.textContent = 'Projects';
                 content.appendChild(projectsHeading);
-                const divider2 = document.createElement('div');
-                divider2.classList.add('w-100');
-                divider2.classList.add('border');
-                content.appendChild(divider2);
-                this.displayItems(removedProjects);
+                divider = this.makeDivider();
+                content.appendChild(divider);
+                this.displayItems(removedProjects, true);
                 }
             const removedTodos = removedItems.filter((item) => !item.isProject);
             if (removedTodos.length > 0) {
                 const todosHeading = document.createElement('h4');
                 todosHeading.classList.add('subheading');
                 todosHeading.textContent = 'Todos';
-                const divider3 = document.createElement('div');
-                divider3.classList.add('w-100');
-                divider3.classList.add('border');
-                content.appendChild(divider3);
+                divider = this.makeDivider();
+                content.appendChild(divider);
                 content.appendChild(todosHeading);
-                const divider4 = document.createElement('div');
-                divider4.classList.add('w-100');
-                divider4.classList.add('border');
-                content.appendChild(divider4);
+                divider = this.makeDivider();
+                content.appendChild(divider);
 
-                this.displayItems(removedTodos);
+                this.displayItems(removedTodos, false);
             }
         }
+    }
+
+    makeDivider() {
+        const divider = document.createElement('div');
+        divider.classList.add('w-100');
+        divider.classList.add('border');
+        return divider;
+    }
+
+    makeNothing() {
+        const nothing = document.createElement('div');
+        nothing.classList.add('nothing');
+        nothing.classList.add('d-flex');
+        nothing.classList.add('justify-content-center');
+        nothing.classList.add('align-items-center');
+        const text = document.createElement('span');
+        text.textContent = 'There is nothing here';
+        nothing.appendChild(text);
+        return nothing;
     }
 
     clearContent() {
