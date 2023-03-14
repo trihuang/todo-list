@@ -109,12 +109,25 @@ class View {
 
     // Add event listeners and bind handlers for filter and sort
 
-    addSortCriteriaEventListeners() {
-        // TODO
+
+    bindFilterByTodayEventListener(handler) {
+        const filterByToday = document.querySelector('#filterDropdown + .dropdown-menu > .dropdown-item:first-of-type');
+        filterByToday.addEventListener('click', handler);
     }
 
-    addFilterCriteriaEventListeners() {
-        // TODO
+    bindFilterByThisWeekEventListener(handler) {
+        const filterByThisWeek = document.querySelector('#filterDropdown + .dropdown-menu > .dropdown-item:nth-of-type(2)');
+        filterByThisWeek.addEventListener('click', handler);
+    }
+
+    bindFilterByThisMonthEventListener(handler) {
+        const filterByThisMonth = document.querySelector('#filterDropdown + .dropdown-menu > .dropdown-item:nth-of-type(3)');
+        filterByThisMonth.addEventListener('click', handler);
+    }
+
+    bindFilterByOverdueEventListener(handler) {
+        const overdue = document.querySelector('#filterDropdown + .dropdown-menu > .dropdown-item:nth-of-type(4)');
+        overdue.addEventListener('click', handler);
     }
 
     bindFilterByPriorityEventListeners(handler) {

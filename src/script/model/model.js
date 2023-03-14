@@ -29,18 +29,21 @@ class Model {
         const projectFour = new Project('Photography', 'Going on a trip to the national park to take photos!', new Date(2023, 3, 15), 'None', 'None', '', [projectFourTodoOne, projectFourTodoTwo]);
 
         const trashProjectTodoOne = new Todo('Buy seeds', '', undefined, 'None', 'None', '', undefined);
-        const trashProjectOne = new Project('Gardening', 'blah blah', new Date(2023, 4, 8), 'Medium', 'In Progress', '', [trashProjectTodoOne]);
+        const trashProjectOne = new Project('Gardening', 'blah blah', new Date(2023, 2, 8), 'Medium', 'Completed', '', [trashProjectTodoOne]);
 
         const trashProjectTwoTodoSubOne = new Todo('Take notes', '', undefined, 'Medium', 'None', '', undefined)
         const trashProjectTwoTodoOne = new Todo('Research topics', '', undefined, 'None', 'None', '', [trashProjectTwoTodoSubOne]);
         const trashProjectTwo = new Project('Write a Book', '', new Date(), 'None', 'In Progress', '', [trashProjectTwoTodoOne]);
 
-        const trashTodoSubOne = new Todo('Time myself', '', undefined, 'None', 'None', '', undefined);
-        const trashTodoOne = new Todo('Go for a run', 'Get fit.', new Date(2023, 2, 5), 'None', 'Completed', '', [trashTodoSubOne]);
-        const trashTodoTwo = new Todo('Foster a cat', '', new Date(2023, 5, 5), 'None', 'None', '', undefined);
+        const trashTodoSubOne = new Todo('Time myself', '', undefined, 'None', 'Completed', '', undefined);
+        const trashTodoOne = new Todo('Go for a run', 'Get fit.', new Date(2023, 2, 5), 'None', 'None', '', [trashTodoSubOne]);
+        const trashTodoTwo = new Todo('Foster a cat', '', new Date(2023, 2, 5), 'None', 'Completed', '', undefined);
 
         this.projects = [projectOne, projectTwo, projectThree, projectFour];
         this.deletedItems = [trashTodoOne, trashProjectOne, trashProjectTwo, trashTodoTwo];
+
+        this.updateOverdueStatus(this.projects);
+        this.updateOverdueStatus(this.deletedItems)
     }
 
     get projects() {
@@ -98,6 +101,21 @@ class Model {
             parentTodo = parentTodo[0];
             const todoIndex = this._projects[projectIndex].todos.indexOf(parentTodo);
             this._projects[projectIndex].todos[todoIndex].removeTodo(todo);
+        }
+    }
+
+    // Update the status to 'overdue' if the due date is past
+    updateOverdueStatus(array) {
+        const overdue = array.filter((item) => (compareAsc(item.dueDate, new Date()) === -1) && !isSameDay(item.dueDate, new Date()));
+        for (let i = 0; i < overdue.length; i++) {
+            if (overdue[i].status !== 'Completed') {
+                overdue[i].status = 'Overdue';
+            }
+        }
+
+        const itemsWithTodos = array.filter((item) => item.todos !== undefined);
+        for (let j = 0; j < itemsWithTodos.length; j++) {
+            this.updateOverdueStatus(itemsWithTodos[j].todos);
         }
     }
 
@@ -169,18 +187,17 @@ class Model {
 
     // Return an array of projects that are overdue and projects with todos and sub todos that are overdue
     filterByOverdue(array) {
-        // TODO
-        const overdue = array.filter((item) => (compareAsc(item.dueDate, new Date()) === -1) && !isSameDay(item.dueDate, new Date()));
-        const remainingArray = array.filter((item) => !((compareAsc(item.dueDate, new Date()) === -1) && !isSameDay(item.dueDate, new Date()))).filter((item) => item.todos !== undefined);
+        const overdue = array.filter((item) => (compareAsc(item.dueDate, new Date()) === -1) && !isSameDay(item.dueDate, new Date()) && item.status !== 'Completed');
+        const remainingArray = array.filter((item) => !((compareAsc(item.dueDate, new Date()) === -1) && !isSameDay(item.dueDate, new Date()) && item.status !== 'Completed')).filter((item) => item.todos !== undefined);
         
         for (let i = 0; i < remainingArray.length; i++) {
-            const overdueTodos = remainingArray[i].todos.filter((todo) => (compareAsc(todo.dueDate, new Date()) === -1) && !isSameDay(todo.dueDate, new Date()));
+            const overdueTodos = remainingArray[i].todos.filter((todo) => (compareAsc(todo.dueDate, new Date()) === -1) && !isSameDay(todo.dueDate, new Date()) && todo.status !== 'Completed');
             if (overdueTodos.length > 0) {
                 overdue.push(remainingArray[i]);
             } else {
-                const remainingTodosArray = remainingArray[i].todos.filter((todo) => !((compareAsc(todo.dueDate, new Date()) === -1) && !isSameDay(todo.dueDate, new Date()))).filter((item) => item.todos !== undefined);
+                const remainingTodosArray = remainingArray[i].todos.filter((todo) => !((compareAsc(todo.dueDate, new Date()) === -1) && !isSameDay(todo.dueDate, new Date()) && todo.status !== 'Completed')).filter((item) => item.todos !== undefined);
                 for (let j = 0; j < remainingTodosArray.length; j++) {
-                    const overdueSubTodos = remainingTodosArray[j].todos.filter((todo) => (compareAsc(todo.dueDate, new Date()) === -1) && !isSameDay(todo.dueDate, new Date()));
+                    const overdueSubTodos = remainingTodosArray[j].todos.filter((todo) => (compareAsc(todo.dueDate, new Date()) === -1) && !isSameDay(todo.dueDate, new Date()) && todo.status !== 'Completed');
                     if (overdueSubTodos.length > 0) {
                         overdue.push(remainingArray[i]);
                     }
@@ -188,7 +205,6 @@ class Model {
             }
         }
         return overdue;
-        // TODO: update status if necessary?
     }
 
     filterByPriority(array, priority) {

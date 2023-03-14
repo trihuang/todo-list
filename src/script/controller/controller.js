@@ -31,10 +31,17 @@ class Controller {
         this.handleOverdueEventListeners();
         this.handleTrashEventListeners();
 
+        this.handleFilterByTodayEventListener();
+        this.handleFilterByThisWeekEventListener();
+        this.handleFilterByThisMonthEventListener();
+        this.handleFilterByOverdueEventListener();
         this.handleFilterByPriorityEventListeners();
         this.handleFilterByStatusEventListeners();
 
         this.handleProjectLinkEventListener();
+
+        // TODO:
+        // Update notifications for items due today and items that are overdue
     }
 
     get itemsOnDisplay() {
@@ -204,6 +211,58 @@ class Controller {
     }
 
     // Filter handlers
+
+    handleFilterByTodayEventListener() {
+        this.view.bindFilterByTodayEventListener(this.handleFilterByTodayDisplay);
+    }
+
+    handleFilterByTodayDisplay = () => {
+        const filteredItems = this.model.filterByToday(this.itemsOnDisplay);
+        if (this.isTrashPage) {
+            this.updateTrashView(filteredItems, this.isTrashPage);
+        } else {
+            this.updateContentView(filteredItems, this.isProjectsPage, this.isTrashPage);
+        }
+    }
+
+    handleFilterByThisWeekEventListener() {
+        this.view.bindFilterByThisWeekEventListener(this.handleFilterByThisWeekDisplay);
+    }
+
+    handleFilterByThisWeekDisplay = () => {
+        const filteredItems = this.model.filterByThisWeek(this.itemsOnDisplay);
+        if (this.isTrashPage) {
+            this.updateTrashView(filteredItems, this.isTrashPage);
+        } else {
+            this.updateContentView(filteredItems, this.isProjectsPage, this.isTrashPage);
+        }
+    }
+
+    handleFilterByThisMonthEventListener() {
+        this.view.bindFilterByThisMonthEventListener(this.handleFilterByThisMonthDisplay);
+    }
+
+    handleFilterByThisMonthDisplay = () => {
+        const filteredItems = this.model.filterByThisMonth(this.itemsOnDisplay);
+        if (this.isTrashPage) {
+            this.updateTrashView(filteredItems, this.isTrashPage);
+        } else {
+            this.updateContentView(filteredItems, this.isProjectsPage, this.isTrashPage);
+        }
+    }
+
+    handleFilterByOverdueEventListener() {
+        this.view.bindFilterByOverdueEventListener(this.handleFilterByOverdueDisplay);
+    }
+
+    handleFilterByOverdueDisplay = () => {
+        const filteredItems = this.model.filterByOverdue(this.itemsOnDisplay);
+        if (this.isTrashPage) {
+            this.updateTrashView(filteredItems, this.isTrashPage);
+        } else {
+            this.updateContentView(filteredItems, this.isProjectsPage, this.isTrashPage);
+        }
+    }
 
     handleFilterByPriorityEventListeners() {
         this.view.bindFilterByPriorityEventListeners(this.handleFilterByPriorityDisplay);
