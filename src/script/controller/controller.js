@@ -11,8 +11,8 @@ class Controller {
         this.isProjectsPage = true;
         this.initializeProjectsPage(this.itemsOnDisplay);
         //this.view.clearHeader();
-        //this.view.displayTodosHeader(this.model.projects[3]);
-        //this.view.displayItems(this.model.projects[3].todos, false);
+        //this.view.displayTodosHeader(this.model.projects[2]);
+        //this.view.displayItems(this.model.projects[2].todos, false);
 
         // Add event listeners that depend on the model
         this.handleLogoEventListener();
