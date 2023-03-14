@@ -10,13 +10,16 @@ class Controller {
         this.itemsOnDisplay = this.model.projects;
         this.isProjectsPage = true;
         this.initializeProjectsPage(this.itemsOnDisplay);
+
         //this.view.clearHeader();
         //this.view.displayTodosHeader(this.model.projects[2]);
         //this.view.displayItems(this.model.projects[2].todos, false);
 
-        // Add event listeners that depend on the model
+        // Add event listeners
         this.handleLogoEventListener();
+        this.handleHomeEventListener();
         this.handleSearchBarEventListeners();
+        this.handleImportantEventListeners();
     }
 
     get itemsOnDisplay() {
@@ -40,7 +43,17 @@ class Controller {
     }
 
     handleLogoEventListener() {
-        this.view.bindLogoEventListener(this.model.projects);
+        this.view.bindLogoEventListener(this.handleDisplayHomePage);
+    }
+
+    handleHomeEventListener() {
+        this.view.bindHomeEventListener(this.handleDisplayHomePage);
+    }
+
+    handleDisplayHomePage = () => {
+        this._itemsOnDisplay = this.model.projects;
+        this._isProjectsPage = true;
+        this.updateProjectsView(this.itemsOnDisplay, this.isProjectsPage);
     }
 
     handleSearchBarEventListeners() {
@@ -48,9 +61,21 @@ class Controller {
     }
 
     handleSearch = (input) => {
-        this.model.search(input);
-        // TODO
-        // update view
+        const searchResults = this.model.search(this.model.projects, input);
+        this._itemsOnDisplay = searchResults;
+        this._isProjectsPage = true;
+        this.updateProjectsView(this.itemsOnDisplay, this.isProjectsPage);
+    }
+
+    handleImportantEventListeners() {
+        this.view.bindImportantEventListener(this.handleDisplayImportantPage);
+    }
+
+    handleDisplayImportantPage = () => {
+        const importantProjects = this.model.filterByPriority(this.model.projects);
+        this._itemsOnDisplay = importantProjects;
+        this._isProjectsPage = true;
+        this.updateProjectsView(this.itemsOnDisplay, this.isProjectsPage);
     }
 
     handleCreateProjectBtn() {
@@ -61,6 +86,13 @@ class Controller {
         this.model.createProject();
         // TODO
         // update view if necessary
+    }
+
+    updateProjectsView(items, isProjectsPage) {
+        this.view.clearHeader();
+        this.view.clearContent();
+        this.view.displayProjectsHeader();
+        this.view.displayItems(items, isProjectsPage);
     }
 }
 

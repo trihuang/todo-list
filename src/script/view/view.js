@@ -2,19 +2,14 @@ import { isSameDay, isSameYear, format } from 'date-fns';
 
 class View {
     constructor() {
-        this.addSideBarEventListeners();
-
         this.displayProjectsHeader();
     }
 
-    // Add event listeners and bind handlers
+    // Add event listeners and bind handlers in the navbar
 
-    bindLogoEventListener(projects) {
+    bindLogoEventListener(handler) {
         const logo = document.querySelector('.navbar-brand');
-        logo.addEventListener('click', event => {
-            this.displayProjectsHeader();
-            this.displayItems(projects, true);
-        });
+        logo.addEventListener('click', handler);
     }
 
     bindSearchBarEventListeners(handler) {
@@ -47,9 +42,51 @@ class View {
         // TODO
     }
 
-    addSideBarEventListeners() {
+    // Add event listeners and bind handlers in the sidebar
+
+    bindHomeEventListener(handler) {
+        const homeIcon = document.querySelector('.sidebar > ul > li > i');
+        const homeLabel = document.querySelector('.sidebar > ul > li > span');
+        homeIcon.addEventListener('click', handler);
+        homeLabel.addEventListener('click', handler);
+    }
+
+    bindImportantEventListener(handler) {
+        const importantIcon = document.querySelector('.sidebar > ul:nth-of-type(2) > li > i');
+        const importantLabel = document.querySelector('.sidebar > ul:nth-of-type(2) > li > span');
+        importantIcon.addEventListener('click', handler);
+        importantLabel.addEventListener('click', handler);
+    }
+
+    bindTodayEventListener(handler) {
         // TODO
     }
+
+    bindThisWeekEventListener(handler) {
+        // TODO
+    }
+
+    bindThisMonthEventListener(handler) {
+        // TODO
+    }
+
+    bindCompletedEventListener(handler) {
+        // TODO
+    }
+
+    bindInProgressEventListener(handler) {
+        // TODO
+    }
+
+    bindOverdueEventListener(handler) {
+        // TODO
+    }
+
+    bindTrashEventListener(handler) {
+        // TODO
+    }
+
+    // Add event listeners and bind handlers for filter and sort
 
     addSortCriteriaEventListeners() {
         // TODO
@@ -58,6 +95,8 @@ class View {
     addFilterCriteriaEventListeners() {
         // TODO
     }
+
+    // Add event listeners and bind handlers in the projects and todos
 
     addProjectEventListener() {
         // TODO
@@ -125,7 +164,6 @@ class View {
         checkCircle.classList.add('bi-circle');
         checkCircle.classList.add('small');
         title.appendChild(checkCircle);
-        title.classList.add('border');
 
         const name = document.createElement('span');
         name.classList.add('big');
@@ -227,7 +265,6 @@ class View {
         const title = document.createElement('span');
         title.classList.add('width');
         title.classList.add('d-inline-block');
-        title.classList.add('border');
 
         if (todo.todoParent !== undefined && isProjectsPage) {
             title.classList.add('sub-todo');

@@ -57,12 +57,16 @@ body {
 }
 
 .sidebar ul li {
-    cursor: pointer;
     font-size: 1.25rem;
 }
 
 .sidebar ul li span {
     margin-left: 15px;
+    cursor: pointer;
+}
+
+.sidebar ul li i {
+    cursor: pointer;
 }
 
 .dropdown-nav {

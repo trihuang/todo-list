@@ -8,20 +8,25 @@ class Model {
         const projectOneTodoOne = new Todo('Take out the garbage', '', undefined, 'None', 'None', '', undefined);
         const projectOneTodoTwo = new Todo('Wash the dishes', '', undefined, 'None', 'None', '', undefined);
         const projectOneTodoThree = new Todo('Walk the dog', '', undefined, 'None', 'None', '', undefined);
-        const projectOne = new Project('Chores', 'More and more chores that need to be done around the house.', new Date(), 'High', 'In Progress', 'Do not leave them until tomorrow!', [projectOneTodoOne, projectOneTodoTwo, projectOneTodoThree]);
+        const projectOneTodoFour = new Todo('Sweep the floor', '', undefined, 'None', 'None', '', undefined);
+        const projectOneTodoFive = new Todo('Laundry', '', undefined, 'None', 'None', '', undefined);
+        const projectOneTodoSix = new Todo('Water the plants', '', undefined, 'None', 'None', '', undefined);
+        const projectOneTodoSeven = new Todo('Tidy up the study', '', undefined, 'None', 'None', '', undefined);
+        const projectOne = new Project('Chores', 'Things that need to be done around the house.', new Date(), 'High', 'In Progress', 'Do not leave them until tomorrow!', [projectOneTodoOne, projectOneTodoTwo, projectOneTodoThree, projectOneTodoFour, projectOneTodoFive, projectOneTodoSix, projectOneTodoSeven]);
 
         const projectTwo = new Project('Write a Letter', 'Grandma is waiting for a reply.', new Date(2023, 2, 9), 'None', 'None', '', undefined);
         
-        const projectThreeTodoOne = new Todo('Submit report', 'choose a subject', undefined, 'None', 'None', '', undefined);
-        const projectThreeTodoTwo = new Todo('Meeting with boss', '', new Date(2023, 2, 10), 'High', 'None', 'This is a very important meeting!', undefined);
-        const projectThreeTodoThreeSubOne = new Todo('Gather data', '', new Date(2023, 2, 9), 'Medium', 'In Progress', 'Need more information.', undefined);
-        const projectThreeTodoThreeSubTwo = new Todo('Create slides', '', undefined, 'None', 'None', '', undefined); 
+        const projectThreeTodoOne = new Todo('Submit report', '', undefined, 'None', 'None', '', undefined);
+        const projectThreeTodoTwo = new Todo('Meeting with boss', '', new Date(2023, 2, 20), 'None', 'None', 'This is a very important meeting!', undefined);
+        const projectThreeTodoThreeSubOne = new Todo('Gather data', '', new Date(2023, 2, 9), 'High', 'In Progress', 'Need more information.', undefined);
+        const projectThreeTodoThreeSubTwo = new Todo('Create slides', '', new Date(), 'None', 'None', '', undefined); 
         const projectThreeTodoThree = new Todo('Prepare presentation', '', undefined, 'None', 'In Progress', '', [projectThreeTodoThreeSubOne, projectThreeTodoThreeSubTwo]);
-        const projectThreeTodoFour = new Todo('Meeting with clients', 'Product showcase.', new Date(2023, 2, 20), 'None', 'None', '', undefined);
-        const projectThree = new Project('Work', 'Some things to take care of.', new Date(2023, 2, 20), 'Medium', 'None', '', [projectThreeTodoOne, projectThreeTodoTwo, projectThreeTodoThree, projectThreeTodoFour]);
+        const projectThreeTodoFour = new Todo('Meeting with clients', 'Product showcase.', new Date(2023, 2, 25), 'None', 'None', '', undefined);
+        const projectThree = new Project('Work', 'Some things to take care of.', new Date(2023, 2, 25), 'Medium', 'None', '', [projectThreeTodoOne, projectThreeTodoTwo, projectThreeTodoThree, projectThreeTodoFour]);
 
-        const projectFourTodoOne = new Todo('Choose camera to bring', 'choochoochoo', new Date(2023, 2, 9), 'None', 'None', '', undefined);
-        const projectFour = new Project('Photography', 'Going on a trip to the national park to take photos!', new Date(2023, 3, 15), 'None', 'None', '', [projectFourTodoOne]);
+        const projectFourTodoOne = new Todo('Choose camera to bring', '', new Date(2023, 2, 10), 'None', 'None', '', undefined);
+        const projectFourTodoTwo = new Todo('Buy a suitcase', '', new Date(), 'High', 'None', '', undefined);
+        const projectFour = new Project('Photography', 'Going on a trip to the national park to take photos!', new Date(2023, 3, 15), 'None', 'None', '', [projectFourTodoOne, projectFourTodoTwo]);
 
         this.projects = [projectOne, projectTwo, projectThree, projectFour];
         this.deletedItems = [];
