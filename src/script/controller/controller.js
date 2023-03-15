@@ -244,8 +244,10 @@ class Controller {
         const sortedFilteredItems = this.sortInDefaultOrder(filteredItems, this.defaultSortOrder);
         if (this.isTrashPage) {
             this.updateTrashView(sortedFilteredItems, this.isTrashPage);
-        } else {
+        } else if (this.isProjectsPage) {
             this.updateContentView(sortedFilteredItems, this.isProjectsPage, this.isTrashPage);
+        } else {
+            this.updateTodosContentView(sortedFilteredItems, this.isProjectsPage, this.isTrashPage);
         }
     }
 
@@ -258,8 +260,10 @@ class Controller {
         const sortedFilteredItems = this.sortInDefaultOrder(filteredItems, this.defaultSortOrder);
         if (this.isTrashPage) {
             this.updateTrashView(sortedFilteredItems, this.isTrashPage);
-        } else {
+        } else if (this.isProjectsPage) {
             this.updateContentView(sortedFilteredItems, this.isProjectsPage, this.isTrashPage);
+        } else {
+            this.updateTodosContentView(sortedFilteredItems, this.isProjectsPage, this.isTrashPage);
         }
     }
 
@@ -272,8 +276,10 @@ class Controller {
         const sortedFilteredItems = this.sortInDefaultOrder(filteredItems, this.defaultSortOrder);
         if (this.isTrashPage) {
             this.updateTrashView(sortedFilteredItems, this.isTrashPage);
-        } else {
+        } else if (this.isProjectsPage) {
             this.updateContentView(sortedFilteredItems, this.isProjectsPage, this.isTrashPage);
+        } else {
+            this.updateTodosContentView(sortedFilteredItems, this.isProjectsPage, this.isTrashPage);
         }
     }
 
@@ -286,8 +292,10 @@ class Controller {
         const sortedFilteredItems = this.sortInDefaultOrder(filteredItems, this.defaultSortOrder);
         if (this.isTrashPage) {
             this.updateTrashView(sortedFilteredItems, this.isTrashPage);
-        } else {
+        } else if (this.isProjectsPage) {
             this.updateContentView(sortedFilteredItems, this.isProjectsPage, this.isTrashPage);
+        } else {
+            this.updateTodosContentView(sortedFilteredItems, this.isProjectsPage, this.isTrashPage);
         }
     }
 
@@ -300,8 +308,10 @@ class Controller {
         const sortedFilteredItems = this.sortInDefaultOrder(filteredItems, this.defaultSortOrder);
         if (this.isTrashPage) {
             this.updateTrashView(sortedFilteredItems, this.isTrashPage);
-        } else {
+        } else if (this.isProjectsPage) {
             this.updateContentView(sortedFilteredItems, this.isProjectsPage, this.isTrashPage);
+        } else {
+            this.updateTodosContentView(sortedFilteredItems, this.isProjectsPage, this.isTrashPage);
         }
     }
 
@@ -314,8 +324,10 @@ class Controller {
         const sortedFilteredItems = this.sortInDefaultOrder(filteredItems, this.defaultSortOrder);
         if (this.isTrashPage) {
             this.updateTrashView(sortedFilteredItems, this.isTrashPage);
-        } else {
+        } else if (this.isProjectsPage) {
             this.updateContentView(sortedFilteredItems, this.isProjectsPage, this.isTrashPage);
+        } else {
+            this.updateTodosContentView(sortedFilteredItems, this.isProjectsPage, this.isTrashPage);
         }
     }
 
@@ -329,8 +341,10 @@ class Controller {
         const sortedItems = this.model.sortByTitleAsc(this.itemsOnDisplay);
         if (this.isTrashPage) {
             this.updateTrashView(sortedItems, this.isTrashPage);
-        } else {
+        } else if (this.isProjectsPage) {
             this.updateContentView(sortedItems, this.isProjectsPage, this.isTrashPage);
+        } else {
+            this.updateTodosContentView(sortedItems, this.isProjectsPage, this.isTrashPage);
         }
     }
 
@@ -342,8 +356,10 @@ class Controller {
         const sortedItems = this.model.sortByTitleDesc(this.itemsOnDisplay);
         if (this.isTrashPage) {
             this.updateTrashView(sortedItems, this.isTrashPage);
-        } else {
+        } else if (this.isProjectsPage) {
             this.updateContentView(sortedItems, this.isProjectsPage, this.isTrashPage);
+        } else {
+            this.updateTodosContentView(sortedItems, this.isProjectsPage, this.isTrashPage);
         }
     }
 
@@ -355,8 +371,10 @@ class Controller {
         const sortedItems = this.model.sortByPriorityAsc(this.itemsOnDisplay);
         if (this.isTrashPage) {
             this.updateTrashView(sortedItems, this.isTrashPage);
-        } else {
+        } else if (this.isProjectsPage) {
             this.updateContentView(sortedItems, this.isProjectsPage, this.isTrashPage);
+        } else {
+            this.updateTodosContentView(sortedItems, this.isProjectsPage, this.isTrashPage);
         }
     }
 
@@ -368,8 +386,10 @@ class Controller {
         const sortedItems = this.model.sortByPriorityDesc(this.itemsOnDisplay);
         if (this.isTrashPage) {
             this.updateTrashView(sortedItems, this.isTrashPage);
-        } else {
+        } else if (this.isProjectsPage) {
             this.updateContentView(sortedItems, this.isProjectsPage, this.isTrashPage);
+        } else {
+            this.updateTodosContentView(sortedItems, this.isProjectsPage, this.isTrashPage);
         }
     }
 
@@ -381,8 +401,10 @@ class Controller {
         const sortedItems = this.model.sortByStatusAsc(this.itemsOnDisplay);
         if (this.isTrashPage) {
             this.updateTrashView(sortedItems, this.isTrashPage);
-        } else {
+        } else if (this.isProjectsPage) {
             this.updateContentView(sortedItems, this.isProjectsPage, this.isTrashPage);
+        } else {
+            this.updateTodosContentView(sortedItems, this.isProjectsPage, this.isTrashPage);
         }
     }
 
@@ -394,8 +416,10 @@ class Controller {
         const sortedItems = this.model.sortByStatusDesc(this.itemsOnDisplay);
         if (this.isTrashPage) {
             this.updateTrashView(sortedItems, this.isTrashPage);
-        } else {
+        } else if (this.isProjectsPage) {
             this.updateContentView(sortedItems, this.isProjectsPage, this.isTrashPage);
+        } else {
+            this.updateTodosContentView(sortedItems, this.isProjectsPage, this.isTrashPage);
         }
     }
 
@@ -407,8 +431,10 @@ class Controller {
         const sortedItems = this.model.sortByDueDateAsc(this.itemsOnDisplay);
         if (this.isTrashPage) {
             this.updateTrashView(sortedItems, this.isTrashPage);
-        } else {
+        } else if (this.isProjectsPage) {
             this.updateContentView(sortedItems, this.isProjectsPage, this.isTrashPage);
+        } else {
+            this.updateTodosContentView(sortedItems, this.isProjectsPage, this.isTrashPage);
         }
     }
 
@@ -420,8 +446,10 @@ class Controller {
         const sortedItems = this.model.sortByDueDateDesc(this.itemsOnDisplay);
         if (this.isTrashPage) {
             this.updateTrashView(sortedItems, this.isTrashPage);
-        } else {
+        } else if (this.isProjectsPage) {
             this.updateContentView(sortedItems, this.isProjectsPage, this.isTrashPage);
+        } else {
+            this.updateTodosContentView(sortedItems, this.isProjectsPage, this.isTrashPage);
         }
     }
 
@@ -433,8 +461,10 @@ class Controller {
         const sortedItems = this.model.sortByDateAddedAsc(this.itemsOnDisplay);
         if (this.isTrashPage) {
             this.updateTrashView(sortedItems, this.isTrashPage);
-        } else {
+        } else if (this.isProjectsPage) {
             this.updateContentView(sortedItems, this.isProjectsPage, this.isTrashPage);
+        } else {
+            this.updateTodosContentView(sortedItems, this.isProjectsPage, this.isTrashPage);
         }
     }
 
@@ -446,8 +476,10 @@ class Controller {
         const sortedItems = this.model.sortByDateAddedDesc(this.itemsOnDisplay);
         if (this.isTrashPage) {
             this.updateTrashView(sortedItems, this.isTrashPage);
-        } else {
+        } else if (this.isProjectsPage) {
             this.updateContentView(sortedItems, this.isProjectsPage, this.isTrashPage);
+        } else {
+            this.updateTodosContentView(sortedItems, this.isProjectsPage, this.isTrashPage);
         }
     }
 
@@ -479,7 +511,10 @@ class Controller {
         this.view.clearHeader();
         this.view.clearContent();
         this.view.displayTodosHeader(project);
-        const sortedTodos = this.sortInDefaultOrder(project.todos, this.defaultSortOrder);
+        let sortedTodos = project.todos;
+        if (project.todos !== undefined) {
+            sortedTodos = this.sortInDefaultOrder(project.todos, this.defaultSortOrder);
+        }
         this.view.displayItems(sortedTodos, isProjectsPage, isTrashPage);
     }
 
@@ -492,6 +527,11 @@ class Controller {
     updateContentView(items, isProjectsPage, isTrashPage) {
         this.view.clearContent();
         this.view.displayItems(items, isProjectsPage, isTrashPage);
+    }
+
+    updateTodosContentView(todos, isProjectsPage, isTrashPage) {
+        this.view.clearTodosPageContent();
+        this.view.displayItems(todos, isProjectsPage, isTrashPage);
     }
 
     sortInDefaultOrder(items, sortOrder) {

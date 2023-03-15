@@ -640,6 +640,13 @@ class View {
           header.removeChild(header.firstChild);
         }
     }
+
+    clearTodosPageContent() {
+        const content = document.getElementById('content');
+        while (content.childNodes[2]) {
+            content.removeChild(content.childNodes[2]);
+       }
+    }
 }
 
 export { View as default };
