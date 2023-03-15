@@ -28,17 +28,17 @@
                   <div class="modal-content">
                     <div class="modal-header">
                       <h5 class="modal-title">Create Project</h5>
-                      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" id="projXBtn"></button>
                     </div>
                     <div class="modal-body">
-                      <form action="#">
+                      <form action="#" id="createProjectForm">
                         <div class="mb-3">
                             <label for="title" class="col-form-label">Title<span class="text-danger">*</span></label>
                             <input type="text" class="form-control" id="title">
                         </div>
                         <div class="mb-3">
-                            <label for="due-date" class="col-form-label">Due Date<span class="text-danger">*</span></label>
-                            <input type="date" class="form-control" id="due-date">
+                            <label for="dueDate" class="col-form-label">Due Date<span class="text-danger">*</span></label>
+                            <input type="date" class="form-control" id="dueDate">
                         </div>
                         <div class="mb-3">
                             <label for="description" class="col-form-label">Description</label>
@@ -96,22 +96,14 @@
                             <label for="todo" class="col-form-label">Todos</label>
                             <input type="text" class="form-control" id="todo">
                         </div>
-                        <!--
-                        <div class="input-group mb-3">
-                            <input type="text" class="form-control">
-                            <div class="input-group-append">
-                                <button id="removeTodo" type="button" class="btn btn-danger">Remove</button>
-                            </div>
-                        </div>
-                    -->
                         <div class="mb-3 text-light">
                             <button id="addTodo" type="button" class="btn btn-dark">Add Todo</button>
                         </div>
                       </form>
                     </div>
                     <div class="modal-footer">
-                      <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                      <button type="button" class="btn btn-primary">Submit</button>
+                      <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="projCloseBtn">Close</button>
+                      <button type="button" class="btn btn-primary" id="createBtn" data-bs-dismiss="modal">Submit</button>
                     </div>
                   </div>
                 </div>

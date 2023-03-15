@@ -1,10 +1,10 @@
 import { isSameDay, isSameYear, format } from 'date-fns';
-import todo from '../model/todo';
 
 class View {
     constructor() {
         this.displayProjectsHeader();
         this.bindAddTodoBtnEventListener();
+        this.bindCloseBtnEventListeners();
     }
 
     // Add event listeners and bind handlers in the navbar
@@ -79,12 +79,97 @@ class View {
     }
 
     bindCreateProjectBtnEventListener(handler) {
-        // TODO
-        // DOM for all input values
-        // check that title and due date are valid
-        // attach event listener and pass to handler to create project in model
+        const createBtn = document.getElementById('createBtn');
+        createBtn.addEventListener('click', event => {
+            const titleInput = document.getElementById('title');
+            const dueDateInput = document.getElementById('dueDate');
+            const title = titleInput.value.trim();
+            const dueDate = dueDateInput.value;
+            if (title === '' && dueDate === '') {
+                alert('A title and a due date are required.')
+            } else if (title === '') {
+                alert('A title is required.');
+            } else if (dueDate === '') {
+                alert('A due date is required.');
+            } else {
+                const description = document.getElementById('description').value.trim();
+                const notes = document.getElementById('nts').value.trim();
+
+                let priority;
+                const mdPriorityRadioBtn = document.getElementById('medium-priority');
+                const hiPriorityRadioBtn = document.getElementById('hi-priority');
+
+                if (hiPriorityRadioBtn.checked) {
+                    priority = 'High';
+                } else if (mdPriorityRadioBtn.checked) {
+                    priority = 'Medium';
+                } else {
+                    priority = 'None';
+                }
+
+                let status;
+                const inProgressRadioBtn = document.getElementById('in-progress');
+                const completedRadioBtn = document.getElementById('completed');
+
+                if (inProgressRadioBtn.checked) {
+                    status = 'In Progress';
+                } else if (completedRadioBtn.checked) {
+                    status = 'Completed';
+                } else {
+                    status = 'None';
+                }
+    
+                let todoTitle;
+                const todoTitles = [];
+                const todoOneInput = document.getElementById('todo');
+                const todoOneTitle = todoOneInput.value.trim();
+                if (todoOneTitle !== '') {
+                    todoTitles.push(todoOneTitle);
+                    const createBtnContainer = document.getElementById('addTodo').parentNode;
+                    let nextTodoInputContainer = todoOneInput.parentNode.nextElementSibling;
+                    while (nextTodoInputContainer !== createBtnContainer) {
+                        todoTitle = nextTodoInputContainer.children[0].value.trim();
+                        if (todoTitle !== '') {
+                            todoTitles.push(todoTitle);
+                        }
+                        nextTodoInputContainer = nextTodoInputContainer.nextElementSibling;  
+                    }
+                }
+                handler(title, dueDate, description, notes, priority, status, todoTitles);
+            }
+            const projectForm = document.getElementById('createProjectForm');
+            projectForm.reset();
+            this.clearTodoInputFields();
+        });
     }
 
+    clearTodoInputFields() {
+        const createBtnContainer = document.getElementById('addTodo').parentNode;
+        const parent = createBtnContainer.parentNode;
+        const todoOneInput = document.getElementById('todo');
+        let nextTodoInputContainer = todoOneInput.parentNode.nextElementSibling;
+        let elementToDelete;
+        while (nextTodoInputContainer !== createBtnContainer) {
+            elementToDelete = nextTodoInputContainer;
+            nextTodoInputContainer = nextTodoInputContainer.nextElementSibling; 
+            parent.removeChild(elementToDelete); 
+        }
+    }
+
+    bindCloseBtnEventListeners() {
+        const xBtn = document.getElementById('projXBtn');
+        const closeBtn = document.getElementById('projCloseBtn');
+        const projectForm = document.getElementById('createProjectForm');
+        xBtn.addEventListener('click', event => {
+            projectForm.reset();
+            this.clearTodoInputFields();
+        });
+        closeBtn.addEventListener('click', event => {
+            projectForm.reset();
+            this.clearTodoInputFields();
+        });
+    }
+ 
     toggleNotificationBadge() {
         // TODO
     }
@@ -616,7 +701,7 @@ class View {
         date.classList.add('text-muted');
         date.classList.add('due-date');
 
-        if (dueDate !== undefined) {
+        if (dueDate !== '') {
             if (isSameDay(dueDate, new Date())) {
                 date.textContent = 'Today';
             } else if (!isSameYear(dueDate, new Date())) {

@@ -5,22 +5,22 @@ import Todo from './todo';
 class Model {
     constructor() {
         // Initialize some projects
-        const projectOneTodoOne = new Todo('Take out the garbage', '', undefined, 'None', 'None', '', undefined);
-        const projectOneTodoTwo = new Todo('Wash the dishes', '', undefined, 'None', 'None', '', undefined);
-        const projectOneTodoThree = new Todo('Walk the dog', '', undefined, 'None', 'None', '', undefined);
-        const projectOneTodoFour = new Todo('Sweep the floor', '', undefined, 'None', 'None', '', undefined);
-        const projectOneTodoFive = new Todo('Laundry', '', undefined, 'None', 'None', '', undefined);
-        const projectOneTodoSix = new Todo('Water the plants', '', undefined, 'None', 'None', '', undefined);
-        const projectOneTodoSeven = new Todo('Tidy up the study', '', undefined, 'None', 'None', '', undefined);
+        const projectOneTodoOne = new Todo('Take out the garbage', '', '', 'None', 'None', '', undefined);
+        const projectOneTodoTwo = new Todo('Wash the dishes', '', '', 'None', 'None', '', undefined);
+        const projectOneTodoThree = new Todo('Walk the dog', '', '', 'None', 'None', '', undefined);
+        const projectOneTodoFour = new Todo('Sweep the floor', '', '', 'None', 'None', '', undefined);
+        const projectOneTodoFive = new Todo('Laundry', '', '', 'None', 'None', '', undefined);
+        const projectOneTodoSix = new Todo('Water the plants', '', '', 'None', 'None', '', undefined);
+        const projectOneTodoSeven = new Todo('Tidy up the study', '', '', 'None', 'None', '', undefined);
         const projectOne = new Project('Chores', 'Things that need to be done around the house.', new Date(), 'High', 'In Progress', 'Do not leave them until tomorrow!', [projectOneTodoOne, projectOneTodoTwo, projectOneTodoThree, projectOneTodoFour, projectOneTodoFive, projectOneTodoSix, projectOneTodoSeven]);
 
         const projectTwo = new Project('Write a Letter', 'Grandma is waiting for a reply.', new Date(2023, 2, 9), 'None', 'None', '', undefined);
         
-        const projectThreeTodoOne = new Todo('Submit report', '', undefined, 'None', 'None', '', undefined);
+        const projectThreeTodoOne = new Todo('Submit report', '', '', 'None', 'None', '', undefined);
         const projectThreeTodoTwo = new Todo('Meeting with boss', '', new Date(2023, 2, 20), 'None', 'None', 'This is a very important meeting!', undefined);
         const projectThreeTodoThreeSubOne = new Todo('Gather data', '', new Date(2023, 2, 9), 'High', 'In Progress', 'Need more information.', undefined);
         const projectThreeTodoThreeSubTwo = new Todo('Create slides', '', new Date(), 'None', 'None', '', undefined); 
-        const projectThreeTodoThree = new Todo('Prepare presentation', '', undefined, 'None', 'In Progress', '', [projectThreeTodoThreeSubOne, projectThreeTodoThreeSubTwo]);
+        const projectThreeTodoThree = new Todo('Prepare presentation', '', '', 'None', 'In Progress', '', [projectThreeTodoThreeSubOne, projectThreeTodoThreeSubTwo]);
         const projectThreeTodoFour = new Todo('Meeting with clients', 'Product showcase.', new Date(2023, 2, 25), 'None', 'None', '', undefined);
         const projectThree = new Project('Work', 'Some things to take care of.', new Date(2023, 2, 25), 'Medium', 'None', '', [projectThreeTodoOne, projectThreeTodoTwo, projectThreeTodoThree, projectThreeTodoFour]);
 
@@ -28,14 +28,14 @@ class Model {
         const projectFourTodoTwo = new Todo('Buy a suitcase', '', new Date(), 'High', 'None', '', undefined);
         const projectFour = new Project('Photography', 'Going on a trip to the national park to take photos!', new Date(2023, 3, 15), 'None', 'None', '', [projectFourTodoOne, projectFourTodoTwo]);
 
-        const trashProjectTodoOne = new Todo('Buy seeds', '', undefined, 'None', 'None', '', undefined);
+        const trashProjectTodoOne = new Todo('Buy seeds', '', '', 'None', 'None', '', undefined);
         const trashProjectOne = new Project('Gardening', 'blah blah', new Date(2023, 2, 8), 'Medium', 'Completed', '', [trashProjectTodoOne]);
 
-        const trashProjectTwoTodoSubOne = new Todo('Take notes', '', undefined, 'Medium', 'None', '', undefined)
-        const trashProjectTwoTodoOne = new Todo('Research topics', '', undefined, 'None', 'None', '', [trashProjectTwoTodoSubOne]);
+        const trashProjectTwoTodoSubOne = new Todo('Take notes', '', '', 'Medium', 'None', '', undefined)
+        const trashProjectTwoTodoOne = new Todo('Research topics', '', '', 'None', 'None', '', [trashProjectTwoTodoSubOne]);
         const trashProjectTwo = new Project('Write a Book', '', new Date(), 'None', 'In Progress', '', [trashProjectTwoTodoOne]);
 
-        const trashTodoSubOne = new Todo('Time myself', '', undefined, 'None', 'Completed', '', undefined);
+        const trashTodoSubOne = new Todo('Time myself', '', '', 'None', 'Completed', '', undefined);
         const trashTodoOne = new Todo('Go for a run', 'Get fit.', new Date(2023, 2, 5), 'None', 'None', '', [trashTodoSubOne]);
         const trashTodoTwo = new Todo('Foster a cat', '', new Date(2023, 2, 5), 'None', 'Completed', '', undefined);
 
@@ -72,6 +72,11 @@ class Model {
         parent.addTodo(todo);
     }
 
+    createTodoWithOnlyTitle(title) {
+        const todo = new Todo(title, '', '', 'None', 'None', '', undefined);
+        return todo;
+    }
+
     addProject(project) {
         this._projects.push(project);
     }
@@ -106,7 +111,8 @@ class Model {
 
     // Update the status to 'overdue' if the due date is past
     updateOverdueStatus(array) {
-        const overdue = array.filter((item) => (compareAsc(item.dueDate, new Date()) === -1) && !isSameDay(item.dueDate, new Date()));
+        const itemsWithDueDates = array.filter((item) => item.dueDate !== '');
+        const overdue = itemsWithDueDates.filter((item) => (compareAsc(item.dueDate, new Date()) === -1) && !isSameDay(item.dueDate, new Date()));
         for (let i = 0; i < overdue.length; i++) {
             if (overdue[i].status !== 'Completed') {
                 overdue[i].status = 'Overdue';
@@ -360,12 +366,12 @@ class Model {
     filterByDate(array, date) {
         const searchDate = date.toLowerCase();
         const parentArray = array.filter((item) => {
-            if (item.dueDate !== undefined) {
+            if (item.dueDate !== '') {
                 return format(item.dueDate, 'MMM d').toLowerCase() === searchDate || format(item.dueDate, 'MMMM d').toLowerCase() === searchDate;
             }
         });
         const remainingArray = array.filter((item) => {
-            if (item.dueDate !== undefined) {
+            if (item.dueDate !== '') {
                 return !(format(item.dueDate, 'MMM d').toLowerCase() === searchDate || format(item.dueDate, 'MMMM d').toLowerCase() === searchDate);
             } else {
                 return true;
@@ -374,7 +380,7 @@ class Model {
 
         for (let i = 0; i < remainingArray.length; i++) {
             const todos = remainingArray[i].todos.filter((todo) => {
-                if (todo.dueDate !== undefined) {
+                if (todo.dueDate !== '') {
                     return format(todo.dueDate, 'MMM d').toLowerCase() === searchDate || format(todo.dueDate, 'MMMM d').toLowerCase() === searchDate;
                 }
             });
@@ -382,7 +388,7 @@ class Model {
                 parentArray.push(remainingArray[i]);
             } else {
                 const remainingTodos = remainingArray[i].todos.filter((todo) => {
-                    if (todo.dueDate !== undefined) {
+                    if (todo.dueDate !== '') {
                         return !(format(todo.dueDate, 'MMM d').toLowerCase() === searchDate || format(todo.dueDate, 'MMMM d').toLowerCase() === searchDate);
                     } else {
                         return true;
@@ -391,7 +397,7 @@ class Model {
 
                 for (let j = 0; j < remainingTodos.length; j++) {
                     const subTodos = remainingTodos[j].todos.filter((todo) => {
-                        if (todo.dueDate !== undefined) {
+                        if (todo.dueDate !== '') {
                             return format(todo.dueDate, 'MMM d').toLowerCase() === searchDate || format(todo.dueDate, 'MMMM d').toLowerCase() === searchDate;
                         }
                     });
@@ -406,12 +412,12 @@ class Model {
 
     filterByYear(array, year) {
         const parentArray = array.filter((item) => {
-            if (item.dueDate !== undefined) {
+            if (item.dueDate !== '') {
                 return format(item.dueDate, 'yyyy').includes(year);
             }
         });
         const remainingArray = array.filter((item) => {
-            if (item.dueDate !== undefined) {
+            if (item.dueDate !== '') {
                 return !(format(item.dueDate, 'yyyy').includes(year));
             } else {
                 return true;
@@ -420,7 +426,7 @@ class Model {
 
         for (let i = 0; i < remainingArray.length; i++) {
             const todos = remainingArray[i].todos.filter((todo) => {
-                if (todo.dueDate !== undefined) {
+                if (todo.dueDate !== '') {
                     return format(todo.dueDate, 'yyyy').includes(year);
                 }
             });
@@ -428,7 +434,7 @@ class Model {
                 parentArray.push(remainingArray[i]);
             } else {
                 const remainingTodos = remainingArray[i].todos.filter((todo) => {
-                    if (todo.dueDate !== undefined) {
+                    if (todo.dueDate !== '') {
                         return !(format(todo.dueDate, 'yyyy').includes(year));
                     } else {
                         return true;
@@ -437,7 +443,7 @@ class Model {
 
                 for (let j = 0; j < remainingTodos.length; j++) {
                     const subTodos = remainingTodos[j].todos.filter((todo) => {
-                        if (todo.dueDate !== undefined) {
+                        if (todo.dueDate !== '') {
                             return format(todo.dueDate, 'yyyy').includes(year);
                         }
                     });
@@ -453,12 +459,12 @@ class Model {
     filterByMonth(array, month) {
         const searchMonth = month.toLowerCase();
         const parentArray = array.filter((item) => {
-            if (item.dueDate !== undefined) {
+            if (item.dueDate !== '') {
                 return format(item.dueDate, 'MMMM').toLowerCase().includes(searchMonth);
             }
         });
         const remainingArray = array.filter((item) => {
-            if (item.dueDate !== undefined) {
+            if (item.dueDate !== '') {
                 return !(format(item.dueDate, 'MMMM').toLowerCase().includes(searchMonth));
             } else {
                 return true;
@@ -467,7 +473,7 @@ class Model {
 
         for (let i = 0; i < remainingArray.length; i++) {
             const todos = remainingArray[i].todos.filter((todo) => {
-                if (todo.dueDate !== undefined) {
+                if (todo.dueDate !== '') {
                     return format(todo.dueDate, 'MMMM').toLowerCase().includes(searchMonth);
                 }
             });
@@ -475,7 +481,7 @@ class Model {
                 parentArray.push(remainingArray[i]);
             } else {
                 const remainingTodos = remainingArray[i].todos.filter((todo) => {
-                    if (todo.dueDate !== undefined) {
+                    if (todo.dueDate !== '') {
                         return !(format(todo.dueDate, 'MMMM').toLowerCase().includes(searchMonth));
                     } else {
                         return true;
@@ -484,7 +490,7 @@ class Model {
 
                 for (let j = 0; j < remainingTodos.length; j++) {
                     const subTodos = remainingTodos[j].todos.filter((todo) => {
-                        if (todo.dueDate !== undefined) {
+                        if (todo.dueDate !== '') {
                             return format(todo.dueDate, 'MMMM').toLowerCase().includes(searchMonth);
                         }
                     });
@@ -499,12 +505,12 @@ class Model {
 
     filterByDay(array, day) {
         const parentArray = array.filter((item) => {
-            if (item.dueDate !== undefined) {
+            if (item.dueDate !== '') {
                 return format(item.dueDate, 'd') === day;
             }
         });
         const remainingArray = array.filter((item) => {
-            if (item.dueDate !== undefined) {
+            if (item.dueDate !== '') {
                 return format(item.dueDate, 'd') !== day;
             } else {
                 return true;
@@ -513,7 +519,7 @@ class Model {
 
         for (let i = 0; i < remainingArray.length; i++) {
             const todos = remainingArray[i].todos.filter((todo) => {
-                if (todo.dueDate !== undefined) {
+                if (todo.dueDate !== '') {
                     return format(todo.dueDate, 'd') === day;
                 }
             });
@@ -521,7 +527,7 @@ class Model {
                 parentArray.push(remainingArray[i]);
             } else {
                 const remainingTodos = remainingArray[i].todos.filter((todo) => {
-                    if (todo.dueDate !== undefined) {
+                    if (todo.dueDate !== '') {
                         return format(todo.dueDate, 'd') !== day;
                     } else {
                         return true;
@@ -530,7 +536,7 @@ class Model {
 
                 for (let j = 0; j < remainingTodos.length; j++) {
                     const subTodos = remainingTodos[j].todos.filter((todo) => {
-                        if (todo.dueDate !== undefined) {
+                        if (todo.dueDate !== '') {
                             return format(todo.dueDate, 'd') === day;
                         }
                     });
@@ -565,11 +571,11 @@ class Model {
     }
 
     filterByWithDueDate(array) {
-        return array.filter((item) => item.dueDate !== undefined);
+        return array.filter((item) => item.dueDate !== '');
     }
 
     filterByWithoutDueDate(array) {
-        return array.filter((item) => item.dueDate === undefined);
+        return array.filter((item) => item.dueDate === '');
     }
 
     sortByTitleAsc(array) {
@@ -590,11 +596,11 @@ class Model {
 
     sortByDueDateAsc(array) {
         return array.sort((a, b) => {
-            if (a.dueDate === undefined && b.dueDate === undefined) {
+            if (a.dueDate === '' && b.dueDate === '') {
                 return 0;
-            } else if (a.dueDate === undefined) {
+            } else if (a.dueDate === '') {
                 return -1;
-            } else if (b.dueDate === undefined) {
+            } else if (b.dueDate === '') {
                 return 1;
             } else {
                 return compareAsc(a.dueDate, b.dueDate);
@@ -604,11 +610,11 @@ class Model {
 
     sortByDueDateDesc(array) {
         return array.sort((a, b) => {
-            if (a.dueDate === undefined && b.dueDate === undefined) {
+            if (a.dueDate === '' && b.dueDate === '') {
                 return 0;
-            } else if (b.dueDate === undefined) {
+            } else if (b.dueDate === '') {
                 return -1;
-            } else if (a.dueDate === undefined) {
+            } else if (a.dueDate === '') {
                 return 1;
             } else {
                 return compareDesc(a.dueDate, b.dueDate);

@@ -1,5 +1,6 @@
 import View from '../view/view';
 import Model from '../model/model';
+import { parseISO } from 'date-fns';
 
 class Controller {
     constructor(model, view) {
@@ -22,6 +23,7 @@ class Controller {
         this.handleHomeEventListener();
 
         this.handleSearchBarEventListeners();
+        this.handleCreateProjectBtnEventListener();
 
         this.handleImportantEventListeners();
         this.handleTodayEventListeners();
@@ -118,14 +120,24 @@ class Controller {
         this.updateProjectsView(sortedProjects, this.isProjectsPage, this.isTrashPage, this.defaultSortOrder);
     }
 
-    handleCreateProjectBtn() {
+    handleCreateProjectBtnEventListener() {
         this.view.bindCreateProjectBtnEventListener(this.handleCreateProject);
     }
 
-    handleCreateProject = () => {
-        this.model.createProject();
-        // TODO
-        // update view if necessary
+    handleCreateProject = (title, dueDate, description, notes, priority, status, todoTitles) => {
+        const date = parseISO(dueDate);
+        let todos;
+        let todo;
+        if (todoTitles.length === 0) {
+            todos = undefined;
+        } else {
+            todos = [];
+            for (let i = 0; i < todoTitles.length; i++) {
+                todo = this.model.createTodoWithOnlyTitle(todoTitles[i]);
+                todos.push(todo);
+            }
+        }
+        this.model.createProject(title, description, date, priority, status, notes, todos);
     }
 
     // Sidebar handlers

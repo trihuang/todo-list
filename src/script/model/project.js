@@ -55,10 +55,6 @@ class Project {
     }
 
     set title(title) {
-        title = title.trim();
-        if (title === '') {
-            alert('Please enter a title.');
-        }
         this._title = title;
     }
 
@@ -71,9 +67,6 @@ class Project {
     }
 
     set dueDate(date) {
-        if (date === undefined) {
-            alert('Please enter a due date.');
-        }
         this._dueDate = date;
     }
 
@@ -84,8 +77,10 @@ class Project {
     set status(newStatus) {
         this._status = newStatus;
         if (this._status !== 'Completed' || newStatus !== 'Completed') {
-            if (compareAsc(this._dueDate, new Date()) === -1) {
-                this._status = 'Overdue';
+            if (this._dueDate !== '') {
+                if (compareAsc(this._dueDate, new Date()) === -1) {
+                    this._status = 'Overdue';
+                }
             }
         } 
     }
@@ -176,11 +171,11 @@ class Project {
 
     sortByDueDateAsc(array) {
         return array.sort((a, b) => {
-            if (a.dueDate === undefined && b.dueDate === undefined) {
+            if (a.dueDate === '' && b.dueDate === '') {
                 return 0;
-            } else if (a.dueDate === undefined) {
+            } else if (a.dueDate === '') {
                 return -1;
-            } else if (b.dueDate === undefined) {
+            } else if (b.dueDate === '') {
                 return 1;
             } else {
                 return compareAsc(a.dueDate, b.dueDate);
@@ -190,11 +185,11 @@ class Project {
 
     sortByDueDateDesc(array) {
         return array.sort((a, b) => {
-            if (a.dueDate === undefined && b.dueDate === undefined) {
+            if (a.dueDate === '' && b.dueDate === '') {
                 return 0;
-            } else if (b.dueDate === undefined) {
+            } else if (b.dueDate === '') {
                 return -1;
-            } else if (a.dueDate === undefined) {
+            } else if (a.dueDate === '') {
                 return 1;
             } else {
                 return compareDesc(a.dueDate, b.dueDate);
