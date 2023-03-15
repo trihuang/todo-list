@@ -38,6 +38,8 @@ class Controller {
         this.handleFilterByOverdueEventListener();
         this.handleFilterByPriorityEventListeners();
         this.handleFilterByStatusEventListeners();
+        this.handleFilterByWithDueDateEventListener();
+        this.handleFilterByWithoutDueDateEventListener();
 
         this.handleSortByTitleAscEventListener();
         this.handleSortByTitleDescEventListener();
@@ -344,6 +346,46 @@ class Controller {
         let sortedFilteredItems = this.itemsOnDisplay;
         if (this.itemsOnDisplay !== undefined) {
             filteredItems = this.model.filterByStatus(this.itemsOnDisplay, status);
+            sortedFilteredItems = this.sortInDefaultOrder(filteredItems, this.defaultSortOrder);
+        }
+        if (this.isTrashPage) {
+            this.updateTrashView(sortedFilteredItems, this.isTrashPage, this.defaultSortOrder);
+        } else if (this.isProjectsPage) {
+            this.updateContentView(sortedFilteredItems, this.isProjectsPage, this.isTrashPage, this.defaultSortOrder);
+        } else {
+            this.updateTodosContentView(sortedFilteredItems, this.isProjectsPage, this.isTrashPage, this.defaultSortOrder);
+        }
+    }
+
+    handleFilterByWithDueDateEventListener() {
+        this.view.bindFilterByWithDueDateEventListener(this.handleFilterByWithDueDateDisplay);
+    }
+
+    handleFilterByWithDueDateDisplay = () => {
+        let filteredItems = this.itemsOnDisplay;
+        let sortedFilteredItems = this.itemsOnDisplay;
+        if (this.itemsOnDisplay !== undefined) {
+            filteredItems = this.model.filterByWithDueDate(this.itemsOnDisplay);
+            sortedFilteredItems = this.sortInDefaultOrder(filteredItems, this.defaultSortOrder);
+        }
+        if (this.isTrashPage) {
+            this.updateTrashView(sortedFilteredItems, this.isTrashPage, this.defaultSortOrder);
+        } else if (this.isProjectsPage) {
+            this.updateContentView(sortedFilteredItems, this.isProjectsPage, this.isTrashPage, this.defaultSortOrder);
+        } else {
+            this.updateTodosContentView(sortedFilteredItems, this.isProjectsPage, this.isTrashPage, this.defaultSortOrder);
+        }
+    }
+
+    handleFilterByWithoutDueDateEventListener() {
+        this.view.bindFilterByWithoutDueDateEventListener(this.handleFilterByWithoutDueDateDisplay);
+    }
+
+    handleFilterByWithoutDueDateDisplay = () => {
+        let filteredItems = this.itemsOnDisplay;
+        let sortedFilteredItems = this.itemsOnDisplay;
+        if (this.itemsOnDisplay !== undefined) {
+            filteredItems = this.model.filterByWithoutDueDate(this.itemsOnDisplay);
             sortedFilteredItems = this.sortInDefaultOrder(filteredItems, this.defaultSortOrder);
         }
         if (this.isTrashPage) {

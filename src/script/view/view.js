@@ -161,6 +161,16 @@ class View {
         });
     }
 
+    bindFilterByWithDueDateEventListener(handler) {
+        const withDueDate = document.querySelector('#filterDropdown + .dropdown-menu > .dropdown-item:nth-of-type(11)');
+        withDueDate.addEventListener('click', handler);
+    }
+
+    bindFilterByWithoutDueDateEventListener(handler) {
+        const withoutDueDate = document.querySelector('#filterDropdown + .dropdown-menu > .dropdown-item:nth-of-type(12)');
+        withoutDueDate.addEventListener('click', handler);
+    }
+
     bindSortByTitleAscEventListener(handler) {
         const sortCriteria = document.querySelector('#sortDropdown + .dropdown-menu > .dropdown-item:first-of-type');
         sortCriteria.addEventListener('click', handler);

@@ -564,6 +564,14 @@ class Model {
         return filteredSet;
     }
 
+    filterByWithDueDate(array) {
+        return array.filter((item) => item.dueDate !== undefined);
+    }
+
+    filterByWithoutDueDate(array) {
+        return array.filter((item) => item.dueDate === undefined);
+    }
+
     sortByTitleAsc(array) {
         return array.sort((a, b) => {
             const titleA = a.title.toLowerCase();
