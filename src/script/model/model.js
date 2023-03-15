@@ -582,7 +582,9 @@ class Model {
 
     sortByDueDateAsc(array) {
         return array.sort((a, b) => {
-            if (a.dueDate === undefined) {
+            if (a.dueDate === undefined && b.dueDate === undefined) {
+                return 0;
+            } else if (a.dueDate === undefined) {
                 return -1;
             } else if (b.dueDate === undefined) {
                 return 1;
@@ -594,7 +596,9 @@ class Model {
 
     sortByDueDateDesc(array) {
         return array.sort((a, b) => {
-            if (b.dueDate === undefined) {
+            if (a.dueDate === undefined && b.dueDate === undefined) {
+                return 0;
+            } else if (b.dueDate === undefined) {
                 return -1;
             } else if (a.dueDate === undefined) {
                 return 1;
@@ -605,19 +609,23 @@ class Model {
     }
 
     sortByPriorityAsc(array) {
-        return array.sort((a, b) => a.convertPriority() > b.convertPriority() ? 1 : -1);
+        return array.sort((a, b) => a.convertPriority() > b.convertPriority() ? 1 : 
+                                    a.convertPriority() < b.convertPriority() ? -1 : 0);
     }
 
     sortByPriorityDesc(array) {
-        return array.sort((a, b) => a.convertPriority() > b.convertPriority() ? -1 : 1);
+        return array.sort((a, b) => a.convertPriority() > b.convertPriority() ? -1 : 
+                                    a.convertPriority() < b.convertPriority() ? 1 : 0);
     }
 
     sortByStatusAsc(array) {
-        return array.sort((a, b) => a.convertStatus() > b.convertStatus() ? 1 : -1);
+        return array.sort((a, b) => a.convertStatus() > b.convertStatus() ? 1 :
+                                    a.convertStatus() < b.convertStatus() ? -1 : 0);
     }
 
     sortByStatusDesc(array) {
-        return array.sort((a, b) => a.convertStatus() > b.convertStatus() ? -1 : 1);
+        return array.sort((a, b) => a.convertStatus() > b.convertStatus() ? -1 :
+                                    a.convertStatus() < b.convertStatus() ? 1 : 0);
     }
 
     sortByDateAddedAsc(array) {

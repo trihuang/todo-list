@@ -109,7 +109,6 @@ class View {
 
     // Add event listeners and bind handlers for filter and sort
 
-
     bindFilterByTodayEventListener(handler) {
         const filterByToday = document.querySelector('#filterDropdown + .dropdown-menu > .dropdown-item:first-of-type');
         filterByToday.addEventListener('click', handler);
@@ -160,6 +159,56 @@ class View {
         notYetStarted.addEventListener('click', event => {
             handler('None');
         });
+    }
+
+    bindSortByTitleAscEventListener(handler) {
+        const sortCriteria = document.querySelector('#sortDropdown + .dropdown-menu > .dropdown-item:first-of-type');
+        sortCriteria.addEventListener('click', handler);
+    }
+
+    bindSortByTitleDescEventListener(handler) {
+        const sortCriteria = document.querySelector('#sortDropdown + .dropdown-menu > .dropdown-item:nth-of-type(2)');
+        sortCriteria.addEventListener('click', handler);
+    }
+
+    bindSortByPriorityAscEventListener(handler) {
+        const sortCriteria = document.querySelector('#sortDropdown + .dropdown-menu > .dropdown-item:nth-of-type(3)');
+        sortCriteria.addEventListener('click', handler);
+    }
+
+    bindSortByPriorityDescEventListener(handler) {
+        const sortCriteria = document.querySelector('#sortDropdown + .dropdown-menu > .dropdown-item:nth-of-type(4)');
+        sortCriteria.addEventListener('click', handler);
+    }
+
+    bindSortByStatusAscEventListener(handler) {
+        const sortCriteria = document.querySelector('#sortDropdown + .dropdown-menu > .dropdown-item:nth-of-type(5)');
+        sortCriteria.addEventListener('click', handler);
+    }
+
+    bindSortByStatusDescEventListener(handler) {
+        const sortCriteria = document.querySelector('#sortDropdown + .dropdown-menu > .dropdown-item:nth-of-type(6)');
+        sortCriteria.addEventListener('click', handler);
+    }
+
+    bindSortByDueDateAscEventListener(handler) {
+        const sortCriteria = document.querySelector('#sortDropdown + .dropdown-menu > .dropdown-item:nth-of-type(7)');
+        sortCriteria.addEventListener('click', handler);
+    }
+
+    bindSortByDueDateDescEventListener(handler) {
+        const sortCriteria = document.querySelector('#sortDropdown + .dropdown-menu > .dropdown-item:nth-of-type(8)');
+        sortCriteria.addEventListener('click', handler);
+    }
+
+    bindSortByDateAddedAscEventListener(handler) {
+        const sortCriteria = document.querySelector('#sortDropdown + .dropdown-menu > .dropdown-item:nth-of-type(9)');
+        sortCriteria.addEventListener('click', handler);
+    }
+
+    bindSortByDateAddedDescEventListener(handler) {
+        const sortCriteria = document.querySelector('#sortDropdown + .dropdown-menu > .dropdown-item:nth-of-type(10)');
+        sortCriteria.addEventListener('click', handler);
     }
 
     // Add event listeners and bind handlers in the projects and todos
