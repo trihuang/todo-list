@@ -258,7 +258,7 @@ class View {
         header.textContent = 'Projects';
     }
 
-    displayItems(items, isProjectsPage, isTrashPage) {
+    displayItems(items, isProjectsPage, isTrashPage, sortOrder) {
         const content = document.getElementById('content');
 
         if (items === undefined) return;
@@ -274,13 +274,13 @@ class View {
         accordion.setAttribute('id', 'itemAccordion');
 
         for (let i = 0; i < items.length; i++) {
-            let accordionItem = this.displayItem(items[i], isProjectsPage, isTrashPage);
+            let accordionItem = this.displayItem(items[i], isProjectsPage, isTrashPage, sortOrder);
             accordion.appendChild(accordionItem);
         }
         content.appendChild(accordion);
     }
 
-    displayItem(item, isProjectsPage, isTrashPage) {
+    displayItem(item, isProjectsPage, isTrashPage, sortOrder) {
         const accordionItem = document.createElement('div');
         accordionItem.classList.add('accordion-item');
 
@@ -361,14 +361,16 @@ class View {
         }
 
         if (item.todos !== undefined) {
+            const sortedTodos = item.sortInDefaultOrder(item.todos, sortOrder);
             let task;
-            for (let i = 0; i < item.todos.length; i++) {
-                task = this.displayTodo(item.todos[i], isProjectsPage);
+            for (let i = 0; i < sortedTodos.length; i++) {
+                task = this.displayTodo(sortedTodos[i], isProjectsPage);
                 accordionBody.appendChild(task);
 
-                if (item.todos[i].todos !== undefined) {
-                    for (let j = 0; j < item.todos[i].todos.length; j++) {
-                        task = this.displayTodo(item.todos[i].todos[j], isProjectsPage);
+                if (sortedTodos[i].todos !== undefined) {
+                    const sortedSubTodos = sortedTodos[i].sortInDefaultOrder(sortedTodos[i].todos, sortOrder);
+                    for (let j = 0; j < sortedSubTodos.length; j++) {
+                        task = this.displayTodo(sortedSubTodos[j], isProjectsPage);
                         accordionBody.appendChild(task);
                     }
                 }
@@ -510,7 +512,7 @@ class View {
         content.appendChild(divider);
     }
 
-    displayTrashPage(removedItems, isTrashPage) {
+    displayTrashPage(removedItems, isTrashPage, sortOrder) {
         const header = document.querySelector('.navbar > h2');
         header.textContent = 'Trash';
 
@@ -530,7 +532,7 @@ class View {
                 content.appendChild(projectsHeading);
                 divider = this.makeDivider();
                 content.appendChild(divider);
-                this.displayItems(removedProjects, true, isTrashPage);
+                this.displayItems(removedProjects, true, isTrashPage, sortOrder);
                 }
             const removedTodos = removedItems.filter((item) => !item.isProject);
             if (removedTodos.length > 0) {
@@ -543,7 +545,7 @@ class View {
                 divider = this.makeDivider();
                 content.appendChild(divider);
 
-                this.displayItems(removedTodos, false, isTrashPage);
+                this.displayItems(removedTodos, false, isTrashPage, sortOrder);
             }
         }
     }

@@ -82,7 +82,7 @@ class Controller {
 
     initializeProjectsPage(projects) {
         const sortedProjects = this.sortInDefaultOrder(projects, this.defaultSortOrder);
-        this.view.displayItems(sortedProjects, this.isProjectsPage, this.isTrashPage);
+        this.view.displayItems(sortedProjects, this.isProjectsPage, this.isTrashPage, this.defaultSortOrder);
     }
 
     handleLogoEventListener() {
@@ -98,7 +98,7 @@ class Controller {
         const sortedProjects = this.sortInDefaultOrder(this.model.projects, this.defaultSortOrder);
         this._isProjectsPage = true;
         this._isTrashPage = false;
-        this.updateProjectsView(sortedProjects, this.isProjectsPage, this.isTrashPage);
+        this.updateProjectsView(sortedProjects, this.isProjectsPage, this.isTrashPage, this.defaultSortOrder);
     }
 
     // Nav bar handlers
@@ -113,7 +113,7 @@ class Controller {
         const sortedProjects = this.sortInDefaultOrder(searchResults, this.defaultSortOrder);
         this._isProjectsPage = true;
         this._isTrashPage = false;
-        this.updateProjectsView(sortedProjects, this.isProjectsPage, this.isTrashPage);
+        this.updateProjectsView(sortedProjects, this.isProjectsPage, this.isTrashPage, this.defaultSortOrder);
     }
 
     handleCreateProjectBtn() {
@@ -138,7 +138,7 @@ class Controller {
         const sortedProjects = this.sortInDefaultOrder(importantProjects, this.defaultSortOrder);
         this._isProjectsPage = true;
         this._isTrashPage = false;
-        this.updateProjectsView(sortedProjects, this.isProjectsPage, this.isTrashPage);
+        this.updateProjectsView(sortedProjects, this.isProjectsPage, this.isTrashPage, this.defaultSortOrder);
     }
 
     handleTodayEventListeners() {
@@ -151,7 +151,7 @@ class Controller {
         const sortedProjects = this.sortInDefaultOrder(todayProjects, this.defaultSortOrder);
         this._isProjectsPage = true;
         this._isTrashPage = false;
-        this.updateProjectsView(sortedProjects, this.isProjectsPage, this.isTrashPage);
+        this.updateProjectsView(sortedProjects, this.isProjectsPage, this.isTrashPage, this.defaultSortOrder);
     }
 
     handleThisWeekEventListeners() {
@@ -164,7 +164,7 @@ class Controller {
         const sortedProjects = this.sortInDefaultOrder(thisWeekProjects, this.defaultSortOrder);
         this._isProjectsPage = true;
         this._isTrashPage = false;
-        this.updateProjectsView(sortedProjects, this.isProjectsPage, this.isTrashPage);
+        this.updateProjectsView(sortedProjects, this.isProjectsPage, this.isTrashPage, this.defaultSortOrder);
     }
 
     handleThisMonthEventListeners() {
@@ -177,7 +177,7 @@ class Controller {
         const sortedProjects = this.sortInDefaultOrder(thisMonthProjects, this.defaultSortOrder);
         this._isProjectsPage = true;
         this._isTrashPage = false;
-        this.updateProjectsView(sortedProjects, this.isProjectsPage, this.isTrashPage);
+        this.updateProjectsView(sortedProjects, this.isProjectsPage, this.isTrashPage, this.defaultSortOrder);
     }
 
     handleCompletedEventListeners() {
@@ -190,7 +190,7 @@ class Controller {
         const sortedProjects = this.sortInDefaultOrder(completedProjects, this.defaultSortOrder);
         this._isProjectsPage = true;
         this._isTrashPage = false;
-        this.updateProjectsView(sortedProjects, this.isProjectsPage, this.isTrashPage);
+        this.updateProjectsView(sortedProjects, this.isProjectsPage, this.isTrashPage, this.defaultSortOrder);
     }
 
     handleInProgressEventListeners() {
@@ -203,7 +203,7 @@ class Controller {
         const sortedProjects = this.sortInDefaultOrder(projectsInProgress, this.defaultSortOrder);
         this._isProjectsPage = true;
         this._isTrashPage = false;
-        this.updateProjectsView(sortedProjects, this.isProjectsPage, this.isTrashPage);
+        this.updateProjectsView(sortedProjects, this.isProjectsPage, this.isTrashPage, this.defaultSortOrder);
     }
 
     handleOverdueEventListeners() {
@@ -216,7 +216,7 @@ class Controller {
         const sortedProjects = this.sortInDefaultOrder(overdueProjects, this.defaultSortOrder);
         this._isProjectsPage = true;
         this._isTrashPage = false;
-        this.updateProjectsView(sortedProjects, this.isProjectsPage, this.isTrashPage);
+        this.updateProjectsView(sortedProjects, this.isProjectsPage, this.isTrashPage, this.defaultSortOrder);
     }
 
     handleTrashEventListeners() {
@@ -230,7 +230,7 @@ class Controller {
         const sortedProjects = this.sortInDefaultOrder(this.model.deletedItems, this.defaultSortOrder);
         this._isProjectsPage = false;
         this._isTrashPage = true;
-        this.view.displayTrashPage(sortedProjects, this.isTrashPage);
+        this.view.displayTrashPage(sortedProjects, this.isTrashPage, this.defaultSortOrder);
     }
 
     // Filter handlers
@@ -240,14 +240,18 @@ class Controller {
     }
 
     handleFilterByTodayDisplay = () => {
-        const filteredItems = this.model.filterByToday(this.itemsOnDisplay);
-        const sortedFilteredItems = this.sortInDefaultOrder(filteredItems, this.defaultSortOrder);
+        let filteredItems = this.itemsOnDisplay;
+        let sortedFilteredItems = this.itemsOnDisplay;
+        if (this.itemsOnDisplay !== undefined) {
+            filteredItems = this.model.filterByToday(this.itemsOnDisplay);
+            sortedFilteredItems = this.sortInDefaultOrder(filteredItems, this.defaultSortOrder);
+        }
         if (this.isTrashPage) {
-            this.updateTrashView(sortedFilteredItems, this.isTrashPage);
+            this.updateTrashView(sortedFilteredItems, this.isTrashPage, this.defaultSortOrder);
         } else if (this.isProjectsPage) {
-            this.updateContentView(sortedFilteredItems, this.isProjectsPage, this.isTrashPage);
+            this.updateContentView(sortedFilteredItems, this.isProjectsPage, this.isTrashPage, this.defaultSortOrder);
         } else {
-            this.updateTodosContentView(sortedFilteredItems, this.isProjectsPage, this.isTrashPage);
+            this.updateTodosContentView(sortedFilteredItems, this.isProjectsPage, this.isTrashPage, this.defaultSortOrder);
         }
     }
 
@@ -256,14 +260,18 @@ class Controller {
     }
 
     handleFilterByThisWeekDisplay = () => {
-        const filteredItems = this.model.filterByThisWeek(this.itemsOnDisplay);
-        const sortedFilteredItems = this.sortInDefaultOrder(filteredItems, this.defaultSortOrder);
+        let filteredItems = this.itemsOnDisplay;
+        let sortedFilteredItems = this.itemsOnDisplay;
+        if (this.itemsOnDisplay !== undefined) {
+            filteredItems = this.model.filterByhisWeek(this.itemsOnDisplay);
+            sortedFilteredItems = this.sortInDefaultOrder(filteredItems, this.defaultSortOrder);
+        }
         if (this.isTrashPage) {
-            this.updateTrashView(sortedFilteredItems, this.isTrashPage);
+            this.updateTrashView(sortedFilteredItems, this.isTrashPage, this.defaultSortOrder);
         } else if (this.isProjectsPage) {
-            this.updateContentView(sortedFilteredItems, this.isProjectsPage, this.isTrashPage);
+            this.updateContentView(sortedFilteredItems, this.isProjectsPage, this.isTrashPage, this.defaultSortOrder);
         } else {
-            this.updateTodosContentView(sortedFilteredItems, this.isProjectsPage, this.isTrashPage);
+            this.updateTodosContentView(sortedFilteredItems, this.isProjectsPage, this.isTrashPage, this.defaultSortOrder);
         }
     }
 
@@ -272,14 +280,18 @@ class Controller {
     }
 
     handleFilterByThisMonthDisplay = () => {
-        const filteredItems = this.model.filterByThisMonth(this.itemsOnDisplay);
-        const sortedFilteredItems = this.sortInDefaultOrder(filteredItems, this.defaultSortOrder);
+        let filteredItems = this.itemsOnDisplay;
+        let sortedFilteredItems = this.itemsOnDisplay;
+        if (this.itemsOnDisplay !== undefined) {
+            filteredItems = this.model.filterByThisMonth(this.itemsOnDisplay);
+            sortedFilteredItems = this.sortInDefaultOrder(filteredItems, this.defaultSortOrder);
+        }
         if (this.isTrashPage) {
-            this.updateTrashView(sortedFilteredItems, this.isTrashPage);
+            this.updateTrashView(sortedFilteredItems, this.isTrashPage, this.defaultSortOrder);
         } else if (this.isProjectsPage) {
-            this.updateContentView(sortedFilteredItems, this.isProjectsPage, this.isTrashPage);
+            this.updateContentView(sortedFilteredItems, this.isProjectsPage, this.isTrashPage, this.defaultSortOrder);
         } else {
-            this.updateTodosContentView(sortedFilteredItems, this.isProjectsPage, this.isTrashPage);
+            this.updateTodosContentView(sortedFilteredItems, this.isProjectsPage, this.isTrashPage, this.defaultSortOrder);
         }
     }
 
@@ -288,14 +300,18 @@ class Controller {
     }
 
     handleFilterByOverdueDisplay = () => {
-        const filteredItems = this.model.filterByOverdue(this.itemsOnDisplay);
-        const sortedFilteredItems = this.sortInDefaultOrder(filteredItems, this.defaultSortOrder);
+        let filteredItems = this.itemsOnDisplay;
+        let sortedFilteredItems = this.itemsOnDisplay;
+        if (this.itemsOnDisplay !== undefined) {
+            filteredItems = this.model.filterByOverdue(this.itemsOnDisplay);
+            sortedFilteredItems = this.sortInDefaultOrder(filteredItems, this.defaultSortOrder);
+        }
         if (this.isTrashPage) {
-            this.updateTrashView(sortedFilteredItems, this.isTrashPage);
+            this.updateTrashView(sortedFilteredItems, this.isTrashPage, this.defaultSortOrder);
         } else if (this.isProjectsPage) {
-            this.updateContentView(sortedFilteredItems, this.isProjectsPage, this.isTrashPage);
+            this.updateContentView(sortedFilteredItems, this.isProjectsPage, this.isTrashPage, this.defaultSortOrder);
         } else {
-            this.updateTodosContentView(sortedFilteredItems, this.isProjectsPage, this.isTrashPage);
+            this.updateTodosContentView(sortedFilteredItems, this.isProjectsPage, this.isTrashPage, this.defaultSortOrder);
         }
     }
 
@@ -304,14 +320,18 @@ class Controller {
     }
 
     handleFilterByPriorityDisplay = (priority) => {
-        const filteredItems = this.model.filterByPriority(this.itemsOnDisplay, priority);
-        const sortedFilteredItems = this.sortInDefaultOrder(filteredItems, this.defaultSortOrder);
+        let filteredItems = this.itemsOnDisplay;
+        let sortedFilteredItems = this.itemsOnDisplay;
+        if (this.itemsOnDisplay !== undefined) {
+            filteredItems = this.model.filterByPriority(this.itemsOnDisplay, priority);
+            sortedFilteredItems = this.sortInDefaultOrder(filteredItems, this.defaultSortOrder);
+        }
         if (this.isTrashPage) {
-            this.updateTrashView(sortedFilteredItems, this.isTrashPage);
+            this.updateTrashView(sortedFilteredItems, this.isTrashPage, this.defaultSortOrder);
         } else if (this.isProjectsPage) {
-            this.updateContentView(sortedFilteredItems, this.isProjectsPage, this.isTrashPage);
+            this.updateContentView(sortedFilteredItems, this.isProjectsPage, this.isTrashPage, this.defaultSortOrder);
         } else {
-            this.updateTodosContentView(sortedFilteredItems, this.isProjectsPage, this.isTrashPage);
+            this.updateTodosContentView(sortedFilteredItems, this.isProjectsPage, this.isTrashPage, this.defaultSortOrder);
         }
     }
 
@@ -320,14 +340,18 @@ class Controller {
     }
 
     handleFilterByStatusDisplay = (status) => {
-        const filteredItems = this.model.filterByStatus(this.itemsOnDisplay, status);
-        const sortedFilteredItems = this.sortInDefaultOrder(filteredItems, this.defaultSortOrder);
+        let filteredItems = this.itemsOnDisplay;
+        let sortedFilteredItems = this.itemsOnDisplay;
+        if (this.itemsOnDisplay !== undefined) {
+            filteredItems = this.model.filterByStatus(this.itemsOnDisplay, status);
+            sortedFilteredItems = this.sortInDefaultOrder(filteredItems, this.defaultSortOrder);
+        }
         if (this.isTrashPage) {
-            this.updateTrashView(sortedFilteredItems, this.isTrashPage);
+            this.updateTrashView(sortedFilteredItems, this.isTrashPage, this.defaultSortOrder);
         } else if (this.isProjectsPage) {
-            this.updateContentView(sortedFilteredItems, this.isProjectsPage, this.isTrashPage);
+            this.updateContentView(sortedFilteredItems, this.isProjectsPage, this.isTrashPage, this.defaultSortOrder);
         } else {
-            this.updateTodosContentView(sortedFilteredItems, this.isProjectsPage, this.isTrashPage);
+            this.updateTodosContentView(sortedFilteredItems, this.isProjectsPage, this.isTrashPage, this.defaultSortOrder);
         }
     }
 
@@ -338,13 +362,16 @@ class Controller {
     }
 
     handleSortByTitleAscDisplay = () => {
-        const sortedItems = this.model.sortByTitleAsc(this.itemsOnDisplay);
+        let sortedItems = this.itemsOnDisplay;
+        if (this.itemsOnDisplay !== undefined) {
+            sortedItems = this.model.sortByTitleAsc(this.itemsOnDisplay);
+        }
         if (this.isTrashPage) {
-            this.updateTrashView(sortedItems, this.isTrashPage);
+            this.updateTrashView(sortedItems, this.isTrashPage, 'titleAsc');
         } else if (this.isProjectsPage) {
-            this.updateContentView(sortedItems, this.isProjectsPage, this.isTrashPage);
+            this.updateContentView(sortedItems, this.isProjectsPage, this.isTrashPage, 'titleAsc');
         } else {
-            this.updateTodosContentView(sortedItems, this.isProjectsPage, this.isTrashPage);
+            this.updateTodosContentView(sortedItems, this.isProjectsPage, this.isTrashPage, 'titleAsc');
         }
     }
 
@@ -353,13 +380,16 @@ class Controller {
     }
 
     handleSortByTitleDescDisplay = () => {
-        const sortedItems = this.model.sortByTitleDesc(this.itemsOnDisplay);
+        let sortedItems = this.itemsOnDisplay;
+        if (this.itemsOnDisplay !== undefined) {
+            sortedItems = this.model.sortByTitleDesc(this.itemsOnDisplay);
+        }
         if (this.isTrashPage) {
-            this.updateTrashView(sortedItems, this.isTrashPage);
+            this.updateTrashView(sortedItems, this.isTrashPage, 'titleDesc');
         } else if (this.isProjectsPage) {
-            this.updateContentView(sortedItems, this.isProjectsPage, this.isTrashPage);
+            this.updateContentView(sortedItems, this.isProjectsPage, this.isTrashPage, 'titleDesc');
         } else {
-            this.updateTodosContentView(sortedItems, this.isProjectsPage, this.isTrashPage);
+            this.updateTodosContentView(sortedItems, this.isProjectsPage, this.isTrashPage, 'titleDesc');
         }
     }
 
@@ -368,13 +398,16 @@ class Controller {
     }
 
     handleSortByPriorityAscDisplay = () => {
-        const sortedItems = this.model.sortByPriorityAsc(this.itemsOnDisplay);
+        let sortedItems = this.itemsOnDisplay;
+        if (this.itemsOnDisplay !== undefined) {
+            sortedItems = this.model.sortByPriorityAsc(this.itemsOnDisplay);
+        }
         if (this.isTrashPage) {
-            this.updateTrashView(sortedItems, this.isTrashPage);
+            this.updateTrashView(sortedItems, this.isTrashPage, 'priorityAsc');
         } else if (this.isProjectsPage) {
-            this.updateContentView(sortedItems, this.isProjectsPage, this.isTrashPage);
+            this.updateContentView(sortedItems, this.isProjectsPage, this.isTrashPage, 'priorityAsc');
         } else {
-            this.updateTodosContentView(sortedItems, this.isProjectsPage, this.isTrashPage);
+            this.updateTodosContentView(sortedItems, this.isProjectsPage, this.isTrashPage, 'priorityAsc');
         }
     }
 
@@ -383,13 +416,16 @@ class Controller {
     }
 
     handleSortByPriorityDescDisplay = () => {
-        const sortedItems = this.model.sortByPriorityDesc(this.itemsOnDisplay);
+        let sortedItems = this.itemsOnDisplay;
+        if (this.itemsOnDisplay !== undefined) {
+            sortedItems = this.model.sortByPriorityDesc(this.itemsOnDisplay);
+        }
         if (this.isTrashPage) {
-            this.updateTrashView(sortedItems, this.isTrashPage);
+            this.updateTrashView(sortedItems, this.isTrashPage, 'priorityDesc');
         } else if (this.isProjectsPage) {
-            this.updateContentView(sortedItems, this.isProjectsPage, this.isTrashPage);
+            this.updateContentView(sortedItems, this.isProjectsPage, this.isTrashPage, 'priorityDesc');
         } else {
-            this.updateTodosContentView(sortedItems, this.isProjectsPage, this.isTrashPage);
+            this.updateTodosContentView(sortedItems, this.isProjectsPage, this.isTrashPage, 'priorityDesc');
         }
     }
 
@@ -398,13 +434,16 @@ class Controller {
     }
 
     handleSortByStatusAscDisplay = () => {
-        const sortedItems = this.model.sortByStatusAsc(this.itemsOnDisplay);
+        let sortedItems = this.itemsOnDisplay;
+        if (this.itemsOnDisplay !== undefined) {
+            sortedItems = this.model.sortByStatusAsc(this.itemsOnDisplay);
+        }
         if (this.isTrashPage) {
-            this.updateTrashView(sortedItems, this.isTrashPage);
+            this.updateTrashView(sortedItems, this.isTrashPage, 'statusAsc');
         } else if (this.isProjectsPage) {
-            this.updateContentView(sortedItems, this.isProjectsPage, this.isTrashPage);
+            this.updateContentView(sortedItems, this.isProjectsPage, this.isTrashPage, 'statusAsc');
         } else {
-            this.updateTodosContentView(sortedItems, this.isProjectsPage, this.isTrashPage);
+            this.updateTodosContentView(sortedItems, this.isProjectsPage, this.isTrashPage, 'statusAsc');
         }
     }
 
@@ -413,13 +452,16 @@ class Controller {
     }
 
     handleSortByStatusDescDisplay = () => {
-        const sortedItems = this.model.sortByStatusDesc(this.itemsOnDisplay);
+        let sortedItems = this.itemsOnDisplay;
+        if (this.itemsOnDisplay !== undefined) {
+            sortedItems = this.model.sortByStatusDesc(this.itemsOnDisplay);
+        }
         if (this.isTrashPage) {
-            this.updateTrashView(sortedItems, this.isTrashPage);
+            this.updateTrashView(sortedItems, this.isTrashPage, 'statusDesc');
         } else if (this.isProjectsPage) {
-            this.updateContentView(sortedItems, this.isProjectsPage, this.isTrashPage);
+            this.updateContentView(sortedItems, this.isProjectsPage, this.isTrashPage, 'statusDesc');
         } else {
-            this.updateTodosContentView(sortedItems, this.isProjectsPage, this.isTrashPage);
+            this.updateTodosContentView(sortedItems, this.isProjectsPage, this.isTrashPage, 'statusDesc');
         }
     }
 
@@ -428,13 +470,16 @@ class Controller {
     }
 
     handleSortByDueDateAscDisplay = () => {
-        const sortedItems = this.model.sortByDueDateAsc(this.itemsOnDisplay);
+        let sortedItems = this.itemsOnDisplay;
+        if (this.itemsOnDisplay !== undefined) {
+            sortedItems = this.model.sortByDueDateAsc(this.itemsOnDisplay);
+        }
         if (this.isTrashPage) {
-            this.updateTrashView(sortedItems, this.isTrashPage);
+            this.updateTrashView(sortedItems, this.isTrashPage, 'dueDateAsc');
         } else if (this.isProjectsPage) {
-            this.updateContentView(sortedItems, this.isProjectsPage, this.isTrashPage);
+            this.updateContentView(sortedItems, this.isProjectsPage, this.isTrashPage, 'dueDateAsc');
         } else {
-            this.updateTodosContentView(sortedItems, this.isProjectsPage, this.isTrashPage);
+            this.updateTodosContentView(sortedItems, this.isProjectsPage, this.isTrashPage, 'dueDateAsc');
         }
     }
 
@@ -443,13 +488,16 @@ class Controller {
     }
 
     handleSortByDueDateDescDisplay = () => {
-        const sortedItems = this.model.sortByDueDateDesc(this.itemsOnDisplay);
+        let sortedItems = this.itemsOnDisplay;
+        if (this.itemsOnDisplay !== undefined) {
+            sortedItems = this.model.sortByDueDateDesc(this.itemsOnDisplay);
+        }
         if (this.isTrashPage) {
-            this.updateTrashView(sortedItems, this.isTrashPage);
+            this.updateTrashView(sortedItems, this.isTrashPage, 'dueDateDesc');
         } else if (this.isProjectsPage) {
-            this.updateContentView(sortedItems, this.isProjectsPage, this.isTrashPage);
+            this.updateContentView(sortedItems, this.isProjectsPage, this.isTrashPage, 'dueDateDesc');
         } else {
-            this.updateTodosContentView(sortedItems, this.isProjectsPage, this.isTrashPage);
+            this.updateTodosContentView(sortedItems, this.isProjectsPage, this.isTrashPage, 'dueDateDesc');
         }
     }
 
@@ -458,13 +506,16 @@ class Controller {
     }
 
     handleSortByDateAddedAscDisplay = () => {
-        const sortedItems = this.model.sortByDateAddedAsc(this.itemsOnDisplay);
+        let sortedItems = this.itemsOnDisplay;
+        if (this.itemsOnDisplay !== undefined) {
+            sortedItems = this.model.sortByDateAddedAsc(this.itemsOnDisplay);
+        }
         if (this.isTrashPage) {
-            this.updateTrashView(sortedItems, this.isTrashPage);
+            this.updateTrashView(sortedItems, this.isTrashPage, 'dateAddedAsc');
         } else if (this.isProjectsPage) {
-            this.updateContentView(sortedItems, this.isProjectsPage, this.isTrashPage);
+            this.updateContentView(sortedItems, this.isProjectsPage, this.isTrashPage, 'dateAddedAsc');
         } else {
-            this.updateTodosContentView(sortedItems, this.isProjectsPage, this.isTrashPage);
+            this.updateTodosContentView(sortedItems, this.isProjectsPage, this.isTrashPage, 'dateAddedAsc');
         }
     }
 
@@ -473,13 +524,16 @@ class Controller {
     }
 
     handleSortByDateAddedDescDisplay = () => {
-        const sortedItems = this.model.sortByDateAddedDesc(this.itemsOnDisplay);
+        let sortedItems = this.itemsOnDisplay;
+        if (this.itemsOnDisplay !== undefined) {
+            sortedItems = this.model.sortByDateAddedDesc(this.itemsOnDisplay);
+        }
         if (this.isTrashPage) {
-            this.updateTrashView(sortedItems, this.isTrashPage);
+            this.updateTrashView(sortedItems, this.isTrashPage, 'dateAddedDesc');
         } else if (this.isProjectsPage) {
-            this.updateContentView(sortedItems, this.isProjectsPage, this.isTrashPage);
+            this.updateContentView(sortedItems, this.isProjectsPage, this.isTrashPage, 'dateAddedDesc');
         } else {
-            this.updateTodosContentView(sortedItems, this.isProjectsPage, this.isTrashPage);
+            this.updateTodosContentView(sortedItems, this.isProjectsPage, this.isTrashPage, 'dateAddedDesc');
         }
     }
 
@@ -495,43 +549,43 @@ class Controller {
         this._itemsOnDisplay = project.todos;
         this._isProjectsPage = false;
         this._isTrashPage = false;
-        this.updateTodosView(project, this.isProjectsPage, this.isTrashPage);
+        this.updateTodosView(project, this.isProjectsPage, this.isTrashPage, this.defaultSortOrder);
     }
 
     // Helpers
 
-    updateProjectsView(items, isProjectsPage, isTrashPage) {
+    updateProjectsView(items, isProjectsPage, isTrashPage, sortOrder) {
         this.view.clearHeader();
         this.view.clearContent();
         this.view.displayProjectsHeader();
-        this.view.displayItems(items, isProjectsPage, isTrashPage);
+        this.view.displayItems(items, isProjectsPage, isTrashPage, sortOrder);
     }
 
-    updateTodosView(project, isProjectsPage, isTrashPage) {
+    updateTodosView(project, isProjectsPage, isTrashPage, sortOrder) {
         this.view.clearHeader();
         this.view.clearContent();
         this.view.displayTodosHeader(project);
         let sortedTodos = project.todos;
         if (project.todos !== undefined) {
-            sortedTodos = this.sortInDefaultOrder(project.todos, this.defaultSortOrder);
+            sortedTodos = this.sortInDefaultOrder(project.todos, sortOrder);
         }
-        this.view.displayItems(sortedTodos, isProjectsPage, isTrashPage);
+        this.view.displayItems(sortedTodos, isProjectsPage, isTrashPage, sortOrder);
     }
 
-    updateTrashView(items, isTrashPage) {
+    updateTrashView(items, isTrashPage, sortOrder) {
         this.view.clearHeader();
         this.view.clearContent();
-        this.view.displayTrashPage(items, isTrashPage);
+        this.view.displayTrashPage(items, isTrashPage, sortOrder);
     }
 
-    updateContentView(items, isProjectsPage, isTrashPage) {
+    updateContentView(items, isProjectsPage, isTrashPage, sortOrder) {
         this.view.clearContent();
-        this.view.displayItems(items, isProjectsPage, isTrashPage);
+        this.view.displayItems(items, isProjectsPage, isTrashPage, sortOrder);
     }
 
-    updateTodosContentView(todos, isProjectsPage, isTrashPage) {
+    updateTodosContentView(todos, isProjectsPage, isTrashPage, sortOrder) {
         this.view.clearTodosPageContent();
-        this.view.displayItems(todos, isProjectsPage, isTrashPage);
+        this.view.displayItems(todos, isProjectsPage, isTrashPage, sortOrder);
     }
 
     sortInDefaultOrder(items, sortOrder) {

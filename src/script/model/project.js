@@ -1,4 +1,4 @@
-import { compareAsc } from 'date-fns';
+import { compareAsc, compareDesc } from 'date-fns';
 
 class Project {
     constructor(title, description, dueDate, priority, status, notes, todos) {
@@ -156,6 +156,117 @@ class Project {
         } else if (status === 'Overdue') {
             return 1;
         } else return 0;
+    }
+
+    sortByTitleAsc(array) {
+        return array.sort((a, b) => {
+            const titleA = a.title.toLowerCase();
+            const titleB = b.title.toLowerCase();
+            return titleA.localeCompare(titleB);
+        });
+    }
+
+    sortByTitleDesc(array) {
+        return array.sort((a, b) => {
+            const titleA = a.title.toLowerCase();
+            const titleB = b.title.toLowerCase();
+            return titleB.localeCompare(titleA);
+        });
+    }
+
+    sortByDueDateAsc(array) {
+        return array.sort((a, b) => {
+            if (a.dueDate === undefined && b.dueDate === undefined) {
+                return 0;
+            } else if (a.dueDate === undefined) {
+                return -1;
+            } else if (b.dueDate === undefined) {
+                return 1;
+            } else {
+                return compareAsc(a.dueDate, b.dueDate);
+            }
+        });
+    }
+
+    sortByDueDateDesc(array) {
+        return array.sort((a, b) => {
+            if (a.dueDate === undefined && b.dueDate === undefined) {
+                return 0;
+            } else if (b.dueDate === undefined) {
+                return -1;
+            } else if (a.dueDate === undefined) {
+                return 1;
+            } else {
+                return compareDesc(a.dueDate, b.dueDate);
+            }
+        });
+    }
+
+    sortByPriorityAsc(array) {
+        return array.sort((a, b) => a.convertPriority() > b.convertPriority() ? 1 : 
+                                    a.convertPriority() < b.convertPriority() ? -1 : 0);
+    }
+
+    sortByPriorityDesc(array) {
+        return array.sort((a, b) => a.convertPriority() > b.convertPriority() ? -1 : 
+                                    a.convertPriority() < b.convertPriority() ? 1 : 0);
+    }
+
+    sortByStatusAsc(array) {
+        return array.sort((a, b) => a.convertStatus() > b.convertStatus() ? 1 :
+                                    a.convertStatus() < b.convertStatus() ? -1 : 0);
+    }
+
+    sortByStatusDesc(array) {
+        return array.sort((a, b) => a.convertStatus() > b.convertStatus() ? -1 :
+                                    a.convertStatus() < b.convertStatus() ? 1 : 0);
+    }
+
+    sortByDateAddedAsc(array) {
+        return array.sort((a, b) => compareAsc(a.dateAdded, b.dateAdded));
+    }
+
+    sortByDateAddedDesc(array) {
+        return array.sort((a, b) => compareDesc(a.dateAdded, b.dateAdded));
+    }
+
+    sortInDefaultOrder(items, sortOrder) {
+        let sortedItems;
+        switch(sortOrder) {
+            case 'dateAddedAsc':
+                sortedItems = this.sortByDateAddedAsc(items);
+                break;
+            case 'dateAddedDesc':
+                sortedItems = this.sortByDateAddedDesc(items);
+                break;
+            case 'titleAsc':
+                sortedItems = this.sortByTitleAsc(items);
+                break;
+            case 'titleDesc':
+                sortedItems = this.sortByTitleDesc(items);
+                break;
+            case 'priorityAsc':
+                sortedItems = this.sortByPriorityAsc(items);
+                break;
+            case 'priorityDesc':
+                sortedItems = this.sortByPriorityDesc(items);
+                break;
+            case 'statusAsc':
+                sortedItems = this.sortByStatusAsc(items);
+                break;
+            case 'statusDesc':
+                sortedItems = this.sortByStatusDesc(items);
+                break;
+            case 'dueDateAsc':
+                sortedItems = this.sortByDueDateAsc(items);
+                break;
+            case 'dueDateDesc':
+                sortedItems = this.sortByDueDateDesc(items);
+                break;
+            default:
+                sortedItems = this.sortByDateAddedAsc(items);
+        }
+        return sortedItems;
     }
 }
 
