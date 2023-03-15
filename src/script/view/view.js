@@ -1,8 +1,10 @@
 import { isSameDay, isSameYear, format } from 'date-fns';
+import todo from '../model/todo';
 
 class View {
     constructor() {
         this.displayProjectsHeader();
+        this.bindAddTodoBtnEventListener();
     }
 
     // Add event listeners and bind handlers in the navbar
@@ -25,6 +27,55 @@ class View {
             if (input === '' || input === null) return;
             else handler(input);
         });
+    }
+
+    bindAddTodoBtnEventListener() {
+        const addTodoBtn = document.getElementById('addTodo');
+        addTodoBtn.addEventListener('click', event => {
+            const todoInputContainer = addTodoBtn.parentNode.previousElementSibling;
+            let todoInput;
+            if (todoInputContainer.id === 'todoField') {
+                todoInput = todoInputContainer.children[1];
+            } else {
+                todoInput = todoInputContainer.children[0];
+            }
+
+            if (todoInput.value.trim() !== '') {
+                this.addTodoInputField();
+            } else {
+                alert('Please type in a todo.')
+            }
+        });
+    }
+
+    addTodoInputField() {
+        const todoInputContainer = document.createElement('div');
+        todoInputContainer.classList.add('input-group');
+        todoInputContainer.classList.add('mb-3');
+
+        const todoInputField = document.createElement('input');
+        todoInputField.setAttribute('type', 'text');
+        todoInputField.classList.add('form-control');
+        todoInputContainer.appendChild(todoInputField);
+
+        const buttonDiv = document.createElement('div');
+        buttonDiv.classList.add('input-group-append');
+        const removeBtn = document.createElement('button');
+        removeBtn.setAttribute('type', 'button');
+        removeBtn.classList.add('btn');
+        removeBtn.classList.add('btn-danger');
+        removeBtn.textContent = 'Remove';
+        removeBtn.addEventListener('click', this.removeTodoInputField);
+        buttonDiv.appendChild(removeBtn);
+        todoInputContainer.appendChild(buttonDiv);
+
+        const addTodoBtnContainer = document.getElementById('addTodo').parentNode;
+        const prevTodoInputField = addTodoBtnContainer.previousSibling;
+        this.insertAfter(prevTodoInputField, todoInputContainer);
+    }
+
+    removeTodoInputField(e) {
+        e.target.parentNode.parentNode.parentNode.removeChild(e.target.parentNode.parentNode);
     }
 
     bindCreateProjectBtnEventListener(handler) {
@@ -658,6 +709,10 @@ class View {
         while (content.childNodes[2]) {
             content.removeChild(content.childNodes[2]);
        }
+    }
+
+    insertAfter(referenceNode, newNode) {
+        referenceNode.parentNode.insertBefore(newNode, referenceNode.nextSibling);
     }
 }
 

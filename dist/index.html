@@ -21,7 +21,9 @@
         </form>
         <div class="icons d-flex flex-nowrap text-light">
             <i class="bi bi-plus-lg" data-bs-toggle="modal" data-bs-target="#create-project-modal"></i>
-            <div class="modal fade text-dark" id="create-project-modal" tabindex="-1" aria-labelledby="create-project-modal" aria-hidden="true">
+
+            <!-- Create Project Modal -->
+            <div class="modal fade text-dark modal-font" id="create-project-modal" tabindex="-1" aria-labelledby="create-project-modal" aria-hidden="true">
                 <div class="modal-dialog">
                   <div class="modal-content">
                     <div class="modal-header">
@@ -90,6 +92,21 @@
                                 </label>
                               </div>                              
                         </div>
+                        <div class="mb-3" id="todoField">
+                            <label for="todo" class="col-form-label">Todos</label>
+                            <input type="text" class="form-control" id="todo">
+                        </div>
+                        <!--
+                        <div class="input-group mb-3">
+                            <input type="text" class="form-control">
+                            <div class="input-group-append">
+                                <button id="removeTodo" type="button" class="btn btn-danger">Remove</button>
+                            </div>
+                        </div>
+                    -->
+                        <div class="mb-3 text-light">
+                            <button id="addTodo" type="button" class="btn btn-dark">Add Todo</button>
+                        </div>
                       </form>
                     </div>
                     <div class="modal-footer">
@@ -99,6 +116,7 @@
                   </div>
                 </div>
               </div>
+
               <div class="dropdown">
                 <i class="bi bi-bell-fill position-relative" data-bs-toggle="dropdown">
                     <span class="position-absolute badge-pos translate-middle p-2 bg-danger rounded-circle">
