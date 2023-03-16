@@ -393,12 +393,102 @@ class View {
         });
     }
 
+    bindEditProjectBtnEventListener(handler) {
+        document.querySelector('body').addEventListener('click', event => {
+            if (event.target.id === 'edit-project-btn') {
+                const projectID = event.target.getAttribute('data-id');
+                handler(projectID);
+            }
+        });
+    }
+
+    showEditProjectModal(project) {
+        // Fill in the fields
+        const title = document.getElementById('edit-proj-title');
+        title.value = project.title;
+
+        const dueDate = document.getElementById('edit-proj-dueDate');
+        dueDate.value = format(project.dueDate, 'yyyy-MM-dd');
+
+        const description = document.getElementById('edit-proj-description');
+        description.value = project.description;
+
+        const notes = document.getElementById('edit-proj-nts');
+        notes.value = project.notes;
+
+        const noPriorityRadioBtn = document.getElementById('edit-proj-no-priority');
+        const mdPriorityRadioBtn = document.getElementById('edit-proj-medium-priority');
+        const hiPriorityRadioBtn = document.getElementById('edit-proj-hi-priority');
+
+        if (project.priority === 'Medium') {
+            mdPriorityRadioBtn.checked = true;
+        } else if (project.priority === 'High') {
+            hiPriorityRadioBtn.checked = true;
+        } else {
+            noPriorityRadioBtn.checked = true;
+        }
+
+        const notYetStarted = document.getElementById('edit-proj-not-yet-started');
+        const inProgress = document.getElementById('edit-proj-in-progress');
+        const completed = document.getElementById('edit-proj-completed');
+
+        if (project.status === 'In Progress') {
+            inProgress.checked = true;
+        } else if (project.status === 'Completed') {
+            completed.checked = true;
+        } else if (project.status === 'None') {
+            notYetStarted.checked = true;
+        }
+
+        const todoField = document.getElementById('edit-proj-todo-field');
+        let todo;
+
+        if (project.todos !== undefined) {
+            for (let i = 0; i < project.todos.length; i++) {
+                todo = this.makeEditProjTodoInputField(project.todos[i].title);
+                this.insertAfter(todoField, todo);
+            }
+        }
+
+        // Show the modal
+        const editForm = document.getElementById('edit-project-modal');
+        const modal = new bootstrap.Modal(editForm);
+        modal.show();
+    }
+
+    makeEditProjTodoInputField(todoTitle) {
+        const todoInputContainer = document.createElement('div');
+        todoInputContainer.classList.add('input-group');
+        todoInputContainer.classList.add('mb-3');
+
+        const todoInputField = document.createElement('input');
+        todoInputField.setAttribute('type', 'text');
+        todoInputField.classList.add('form-control');
+        todoInputField.value = todoTitle;
+        todoInputContainer.appendChild(todoInputField);
+
+        const buttonDiv = document.createElement('div');
+        buttonDiv.classList.add('input-group-append');
+        const removeBtn = document.createElement('button');
+        removeBtn.setAttribute('type', 'button');
+        removeBtn.classList.add('btn');
+        removeBtn.classList.add('btn-danger');
+        removeBtn.textContent = 'Remove';
+        //removeBtn.addEventListener('click', this.removeTodoInputField);
+        buttonDiv.appendChild(removeBtn);
+        todoInputContainer.appendChild(buttonDiv);
+
+        return todoInputContainer;
+    }
+
     // TODO: CHANGE
-    bindEditIconEventListener(handler) {
+    bindEditTodoBtnEventListener(handler) {
         document.querySelector('body').addEventListener('click', event => {
             if (event.target.classList.contains('bi-pencil-square')) {
-                //const projectID = event.target.getAttribute('data-id');
-                //handler(projectID);
+                if (event.target.id !== 'edit-project-btn') {
+                    const todoID = event.target.getAttribute('data-id');
+                    // show edit todo modal
+                }
             }
         });
     }
@@ -578,14 +668,14 @@ class View {
             arrow.classList.add('bi');
             arrow.classList.add('bi-arrow-right-circle');
             arrow.classList.add('todo-icon');
-            arrow.setAttribute('data-id', `${item.id}`);
+            arrow.setAttribute('data-id', item.id);
             link.appendChild(arrow);
         } else {
             const editIcon = document.createElement('i');
             editIcon.classList.add('bi');
             editIcon.classList.add('bi-pencil-square');
             editIcon.classList.add('todo-icon');
-            //editIcon.setAttribute('data-id', `${item.id}`);
+            editIcon.setAttribute('data-id', item.id);
             link.appendChild(editIcon);
         }
         accordionBody.appendChild(link);
@@ -698,6 +788,10 @@ class View {
         editIcon.classList.add('bi-pencil-square');
         editIcon.classList.add('text-muted');
         editIcon.classList.add('icon-size');
+        editIcon.setAttribute('id', 'edit-project-btn');
+        editIcon.setAttribute('data-id', project.id);
+        //editIcon.setAttribute('data-bs-toggle', 'modal');
+        //editIcon.setAttribute('data-bs-target', '#edit-project-modal');
         flexContainer.appendChild(editIcon);
         content.appendChild(flexContainer);
 

@@ -50,6 +50,7 @@ class Controller {
 
         this.handleProjectLinkEventListener();
         this.handleCheckCircleEventListeners();
+        this.handleEditProjectBtnEventListener();
 
         // TODO:
         // Update notifications for items due today and items that are overdue
@@ -651,6 +652,16 @@ class Controller {
             statusBtn.textContent = '';
             target.status = 'None';
         }
+    }
+
+    handleEditProjectBtnEventListener() {
+        this.view.bindEditProjectBtnEventListener(this.handleEditProjectModal);
+    }
+
+    handleEditProjectModal = (projectID) => {
+        let project = this.model.findById(this.model.projects, projectID);
+        project = project[0];
+        this.view.showEditProjectModal(project);
     }
 
     // Helpers
