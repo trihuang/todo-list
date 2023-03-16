@@ -1,5 +1,4 @@
 import Project from './project';
-//format(new Date(), "yyyy-MM-dd'T'HH:mm:ss.SSS")
 
 class Todo extends Project {
     constructor(title, description, dueDate, priority, status, notes, todos) {

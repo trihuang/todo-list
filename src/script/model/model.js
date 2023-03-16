@@ -127,17 +127,17 @@ class Model {
 
     // Return an array of projects with due date today and projects with todos and sub todos that have due dates today
     filterByToday(array) {
-        const dueToday = array.filter((item) => isSameDay(item.dueDate, new Date()));
-        const remainingArray = array.filter((item) => !isSameDay(item.dueDate, new Date())).filter((item) => item.todos !== undefined);
+        const dueToday = this.filterByTodayHelper(array);
+        const remainingArray = this.filterByNotTodayWithTodosHelper(array);
 
         for (let i = 0; i < remainingArray.length; i++) {
-            const todosDueToday = remainingArray[i].todos.filter((todo) => isSameDay(todo.dueDate, new Date()));
+            const todosDueToday = this.filterByTodayHelper(remainingArray[i].todos);
             if (todosDueToday.length > 0) {
                 dueToday.push(remainingArray[i]);
             } else {
-                const remainingTodosArray = remainingArray[i].todos.filter((todo) => !isSameDay(todo.dueDate, new Date())).filter((todo) => todo.todos !== undefined);
+                const remainingTodosArray = this.filterByNotTodayWithTodosHelper(remainingArray[i].todos);
                 for (let j = 0; j < remainingTodosArray.length; j++) {
-                    const subTodosDueToday = remainingTodosArray[j].todos.filter((todo) => isSameDay(todo.dueDate, new Date()));
+                    const subTodosDueToday = this.filterByTodayHelper(remainingTodosArray[j].todos);
                     if (subTodosDueToday.length > 0) {
                         dueToday.push(remainingArray[i]);
                     }
@@ -147,19 +147,41 @@ class Model {
         return dueToday;
     }
 
+    filterByTodayHelper(array) {
+        const dueToday = array.filter((item) => {
+            if (item.dueDate === '') {
+                return false;
+            } else {
+                return isSameDay(item.dueDate, new Date());
+            }
+        });
+        return dueToday;
+    }
+
+    filterByNotTodayWithTodosHelper(array) {
+        const remainingArray = array.filter((item) => {
+            if (item.dueDate === '') {
+                return true;
+            } else {
+                return !isSameDay(item.dueDate, new Date());
+            }
+        }).filter((item) => item.todos !== undefined);
+        return remainingArray;
+    }
+
     // Return an array of projects with due dates this week and projects with todos and sub todos that have due dates this week
     filterByThisWeek(array) {
-        const dueThisWeek = array.filter((item) => isSameWeek(item.dueDate, new Date()));
-        const remainingArray = array.filter((item) => !isSameWeek(item.dueDate, new Date())).filter((item) => item.todos !== undefined);
+        const dueThisWeek = this.filterByThisWeekHelper(array);
+        const remainingArray = this.filterByNotThisWeekWithTodosHelper(array);
 
         for (let i = 0; i < remainingArray.length; i++) {
-            const todosDueThisWeek = remainingArray[i].todos.filter((todo) => isSameWeek(todo.dueDate, new Date()));
+            const todosDueThisWeek = this.filterByThisWeekHelper(remainingArray[i].todos);
             if (todosDueThisWeek.length > 0) {
                 dueThisWeek.push(remainingArray[i]);
             } else {
-                const remainingTodosArray = remainingArray[i].todos.filter((todo) => !isSameWeek(todo.dueDate, new Date())).filter((todo) => todo.todos !== undefined);
+                const remainingTodosArray = this.filterByNotThisWeekWithTodosHelper(remainingArray[i].todos);
                 for (let j = 0; j < remainingTodosArray.length; j++) {
-                    const subTodosDueThisWeek = remainingTodosArray[j].todos.filter((todo) => isSameWeek(todo.dueDate, new Date()));
+                    const subTodosDueThisWeek = this.filterByThisWeekHelper(remainingTodosArray[j].todos);
                     if (subTodosDueThisWeek.length > 0) {
                         dueThisWeek.push(remainingArray[i]);
                     }
@@ -169,19 +191,41 @@ class Model {
         return dueThisWeek;
     }
 
+    filterByThisWeekHelper(array) {
+        const dueThisWeek = array.filter((item) => {
+            if (item.dueDate === '') {
+                return false;
+            } else {
+                return isSameWeek(item.dueDate, new Date());
+            }
+        });
+        return dueThisWeek;
+    }
+
+    filterByNotThisWeekWithTodosHelper(array) {
+        const remainingArray = array.filter((item) => {
+            if (item.dueDate === '') {
+                return true;
+            } else {
+                return !isSameWeek(item.dueDate, new Date());
+            }
+        }).filter((item) => item.todos !== undefined);
+        return remainingArray;
+    }
+
     // Return an array of projects with due dates this month and projects with todos and sub todos that have due dates this month
     filterByThisMonth(array) {
-        const dueThisMonth = array.filter((item) => isSameMonth(item.dueDate, new Date()));
-        const remainingArray = array.filter((item) => !isSameMonth(item.dueDate, new Date())).filter((item) => item.todos !== undefined);
+        const dueThisMonth = this.filterByThisMonthHelper(array);
+        const remainingArray = this.filterByNotThisMonthWithTodosHelper(array);
 
         for (let i = 0; i < remainingArray.length; i++) {
-            const todosDueThisMonth = remainingArray[i].todos.filter((todo) => isSameMonth(todo.dueDate, new Date()));
+            const todosDueThisMonth = this.filterByThisMonthHelper(remainingArray[i].todos);
             if (todosDueThisMonth.length > 0) {
                 dueThisMonth.push(remainingArray[i]);
             } else {
-                const remainingTodosArray = remainingArray[i].todos.filter((todo) => !isSameMonth(todo.dueDate, new Date())).filter((todo) => todo.todos !== undefined);
+                const remainingTodosArray = this.filterByNotThisMonthWithTodosHelper(remainingArray[i].todos);
                 for (let j = 0; j < remainingTodosArray.length; j++) {
-                    const subTodosDueThisMonth = remainingTodosArray[j].todos.filter((todo) => isSameMonth(todo.dueDate, new Date()));
+                    const subTodosDueThisMonth = this.filterByThisMonthHelper(remainingTodosArray[j].todos);
                     if (subTodosDueThisMonth.length > 0) {
                         dueThisMonth.push(remainingArray[i]);
                     }
@@ -191,19 +235,41 @@ class Model {
         return dueThisMonth;
     }
 
+    filterByThisMonthHelper(array) {
+        const dueThisMonth = array.filter((item) => {
+            if (item.dueDate === '') {
+                return false;
+            } else {
+                return isSameMonth(item.dueDate, new Date());
+            }
+        });
+        return dueThisMonth;
+    }
+
+    filterByNotThisMonthWithTodosHelper(array) {
+        const remainingArray = array.filter((item) => {
+            if (item.dueDate === '') {
+                return true;
+            } else {
+                return !isSameMonth(item.dueDate, new Date());
+            }
+        }).filter((item) => item.todos !== undefined);
+        return remainingArray;
+    }
+
     // Return an array of projects that are overdue and projects with todos and sub todos that are overdue
     filterByOverdue(array) {
-        const overdue = array.filter((item) => (compareAsc(item.dueDate, new Date()) === -1) && !isSameDay(item.dueDate, new Date()) && item.status !== 'Completed');
-        const remainingArray = array.filter((item) => !((compareAsc(item.dueDate, new Date()) === -1) && !isSameDay(item.dueDate, new Date()) && item.status !== 'Completed')).filter((item) => item.todos !== undefined);
-        
+        const overdue = this.filterByOverdueHelper(array);
+        const remainingArray = this.filterByNotOverdueWithTodosHelper(array);
+
         for (let i = 0; i < remainingArray.length; i++) {
-            const overdueTodos = remainingArray[i].todos.filter((todo) => (compareAsc(todo.dueDate, new Date()) === -1) && !isSameDay(todo.dueDate, new Date()) && todo.status !== 'Completed');
+            const overdueTodos = this.filterByOverdueHelper(remainingArray[i].todos);
             if (overdueTodos.length > 0) {
                 overdue.push(remainingArray[i]);
             } else {
-                const remainingTodosArray = remainingArray[i].todos.filter((todo) => !((compareAsc(todo.dueDate, new Date()) === -1) && !isSameDay(todo.dueDate, new Date()) && todo.status !== 'Completed')).filter((item) => item.todos !== undefined);
+                const remainingTodosArray = this.filterByNotOverdueWithTodosHelper(remainingArray[i].todos);
                 for (let j = 0; j < remainingTodosArray.length; j++) {
-                    const overdueSubTodos = remainingTodosArray[j].todos.filter((todo) => (compareAsc(todo.dueDate, new Date()) === -1) && !isSameDay(todo.dueDate, new Date()) && todo.status !== 'Completed');
+                    const overdueSubTodos = this.filterByOverdueHelper(remainingTodosArray[j].todos);
                     if (overdueSubTodos.length > 0) {
                         overdue.push(remainingArray[i]);
                     }
@@ -211,6 +277,14 @@ class Model {
             }
         }
         return overdue;
+    }
+
+    filterByOverdueHelper(array) {
+        return array.filter((item) => item.status === 'Overdue');
+    }
+
+    filterByNotOverdueWithTodosHelper(array) {
+        return array.filter((item) => item.status !== 'Overdue').filter((item) => item.todos !== undefined);;
     }
 
     filterByPriority(array, priority) {

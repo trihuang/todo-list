@@ -1,5 +1,3 @@
-import View from '../view/view';
-import Model from '../model/model';
 import { parseISO } from 'date-fns';
 
 class Controller {
@@ -13,10 +11,6 @@ class Controller {
         this.isProjectsPage = true;
         this.isTrashPage = false;
         this.initializeProjectsPage(this.itemsOnDisplay);
-
-        //this.view.clearHeader();
-        //this.view.displayTodosHeader(this.model.projects[2]);
-        //this.view.displayItems(this.model.projects[2].todos, false);
 
         // Add event listeners
         this.handleLogoEventListener();
@@ -138,6 +132,7 @@ class Controller {
             }
         }
         this.model.createProject(title, description, date, priority, status, notes, todos);
+        this.handleDisplayHomePage();
     }
 
     // Sidebar handlers
@@ -277,7 +272,7 @@ class Controller {
         let filteredItems = this.itemsOnDisplay;
         let sortedFilteredItems = this.itemsOnDisplay;
         if (this.itemsOnDisplay !== undefined) {
-            filteredItems = this.model.filterByhisWeek(this.itemsOnDisplay);
+            filteredItems = this.model.filterByThisWeek(this.itemsOnDisplay);
             sortedFilteredItems = this.sortInDefaultOrder(filteredItems, this.defaultSortOrder);
         }
         if (this.isTrashPage) {
