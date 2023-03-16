@@ -633,10 +633,16 @@ class Controller {
                 statusBtn.textContent = 'Completed';
                 target.status = 'Completed';
             } else {
+                const alert = document.getElementById('markCompleteAlertModal');
+                const modalBody = document.querySelector('#markCompleteAlertModal .modal-body');
                 if (target.isProject) {
-                    alert('All todos must be completed to mark a project as complete.');
+                    modalBody.textContent = 'All todos and sub todos must be completed to mark a project as complete.';
+                    const modal = new bootstrap.Modal(alert);
+                    modal.show();
                 } else {
-                    alert('All sub todos must be completed to mark the todo as complete.');
+                    modalBody.textContent = 'All sub todos must be completed to mark a todo as complete.';
+                    const modal = new bootstrap.Modal(alert);
+                    modal.show();
                 }
             }
         } else {

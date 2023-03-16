@@ -1,5 +1,4 @@
 import { isSameDay, isSameYear, format } from 'date-fns';
-import { isMatchWithOptions } from 'date-fns/fp';
 
 class View {
     constructor() {
@@ -42,9 +41,11 @@ class View {
             }
 
             if (todoInput.value.trim() !== '') {
+                this.clearTodoWarning();
                 this.addTodoInputField();
             } else {
-                alert('Please type in a todo.')
+                const todosLabel = document.getElementById('todosLabel');
+                todosLabel.textContent = '* The last todo input field cannot be empty.'
             }
         });
     }
@@ -86,12 +87,17 @@ class View {
             const dueDateInput = document.getElementById('dueDate');
             const title = titleInput.value.trim();
             const dueDate = dueDateInput.value;
+            const titleLabel = document.getElementById('requireTitle');
+            const dueDateLabel = document.getElementById('requireDueDate');
             if (title === '' && dueDate === '') {
-                alert('A title and a due date are required.')
+                titleLabel.textContent = '* A title is required.'
+                dueDateLabel.textContent = '* A due date is required.'
             } else if (title === '') {
-                alert('A title is required.');
+                this.clearWarnings();
+                titleLabel.textContent = '* A title is required.'
             } else if (dueDate === '') {
-                alert('A due date is required.');
+                this.clearWarnings();
+                dueDateLabel.textContent = '* A due date is required.'
             } else {
                 const description = document.getElementById('description').value.trim();
                 const notes = document.getElementById('nts').value.trim();
@@ -110,12 +116,9 @@ class View {
 
                 let status;
                 const inProgressRadioBtn = document.getElementById('in-progress');
-                const completedRadioBtn = document.getElementById('completed');
 
                 if (inProgressRadioBtn.checked) {
                     status = 'In Progress';
-                } else if (completedRadioBtn.checked) {
-                    status = 'Completed';
                 } else {
                     status = 'None';
                 }
@@ -137,11 +140,28 @@ class View {
                     }
                 }
                 handler(title, dueDate, description, notes, priority, status, todoTitles);
+                const projectForm = document.getElementById('createProjectForm');
+                projectForm.reset();
+                this.clearTodoInputFields();
+                this.clearWarnings();
+                this.clearTodoWarning();
+                const form = document.getElementById('create-project-modal');
+                const modal = bootstrap.Modal.getInstance(form);
+                modal.hide();
             }
-            const projectForm = document.getElementById('createProjectForm');
-            projectForm.reset();
-            this.clearTodoInputFields();
         });
+    }
+
+    clearWarnings() {
+        const titleLabel = document.getElementById('requireTitle');
+        const dueDateLabel = document.getElementById('requireDueDate');
+        titleLabel.textContent = '*';
+        dueDateLabel.textContent = '*';
+    }
+
+    clearTodoWarning() {
+        const todosLabel = document.getElementById('todosLabel');
+        todosLabel.textContent = '';
     }
 
     clearTodoInputFields() {
@@ -164,10 +184,14 @@ class View {
         xBtn.addEventListener('click', event => {
             projectForm.reset();
             this.clearTodoInputFields();
+            this.clearWarnings();
+            this.clearTodoWarning();
         });
         closeBtn.addEventListener('click', event => {
             projectForm.reset();
             this.clearTodoInputFields();
+            this.clearWarnings();
+            this.clearTodoWarning();
         });
     }
  
