@@ -133,6 +133,17 @@ class Project {
         this._todos.splice(index, 1);
     }
 
+    allTodosAreCompleted() {
+        if (this.todos !== undefined) {
+            for (let i = 0; i < this.todos.length; i++) {
+                if (this.todos[i].status !== 'Completed') {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
     convertPriority() {
         const priority = this._priority;
         if (priority === 'High') {

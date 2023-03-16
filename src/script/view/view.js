@@ -1,4 +1,5 @@
 import { isSameDay, isSameYear, format } from 'date-fns';
+import { isMatchWithOptions } from 'date-fns/fp';
 
 class View {
     constructor() {
@@ -388,13 +389,19 @@ class View {
         });
     }
 
-    bindCheckCircleEventListeners() {
-        // TODO
+    bindCheckCircleEventListeners(handler) {
+        document.querySelector('body').addEventListener('click', event => {
+            if (event.target.classList.contains('bi-circle') || event.target.classList.contains('bi-check-circle-fill')) {
+                const id = event.target.getAttribute('data-id');
+                handler(id, event);
+            }
+        });
     }
 
-    toggleCheckCircle() {
-        // TODO
-        // When checked, also update status to complete; when unchecked, remove complete status
+    toggleCheckCircle(e) {
+        e.target.classList.toggle('bi-circle');
+        e.target.classList.toggle('bi-check-circle-fill');
+        e.target.classList.toggle('text-success');
     }
 
     // Display the pages and their elements
@@ -448,8 +455,16 @@ class View {
         title.classList.add('d-flex');
         const checkCircle = document.createElement('i');
         checkCircle.classList.add('bi');
-        checkCircle.classList.add('bi-circle');
+
+        if (item.status === 'Completed') {
+            checkCircle.classList.add('bi-check-circle-fill');
+            checkCircle.classList.add('text-success');
+        } else {
+            checkCircle.classList.add('bi-circle');
+        }
+
         checkCircle.classList.add('small');
+        checkCircle.setAttribute('data-id', item.id);
         title.appendChild(checkCircle);
 
         const name = document.createElement('span');
@@ -570,8 +585,16 @@ class View {
 
         const icon = document.createElement('i');
         icon.classList.add('bi');
-        icon.classList.add('bi-circle');
+
+        if (todo.status === 'Completed') {
+            icon.classList.add('bi-check-circle-fill');
+            icon.classList.add('text-success');
+        } else {
+            icon.classList.add('bi-circle');
+        }
+
         icon.classList.add('todo-circle');
+        icon.setAttribute('data-id', todo.id);
         title.appendChild(icon);
         const name = document.createElement('span');
         name.classList.add('name');

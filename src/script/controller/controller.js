@@ -49,6 +49,7 @@ class Controller {
         this.handleSortByDateAddedDescEventListener();
 
         this.handleProjectLinkEventListener();
+        this.handleCheckCircleEventListeners();
 
         // TODO:
         // Update notifications for items due today and items that are overdue
@@ -599,6 +600,51 @@ class Controller {
         this._isProjectsPage = false;
         this._isTrashPage = false;
         this.updateTodosView(project, this.isProjectsPage, this.isTrashPage, this.defaultSortOrder);
+    }
+
+    handleCheckCircleEventListeners() {
+        this.view.bindCheckCircleEventListeners(this.handleToggleCheckCircle);
+    }
+
+    handleToggleCheckCircle = (id, event) => {
+        // Find the project or todo by id
+        let target = this.model.findById(this.model.projects, id);
+        if (target.length === 0) {
+            target = this.model.findById(this.model.deletedItems, id);
+        }
+        target = target[0];
+        const statusBtn = event.target.parentNode.nextSibling.children[1].children[1];
+        
+        // The circle can only be checked if all todos and subtodos are checked and completed
+        // When checked, also update status to complete; when unchecked, remove complete status
+        if (target.status !== 'Completed') {
+            const hasAllSubTasksCompleted = this.model.allTodosAndSubTodosAreCompleted(target)
+            if (hasAllSubTasksCompleted) {
+                this.view.toggleCheckCircle(event);
+                if (target.status === 'None') {
+                    statusBtn.classList.remove('bg-transparent');
+                } else if (target.status === 'Overdue') {
+                    statusBtn.classList.remove('bg-danger');
+                } else if (target.status === 'In Progress') {
+                    statusBtn.classList.remove('bg-info');
+                }
+
+                statusBtn.classList.add('bg-success');
+                statusBtn.textContent = 'Completed';
+                target.status = 'Completed';
+            } else {
+                if (target.isProject) {
+                    alert('All todos must be completed to mark a project as complete.');
+                } else {
+                    alert('All sub todos must be completed to mark the todo as complete.');
+                }
+            }
+        } else {
+            this.view.toggleCheckCircle(event);
+            statusBtn.classList.remove('bg-success');
+            statusBtn.textContent = '';
+            target.status = 'None';
+        }
     }
 
     // Helpers

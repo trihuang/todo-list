@@ -109,6 +109,18 @@ class Model {
         }
     }
 
+    allTodosAndSubTodosAreCompleted(project) {
+        if (project.todos !== undefined) {
+            for (let i = 0; i < project.todos.length; i++) {
+                if (!project.todos[i].allTodosAreCompleted()) {
+                    return false;
+                }
+            }
+            return project.allTodosAreCompleted();
+        }
+        return true;
+    }
+
     // Update the status to 'overdue' if the due date is past
     updateOverdueStatus(array) {
         const itemsWithDueDates = array.filter((item) => item.dueDate !== '');
@@ -650,6 +662,30 @@ class Model {
 
     filterByWithoutDueDate(array) {
         return array.filter((item) => item.dueDate === '');
+    }
+
+    findById(array, id) {
+        const target = this.filterById(array, id);
+        if (target.length === 0) {
+            const remainingArraytWithTodos = this.filterByWithTodos(array); 
+            let i = 0;
+            while (target.length === 0 && i < remainingArraytWithTodos.length) {
+                const todoTarget = this.findById(remainingArraytWithTodos[i].todos, id);
+                if (todoTarget.length !== 0) {
+                    target.push(todoTarget[0]);
+                }
+                i++;
+            }
+        }
+        return target;
+    }
+
+    filterById(array, id) {
+        return array.filter((item) => item.id === id);
+    }
+
+    filterByWithTodos(array) {
+        return array.filter((item) => item.todos !== undefined);
     }
 
     sortByTitleAsc(array) {
