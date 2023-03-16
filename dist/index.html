@@ -33,11 +33,11 @@
                     <div class="modal-body">
                       <form action="#" id="createProjectForm">
                         <div class="mb-3">
-                            <label for="title" class="col-form-label">Title<span class="text-danger"><em id="requireTitle">*</em></span></label>
+                            <label for="title" class="col-form-label">Title<span class="text-danger">*<em id="requireTitle"></em></span></label>
                             <input type="text" class="form-control" id="title">
                         </div>
                         <div class="mb-3">
-                            <label for="dueDate" class="col-form-label">Due Date<span class="text-danger"><em id="requireDueDate">*</em></span></label>
+                            <label for="dueDate" class="col-form-label">Due Date<span class="text-danger">*<em id="requireDueDate"></em></span></label>
                             <input type="date" class="form-control" id="dueDate">
                         </div>
                         <div class="mb-3">
@@ -86,10 +86,97 @@
                                 </label>
                               </div>                         
                         </div>
+                        <div class="mb-3">
+                            <div class="divider w-100"></div>
+                        </div>
                         <div class="mb-3" id="todoField">
                             <label for="todo" class="col-form-label">Todos<span><em class="text-danger" id="todosLabel"></em></span></label>
-                            <input type="text" class="form-control" id="todo">
                         </div>
+
+                        <!--
+                        <div class="mb-3">
+                            <div class="mb-3">
+                                <label for="title-todo" class="col-form-label">Title<span class="text-danger">*<em id="editSubTodoRequireTitle"></em></span></label>
+                                <input type="text" class="form-control" id="title-todo">
+                            </div>
+                            <div class="mb-3">
+                                <label for="dueDate-todo" class="col-form-label">Due Date</label>
+                                <input type="date" class="form-control" id="dueDate-todo">
+                            </div>
+                            <div class="mb-3">
+                                <label for="description-todo" class="col-form-label">Description</label>
+                                <textarea class="form-control" id="description-todo"></textarea>
+                            </div>
+                            <div class="mb-3">
+                                <label for="notes-todo" class="col-form-label">Notes</label>
+                                <input type="text" class="form-control" id="notes-todo">
+                            </div>
+                            <div class="mb-3">
+                                <label for="priority-todo" class="col-form-label">Select Priority</label>
+                                <br>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" name="priority-todo" id="no-priority-todo" value="option1">
+                                    <label class="form-check-label" for="no-priority-todo">
+                                        <div class="status priority bg-secondary rounded-pill text-light text-center">None</div>
+                                    </label>
+                                  </div>
+                                  <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" name="priority-todo" id="medium-priority-todo" value="option2">
+                                    <label class="form-check-label" for="medium-priority-todo">
+                                        <div class="status priority md-priority rounded-pill text-light text-center">Medium</div>
+                                    </label>
+                                  </div>
+                                  <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" name="priority-todo" id="hi-priority-todo" value="option3">
+                                    <label class="form-check-label" for="hi-priority-todo">
+                                        <div class="status priority high-priority rounded-pill text-light text-center">High</div>
+                                    </label>
+                                  </div>                              
+                            </div>
+                            <div class="mb-3">
+                                <label for="status-todo" class="col-form-label">Select Status</label>
+                                <br>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" name="status-todo" id="not-yet-started-todo" value="option1">
+                                    <label class="form-check-label" for="not-yet-started-todo">
+                                        <div class="status bg-secondary rounded-pill text-light text-center">None</div>
+                                    </label>
+                                  </div>
+                                  <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" name="status-todo" id="in-progress-todo" value="option2">
+                                    <label class="form-check-label" for="in-progress-todo">
+                                        <div class="status bg-info rounded-pill text-light text-center">In Progress</div>
+                                    </label>
+                                  </div>                         
+                            </div>
+                            <div class="mb-3" id="subtodoField">
+                                <label for="todo" class="col-form-label">Subtodos<span><em class="text-danger" id="todosLabel"></em></span></label>
+                            </div>
+
+                            
+                            <div class="input-group mb-3">
+                                <input type="text" class="form-control">
+                                <div class="input-group-append">
+                                    <button type="button" class="btn btn-outline-secondary"><i class="bi bi-x-lg"></i></button>
+                                </div>
+                            </div>
+                        
+
+                            <div class="mb-3">
+                                <button type="button" class="btn btn-outline-secondary">Add Subtodo</button>
+                            </div>
+
+                            <div class="mb-3 d-flex justify-content-end">
+                                <button type="button" class="btn btn-danger">Remove</button>
+                            </div>
+                            <div class="mb-3">
+                                <div class="divider w-100"></div>
+                            </div>
+                        </div>
+
+                    -->
+                    
+
                         <div class="mb-3 text-light">
                             <button id="addTodo" type="button" class="btn btn-dark">Add Todo</button>
                         </div>
@@ -238,13 +325,13 @@
                       <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" id="edit-x-btn"></button>
                     </div>
                     <div class="modal-body">
-                      <form action="#" id="createProjectForm">
+                      <form action="#" id="editProjectForm">
                         <div class="mb-3">
-                            <label for="edit-proj-title" class="col-form-label">Title<span class="text-danger"><em id="editProjRequireTitle">*</em></span></label>
+                            <label for="edit-proj-title" class="col-form-label">Title<span class="text-danger">*<em id="editProjRequireTitle"></em></span></label>
                             <input type="text" class="form-control" id="edit-proj-title">
                         </div>
                         <div class="mb-3">
-                            <label for="edit-proj-dueDate" class="col-form-label">Due Date<span class="text-danger"><em id="editProjRequireDueDate">*</em></span></label>
+                            <label for="edit-proj-dueDate" class="col-form-label">Due Date<span class="text-danger">*<em id="editProjRequireDueDate"></em></span></label>
                             <input type="date" class="form-control" id="edit-proj-dueDate">
                         </div>
                         <div class="mb-3">
@@ -327,6 +414,166 @@
                       <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="edit-proj-close-btn">Close</button>
                       <button type="button" class="btn btn-danger" id="edit-proj-del-btn">Delete</button>
                       <button type="button" class="btn btn-primary" id="edit-proj-save-btn">Save Changes</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Edit Todo Modal -->
+            <div class="modal fade text-dark modal-font" id="edit-todo-modal" tabindex="-1" aria-labelledby="edit-todo-modal" aria-hidden="true">
+                <div class="modal-dialog">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <h5 class="modal-title">Edit Todo</h5>
+                      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" id="edit-todo-x-btn"></button>
+                    </div>
+                    <div class="modal-body">
+                      <form action="#" id="editTodoForm">
+                        <div class="mb-3">
+                            <label for="edit-todo-title" class="col-form-label">Title<span class="text-danger">*<em id="editTodoRequireTitle"></em></span></label>
+                            <input type="text" class="form-control" id="edit-todo-title">
+                        </div>
+                        <div class="mb-3">
+                            <label for="edit-todo-dueDate" class="col-form-label">Due Date</label>
+                            <input type="date" class="form-control" id="edit-todo-dueDate">
+                        </div>
+                        <div class="mb-3">
+                            <label for="edit-todo-description" class="col-form-label">Description</label>
+                            <textarea class="form-control" id="edit-todo-description"></textarea>
+                        </div>
+                        <div class="mb-3">
+                            <label for="edit-todo-nts" class="col-form-label">Notes</label>
+                            <input type="text" class="form-control" id="edit-todo-nts">
+                        </div>
+                        <div class="mb-3">
+                            <label for="edit-todo-priority" class="col-form-label">Select Priority</label>
+                            <br>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="edit-todo-priority" id="edit-todo-no-priority" value="option1">
+                                <label class="form-check-label" for="edit-todo-no-priority">
+                                    <div class="status priority bg-secondary rounded-pill text-light text-center">None</div>
+                                </label>
+                              </div>
+                              <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="edit-todo-priority" id="edit-todo-medium-priority" value="option2">
+                                <label class="form-check-label" for="edit-todo-medium-priority">
+                                    <div class="status priority md-priority rounded-pill text-light text-center">Medium</div>
+                                </label>
+                              </div>
+                              <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="edit-todo-priority" id="edit-todo-hi-priority" value="option3">
+                                <label class="form-check-label" for="edit-todo-hi-priority">
+                                    <div class="status priority high-priority rounded-pill text-light text-center">High</div>
+                                </label>
+                              </div>                              
+                        </div>
+                        <div class="mb-3">
+                            <label for="edit-todo-status" class="col-form-label">Select Status</label>
+                            <br>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="edit-todo-status" id="edit-todo-not-yet-started" value="option1">
+                                <label class="form-check-label" for="edit-todo-not-yet-started">
+                                    <div class="status bg-secondary rounded-pill text-light text-center">None</div>
+                                </label>
+                              </div>
+                              <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="edit-todo-status" id="edit-todo-in-progress" value="option2">
+                                <label class="form-check-label" for="edit-todo-in-progress">
+                                    <div class="status bg-info rounded-pill text-light text-center">In Progress</div>
+                                </label>
+                              </div>
+                              <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="edit-todo-status" id="edit-todo-completed" value="option3">
+                                <label class="form-check-label" for="edit-todo-completed">
+                                    <div class="status bg-success rounded-pill text-light text-center">Completed</div>
+                                </label>
+                              </div>                           
+                        </div>
+                        <div class="mb-3">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" value="" id="editTodoFlexCheckDefault">
+                                <label class="form-check-label" for="editTodoFlexCheckDefault">
+                                  Mark all sub todos as complete.
+                                </label>
+                              </div>
+                        </div>
+                        <div class="mb-3">
+                            <div class="divider w-100"></div>
+                        </div>
+                        <div id="edit-todo-todo-field">
+                            <label class="col-form-label">Sub Todos<span><em class="text-danger" id="edit-todo-todos-label"></em></span></label>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <div class="mb-3">
+                                <label for="edit-title-subtodo" class="col-form-label">Title<span class="text-danger">*<em id="editSubTodoRequireTitle"></em></span></label>
+                                <input type="text" class="form-control" id="edit-title-subtodo">
+                            </div>
+                            <div class="mb-3">
+                                <label for="edit-dueDate-subtodo" class="col-form-label">Due Date</label>
+                                <input type="date" class="form-control" id="edit-dueDate-subTodo">
+                            </div>
+                            <div class="mb-3">
+                                <label for="edit-priority-subtodo" class="col-form-label">Select Priority</label>
+                                <br>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" name="edit-priority-subtodo" id="edit-no-priority-subtodo" value="option1">
+                                    <label class="form-check-label" for="edit-no-priority-subtodo">
+                                        <div class="status priority bg-secondary rounded-pill text-light text-center">None</div>
+                                    </label>
+                                  </div>
+                                  <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" name="edit-priority-subtodo" id="edit-medium-priority-subtodo" value="option2">
+                                    <label class="form-check-label" for="edit-medium-priority-subtodo">
+                                        <div class="status priority md-priority rounded-pill text-light text-center">Medium</div>
+                                    </label>
+                                  </div>
+                                  <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" name="edit-priority-subtodo" id="edit-hi-priority-subtodo" value="option3">
+                                    <label class="form-check-label" for="edit-hi-priority-subtodo">
+                                        <div class="status priority high-priority rounded-pill text-light text-center">High</div>
+                                    </label>
+                                  </div>                              
+                            </div>
+                            <div class="mb-3">
+                                <label for="edit-status-subtodo" class="col-form-label">Select Status</label>
+                                <br>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" name="edit-status-subtodo" id="edit-not-yet-started-subtodo" value="option1">
+                                    <label class="form-check-label" for="edit-not-yet-started-subtodo">
+                                        <div class="status bg-secondary rounded-pill text-light text-center">None</div>
+                                    </label>
+                                  </div>
+                                  <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" name="edit-status-subtodo" id="edit-in-progress-subtodo" value="option2">
+                                    <label class="form-check-label" for="edit-in-progress-subtodo">
+                                        <div class="status bg-info rounded-pill text-light text-center">In Progress</div>
+                                    </label>
+                                  </div>
+                                  <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" name="edit-status-subtodo" id="edit-completed-subtodo" value="option3">
+                                    <label class="form-check-label" for="edit-completed-subtodo">
+                                        <div class="status bg-success rounded-pill text-light text-center">Completed</div>
+                                    </label>
+                                  </div>                           
+                            </div>
+                            <div class="mb-3 d-flex justify-content-end">
+                                <button type="button" class="btn btn-danger">Remove</button>
+                            </div>
+                            <div class="mb-3">
+                                <div class="divider w-100"></div>
+                            </div>
+                        </div>
+                    
+                        <div class="mb-3 text-light">
+                            <button id="edit-todo-addTodo" type="button" class="btn btn-dark">Add Todo</button>
+                        </div>
+                      </form>
+                    </div>
+                    <div class="modal-footer">
+                      <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="edit-todo-close-btn">Close</button>
+                      <button type="button" class="btn btn-danger" id="edit-todo-del-btn">Delete</button>
+                      <button type="button" class="btn btn-primary" id="edit-todo-save-btn">Save Changes</button>
                     </div>
                   </div>
                 </div>

@@ -51,6 +51,7 @@ class Controller {
         this.handleProjectLinkEventListener();
         this.handleCheckCircleEventListeners();
         this.handleEditProjectBtnEventListener();
+        this.handleEditTodoBtnEventListener();
 
         // TODO:
         // Update notifications for items due today and items that are overdue
@@ -662,6 +663,16 @@ class Controller {
         let project = this.model.findById(this.model.projects, projectID);
         project = project[0];
         this.view.showEditProjectModal(project);
+    }
+
+    handleEditTodoBtnEventListener() {
+        this.view.bindEditTodoBtnEventListener(this.handleEditTodoModal);
+    }
+
+    handleEditTodoModal = (todoID) => {
+        let todo = this.model.findById(this.model.projects, todoID);
+        todo = todo[0];
+        this.view.showEditTodoModal(todo);
     }
 
     // Helpers

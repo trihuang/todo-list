@@ -90,14 +90,14 @@ class View {
             const titleLabel = document.getElementById('requireTitle');
             const dueDateLabel = document.getElementById('requireDueDate');
             if (title === '' && dueDate === '') {
-                titleLabel.textContent = '* A title is required.'
-                dueDateLabel.textContent = '* A due date is required.'
+                titleLabel.textContent = ' A title is required.'
+                dueDateLabel.textContent = ' A due date is required.'
             } else if (title === '') {
                 this.clearWarnings();
-                titleLabel.textContent = '* A title is required.'
+                titleLabel.textContent = ' A title is required.'
             } else if (dueDate === '') {
                 this.clearWarnings();
-                dueDateLabel.textContent = '* A due date is required.'
+                dueDateLabel.textContent = ' A due date is required.'
             } else {
                 const description = document.getElementById('description').value.trim();
                 const notes = document.getElementById('nts').value.trim();
@@ -123,6 +123,7 @@ class View {
                     status = 'None';
                 }
     
+                /*
                 let todoTitle;
                 const todoTitles = [];
                 const todoOneInput = document.getElementById('todo');
@@ -148,6 +149,7 @@ class View {
                 const form = document.getElementById('create-project-modal');
                 const modal = bootstrap.Modal.getInstance(form);
                 modal.hide();
+                */
             }
         });
     }
@@ -481,16 +483,22 @@ class View {
         return todoInputContainer;
     }
 
-    // TODO: CHANGE
     bindEditTodoBtnEventListener(handler) {
         document.querySelector('body').addEventListener('click', event => {
             if (event.target.classList.contains('bi-pencil-square')) {
                 if (event.target.id !== 'edit-project-btn') {
                     const todoID = event.target.getAttribute('data-id');
-                    // show edit todo modal
+                    handler(todoID);
                 }
             }
         });
+    }
+
+    showEditTodoModal(todo) {
+        // Show the modal
+        const editForm = document.getElementById('edit-todo-modal');
+        const modal = new bootstrap.Modal(editForm);
+        modal.show();
     }
 
     // TODO: CHANGE

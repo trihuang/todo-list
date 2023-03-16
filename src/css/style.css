@@ -155,7 +155,7 @@ body {
 }
 
 .divider {
-    border: 1px solid #F5F5F5;
+    border: 1px solid #9E9E9E;
 }
 
 .bg-notification > li > a {
@@ -210,3 +210,4 @@ body {
     font-size: 1rem;
     font-weight: bold;
 }
+
