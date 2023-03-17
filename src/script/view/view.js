@@ -3,8 +3,8 @@ import { isSameDay, isSameYear, format } from 'date-fns';
 class View {
     constructor() {
         this.displayProjectsHeader();
-        this.bindAddTodoBtnEventListener();
-        this.bindCloseBtnEventListeners();
+        this.bindAddTodoBtnInCreateProjectModalEventListener();
+        this.bindCloseBtnEventListenersInCreateProjectModal();
     }
 
     // Add event listeners and bind handlers in the navbar
@@ -29,27 +29,76 @@ class View {
         });
     }
 
-    bindAddTodoBtnEventListener() {
-        const addTodoBtn = document.getElementById('addTodo');
+    // Add event listeners and helpers for create project modal
+    // TODO: Change
+    bindAddTodoBtnInCreateProjectModalEventListener() {
+        const addTodoBtn = document.getElementById('create-proj-addTodo');
+        const btnDiv = addTodoBtn.parentNode;
+        const todosLabelDiv = document.getElementById('todoField');
         addTodoBtn.addEventListener('click', event => {
-            const todoInputContainer = addTodoBtn.parentNode.previousElementSibling;
-            let todoInput;
-            if (todoInputContainer.id === 'todoField') {
-                todoInput = todoInputContainer.children[1];
+            if (btnDiv.previousElementSibling === todosLabelDiv) {
+                this.addTodoInputFieldsToCreateProjectModal();
             } else {
-                todoInput = todoInputContainer.children[0];
-            }
-
-            if (todoInput.value.trim() !== '') {
-                this.clearTodoWarning();
-                this.addTodoInputField();
-            } else {
-                const todosLabel = document.getElementById('todosLabel');
-                todosLabel.textContent = '* The last todo input field cannot be empty.'
+                const titleInput = btnDiv.previousSibling.children[0].children[1];
+                const titleLabel = btnDiv.previousSibling.children[0].children[0];
+                const warningLabel = titleLabel.children[1].children[1];
+                if (titleInput.value.trim() !== '') {
+                    warningLabel.textContent = '';
+                    this.addTodoInputFieldsToCreateProjectModal();
+                } else {
+                    warningLabel.textContent = ' A title is required.'
+                }
             }
         });
     }
 
+    // TODO
+    addTodoInputFieldsToCreateProjectModal() {
+        const todoForm = document.createElement('div');
+        todoForm.classList.add('mb-3');
+        let i = 1;
+
+        // Create the title input
+        const titleDiv = document.createElement('div');
+        titleDiv.classList.add('mb-3');
+        const titleLabel = document.createElement('label');
+        titleLabel.classList.add('col-form-label');
+        titleLabel.setAttribute('for', `title-todo${i}`);
+        const labelText = document.createElement('span');
+        labelText.textContent = 'Title';
+        titleLabel.appendChild(labelText);
+        const warningLabel = document.createElement('span');
+        warningLabel.classList.add('text-danger');
+        const asterisk = document.createElement('span');
+        asterisk.textContent = '*';
+        warningLabel.appendChild(asterisk);
+        const warning = document.createElement('em');
+        warningLabel.appendChild(warning);
+        titleLabel.appendChild(warningLabel);
+        const titleInput = document.createElement('input');
+        titleInput.classList.add('form-control');
+        titleInput.setAttribute('type', 'text');
+        titleInput.setAttribute('id', `title-todo${i}`);
+        i++;
+        titleDiv.appendChild(titleLabel);
+        titleDiv.appendChild(titleInput);
+        todoForm.appendChild(titleDiv);
+
+        // Create the due date input
+
+        // Insert remove button
+        const removeBtn = this.makeRemoveBtn();
+        todoForm.appendChild(removeBtn);
+        const divider = this.makeModalDivider();
+        todoForm.appendChild(divider);
+
+        // Insert the todo form into the modal
+        const addTodoBtnDiv = document.getElementById('create-proj-addTodo').parentNode;
+        const parent = addTodoBtnDiv.parentNode;
+        parent.insertBefore(todoForm, addTodoBtnDiv);
+    }
+
+    // TODO: Change
     addTodoInputField() {
         const todoInputContainer = document.createElement('div');
         todoInputContainer.classList.add('input-group');
@@ -80,6 +129,32 @@ class View {
         e.target.parentNode.parentNode.parentNode.removeChild(e.target.parentNode.parentNode);
     }
 
+    makeRemoveBtn() {
+        const buttonDiv = document.createElement('div');
+        buttonDiv.classList.add('mb-3');
+        buttonDiv.classList.add('d-flex');
+        buttonDiv.classList.add('justify-content-end');
+        const removeBtn = document.createElement('button');
+        removeBtn.setAttribute('type', 'button');
+        removeBtn.classList.add('btn');
+        removeBtn.classList.add('btn-danger');
+        removeBtn.textContent = 'Remove';
+        removeBtn.addEventListener('click', this.removeTodoInputField);
+        buttonDiv.appendChild(removeBtn);
+        return buttonDiv;
+    }
+
+    makeModalDivider() {
+        const dividerDiv = document.createElement('div');
+        dividerDiv.classList.add('mb-3');
+        const div = document.createElement('div');
+        div.classList.add('divider');
+        div.classList.add('w-100');
+        dividerDiv.appendChild(div);
+        return dividerDiv;
+    }
+
+    // TODO: Change
     bindCreateProjectBtnEventListener(handler) {
         const createBtn = document.getElementById('createBtn');
         createBtn.addEventListener('click', event => {
@@ -154,49 +229,40 @@ class View {
         });
     }
 
-    clearWarnings() {
+    clearWarningsInCreateProjectModal() {
         const titleLabel = document.getElementById('requireTitle');
         const dueDateLabel = document.getElementById('requireDueDate');
-        titleLabel.textContent = '*';
-        dueDateLabel.textContent = '*';
+        titleLabel.textContent = '';
+        dueDateLabel.textContent = '';
     }
 
-    clearTodoWarning() {
-        const todosLabel = document.getElementById('todosLabel');
-        todosLabel.textContent = '';
-    }
-
-    clearTodoInputFields() {
-        const createBtnContainer = document.getElementById('addTodo').parentNode;
+    clearTodoInputFieldsInCreateProjectModal() {
+        const createBtnContainer = document.getElementById('create-proj-addTodo').parentNode;
         const parent = createBtnContainer.parentNode;
-        const todoOneInput = document.getElementById('todo');
-        let nextTodoInputContainer = todoOneInput.parentNode.nextElementSibling;
-        let elementToDelete;
-        while (nextTodoInputContainer !== createBtnContainer) {
-            elementToDelete = nextTodoInputContainer;
-            nextTodoInputContainer = nextTodoInputContainer.nextElementSibling; 
-            parent.removeChild(elementToDelete); 
+        const todosLabelDiv = document.getElementById('todoField');
+        while (todosLabelDiv.nextElementSibling !== createBtnContainer) {
+            parent.removeChild(todosLabelDiv.nextElementSibling);
         }
     }
 
-    bindCloseBtnEventListeners() {
+    bindCloseBtnEventListenersInCreateProjectModal() {
         const xBtn = document.getElementById('projXBtn');
         const closeBtn = document.getElementById('projCloseBtn');
         const projectForm = document.getElementById('createProjectForm');
         xBtn.addEventListener('click', event => {
             projectForm.reset();
-            this.clearTodoInputFields();
-            this.clearWarnings();
-            this.clearTodoWarning();
+            this.clearTodoInputFieldsInCreateProjectModal();
+            this.clearWarningsInCreateProjectModal();
         });
         closeBtn.addEventListener('click', event => {
             projectForm.reset();
-            this.clearTodoInputFields();
-            this.clearWarnings();
-            this.clearTodoWarning();
+            this.clearTodoInputFieldsInCreateProjectModal();
+            this.clearWarningsInCreateProjectModal();
         });
     }
  
+    // Notification
+
     toggleNotificationBadge() {
         // TODO
     }
@@ -204,6 +270,8 @@ class View {
     bindNotificationsEventListeners(handler) {
         // TODO
     }
+
+    // Settings
 
     // Add event listeners and bind handlers in the sidebar
 
