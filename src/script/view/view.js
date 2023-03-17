@@ -48,14 +48,25 @@ class View {
             if (btnDiv.previousElementSibling === todosLabelDiv) {
                 this.addTodoInputFieldsToCreateProjectModal();
             } else {
-                const titleInput = btnDiv.previousSibling.children[0].children[1];
-                const titleLabel = btnDiv.previousSibling.children[0].children[0];
-                const warningLabel = titleLabel.children[1].children[1];
-                if (titleInput.value.trim() !== '') {
-                    warningLabel.textContent = '';
+                let currentNode = todosLabelDiv.nextElementSibling;
+                let allTodosHaveTitles = true;
+                while (currentNode !== btnDiv) {
+                    if (currentNode.children[0].children[1].value.trim() === '') {
+                        allTodosHaveTitles = false;
+                        currentNode.children[0].children[0].children[1].children[1].textContent = ' A title is required.';
+                    } else {
+                        currentNode.children[0].children[0].children[1].children[1].textContent = '';
+                    }
+                    currentNode = currentNode.nextElementSibling;
+                }
+
+                if (allTodosHaveTitles) {
+                    currentNode = todosLabelDiv.nextElementSibling;
+                    while (currentNode !== btnDiv) {
+                        currentNode.children[0].children[0].children[1].children[1].textContent = '';
+                        currentNode = currentNode.nextElementSibling;
+                    }
                     this.addTodoInputFieldsToCreateProjectModal();
-                } else {
-                    warningLabel.textContent = ' A title is required.'
                 }
             }
         });
@@ -432,6 +443,9 @@ class View {
             const dueDate = dueDateInput.value;
             const titleLabel = document.getElementById('requireTitle');
             const dueDateLabel = document.getElementById('requireDueDate');
+            const todosLabel = document.getElementById('todoField');
+            const addTodoBtn = document.getElementById('create-proj-addTodo');
+
             if (title === '' && dueDate === '') {
                 titleLabel.textContent = ' A title is required.'
                 dueDateLabel.textContent = ' A due date is required.'
@@ -442,6 +456,19 @@ class View {
                 this.clearWarnings();
                 dueDateLabel.textContent = ' A due date is required.'
             } else {
+                // If there are todos, check that all todos have a title
+                // and check that all subtodos have a title
+                if (todosLabel.nextElementSibling !== addTodoBtn.parentNode) {
+                    let currentNode = todosLabel.nextElementSibling;
+                    let allTodosHaveTitles = true;
+                    let allSubTodosHaveTitles = true;
+                    while (currentNode !== addTodoBtn.parentNode) {
+                        // TODO
+                        currentNode = currentNode.nextElementSibling;
+                    }
+                }
+
+                /*
                 const description = document.getElementById('description').value.trim();
                 const notes = document.getElementById('nts').value.trim();
 
@@ -466,6 +493,7 @@ class View {
                     status = 'None';
                 }
     
+                */
                 /*
                 let todoTitle;
                 const todoTitles = [];
