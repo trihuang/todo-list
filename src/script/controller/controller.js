@@ -121,19 +121,8 @@ class Controller {
         this.view.bindCreateProjectBtnEventListener(this.handleCreateProject);
     }
 
-    handleCreateProject = (title, dueDate, description, notes, priority, status, todoTitles) => {
+    handleCreateProject = (title, dueDate, description, notes, priority, status, todos) => {
         const date = parseISO(dueDate);
-        let todos;
-        let todo;
-        if (todoTitles.length === 0) {
-            todos = undefined;
-        } else {
-            todos = [];
-            for (let i = 0; i < todoTitles.length; i++) {
-                todo = this.model.createTodoWithOnlyTitle(todoTitles[i]);
-                todos.push(todo);
-            }
-        }
         this.model.createProject(title, description, date, priority, status, notes, todos);
         this.handleDisplayHomePage();
     }

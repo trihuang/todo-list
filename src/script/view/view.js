@@ -1,4 +1,5 @@
-import { isSameDay, isSameYear, format } from 'date-fns';
+import { isSameDay, isSameYear, format, parseISO } from 'date-fns';
+import Todo from '../model/todo'
 
 class View {
     constructor() {
@@ -72,7 +73,6 @@ class View {
         });
     }
 
-    // TODO
     addTodoInputFieldsToCreateProjectModal() {
         const todoForm = document.createElement('div');
         todoForm.classList.add('mb-3');
@@ -212,6 +212,7 @@ class View {
         noPriorityRadioBtn.setAttribute('type', 'radio');
         noPriorityRadioBtn.setAttribute('name', `priority-todo${this.modalIDCounter}`);
         noPriorityRadioBtn.setAttribute('id', `no-priority-todo${this.modalIDCounter}`);
+        noPriorityRadioBtn.checked = true;
         const noPriorityLabel = document.createElement('label');
         noPriorityLabel.classList.add('form-check-label');
         noPriorityLabel.setAttribute('for', `no-priority-todo${this.modalIDCounter}`);
@@ -283,6 +284,7 @@ class View {
         noStatusRadioBtn.setAttribute('type', 'radio');
         noStatusRadioBtn.setAttribute('name', `status-todo${this.modalIDCounter}`);
         noStatusRadioBtn.setAttribute('id', `no-status-todo${this.modalIDCounter}`);
+        noStatusRadioBtn.checked = true;
         const noStatusLabel = document.createElement('label');
         noStatusLabel.classList.add('form-check-label');
         noStatusLabel.setAttribute('for', `no-status-todo${this.modalIDCounter}`);
@@ -433,7 +435,6 @@ class View {
         return dividerDiv;
     }
 
-    // TODO: Change
     bindCreateProjectBtnEventListener(handler) {
         const createBtn = document.getElementById('createBtn');
         createBtn.addEventListener('click', event => {
@@ -458,70 +459,141 @@ class View {
             } else {
                 // If there are todos, check that all todos have a title
                 // and check that all subtodos have a title
+                let allTodosHaveTitles = true;
+                let allSubTodosHaveTitles = true;
                 if (todosLabel.nextElementSibling !== addTodoBtn.parentNode) {
                     let currentNode = todosLabel.nextElementSibling;
-                    let allTodosHaveTitles = true;
-                    let allSubTodosHaveTitles = true;
+                    let subTodoLabel;
+                    let addSubTodoBtn;
+                    let currentSubTodo;
                     while (currentNode !== addTodoBtn.parentNode) {
-                        // TODO
+                        if (currentNode.children[0].children[1].value.trim() === '') {
+                            allTodosHaveTitles = false;
+                            currentNode.children[0].children[0].children[1].children[1].textContent = ' A title is required.';
+                        } else {
+                            currentNode.children[0].children[0].children[1].children[1].textContent = '';
+                        }
+                        
+                        subTodoLabel = currentNode.children[6];
+                        addSubTodoBtn = currentNode.lastChild.previousElementSibling.previousElementSibling;
+                        currentSubTodo = subTodoLabel.nextElementSibling;
+                        while (currentSubTodo !== addSubTodoBtn) {
+                            if (currentSubTodo.children[0].value.trim() === '') {
+                                allSubTodosHaveTitles = false;
+                                subTodoLabel.children[0].children[1].textContent = '* A subtodo must have a title.';
+                            } 
+                            currentSubTodo = currentSubTodo.nextElementSibling;
+                        }
+
+                        if (allSubTodosHaveTitles) {
+                            subTodoLabel.children[0].children[1].textContent = '';
+                        }
                         currentNode = currentNode.nextElementSibling;
                     }
                 }
 
-                /*
-                const description = document.getElementById('description').value.trim();
-                const notes = document.getElementById('nts').value.trim();
+                if (allTodosHaveTitles && allSubTodosHaveTitles) {
+                    const description = document.getElementById('description').value.trim();
+                    const notes = document.getElementById('nts').value.trim();
 
-                let priority;
-                const mdPriorityRadioBtn = document.getElementById('medium-priority');
-                const hiPriorityRadioBtn = document.getElementById('hi-priority');
+                    let priority;
+                    const mdPriorityRadioBtn = document.getElementById('medium-priority');
+                    const hiPriorityRadioBtn = document.getElementById('hi-priority');
 
-                if (hiPriorityRadioBtn.checked) {
-                    priority = 'High';
-                } else if (mdPriorityRadioBtn.checked) {
-                    priority = 'Medium';
-                } else {
-                    priority = 'None';
-                }
-
-                let status;
-                const inProgressRadioBtn = document.getElementById('in-progress');
-
-                if (inProgressRadioBtn.checked) {
-                    status = 'In Progress';
-                } else {
-                    status = 'None';
-                }
-    
-                */
-                /*
-                let todoTitle;
-                const todoTitles = [];
-                const todoOneInput = document.getElementById('todo');
-                const todoOneTitle = todoOneInput.value.trim();
-                if (todoOneTitle !== '') {
-                    todoTitles.push(todoOneTitle);
-                    const createBtnContainer = document.getElementById('addTodo').parentNode;
-                    let nextTodoInputContainer = todoOneInput.parentNode.nextElementSibling;
-                    while (nextTodoInputContainer !== createBtnContainer) {
-                        todoTitle = nextTodoInputContainer.children[0].value.trim();
-                        if (todoTitle !== '') {
-                            todoTitles.push(todoTitle);
-                        }
-                        nextTodoInputContainer = nextTodoInputContainer.nextElementSibling;  
+                    if (hiPriorityRadioBtn.checked) {
+                        priority = 'High';
+                    } else if (mdPriorityRadioBtn.checked) {
+                        priority = 'Medium';
+                    } else {
+                        priority = 'None';
                     }
+
+                    let status;
+                    const inProgressRadioBtn = document.getElementById('in-progress');
+
+                    if (inProgressRadioBtn.checked) {
+                        status = 'In Progress';
+                    } else {
+                        status = 'None';
+                    }
+
+                    let todos;
+                    if (todosLabel.nextElementSibling !== addTodoBtn.parentNode) {
+                        todos = [];
+                        let currentNode = todosLabel.nextElementSibling;
+                        let todoTitle;
+                        let todoDueDate;
+                        let todoDescription;
+                        let todoNotes;
+                        let todoPriority;
+                        let todoStatus;
+                        let todoSubtodos;
+                        let noPriorityBtn;
+                        let mdPriorityBtn;
+                        //let hiPriorityBtn;
+                        let noStatusBtn;
+                        //let inProgressBtn;
+                        let subTodoLabel;
+                        let addSubTodoBtn;
+                        let currentSubTodo;
+                        let subTodoTitle;
+                        let subTodo;
+                        let todo;
+                        while (currentNode !== addTodoBtn.parentNode) {
+                            todoTitle = currentNode.children[0].children[1].value.trim();
+                            todoDueDate = currentNode.children[1].children[1].value;
+                            if (todoDueDate !== '') {
+                                todoDueDate = parseISO(todoDueDate);
+                            }
+                            todoDescription = currentNode.children[2].children[1].value.trim();
+                            todoNotes = currentNode.children[3].children[1].value.trim();
+
+                            noPriorityBtn = currentNode.children[4].children[2].children[0];
+                            mdPriorityBtn = currentNode.children[4].children[3].children[0];
+                            //hiPriorityBtn = currentNode.children[4].children[4].children[0];
+
+                            if (noPriorityBtn.checked) {
+                                todoPriority = 'None';
+                            } else if (mdPriorityBtn.checked) {
+                                todoPriority = 'Medium';
+                            } else {
+                                todoPriority = 'High';
+                            }
+
+                            noStatusBtn = currentNode.children[5].children[2].children[0];
+                            if (noStatusBtn.checked) {
+                                todoStatus = 'None';
+                            } else {
+                                todoStatus = 'In Progress';
+                            }
+
+                            subTodoLabel = currentNode.children[6];
+                            addSubTodoBtn = currentNode.lastChild.previousElementSibling.previousElementSibling;
+                            if (subTodoLabel.nextElementSibling !== addSubTodoBtn) {
+                                todoSubtodos = [];
+                                currentSubTodo = subTodoLabel.nextElementSibling;
+                                while (currentSubTodo !== addSubTodoBtn) {
+                                    subTodoTitle = currentSubTodo.children[0].value.trim();
+                                    subTodo = new Todo(subTodoTitle, '', '', 'None', 'None', '', undefined);
+                                    todoSubtodos.push(subTodo);
+                                    currentSubTodo = currentSubTodo.nextElementSibling;
+                                }
+                            }
+                            todo = new Todo(todoTitle, todoDescription, todoDueDate, todoPriority, todoStatus, todoNotes, todoSubtodos);
+                            todos.push(todo);
+                            currentNode = currentNode.nextElementSibling;
+                        }
+                    }
+                    handler(title, dueDate, description, notes, priority, status, todos);
+                    const projectForm = document.getElementById('createProjectForm');
+                    projectForm.reset();
+                    this.clearTodoInputFieldsInCreateProjectModal();
+                    this.clearWarningsInCreateProjectModal();
+                    this.modalIDCounter = 1;
+                    const form = document.getElementById('create-project-modal');
+                    const modal = bootstrap.Modal.getInstance(form);
+                    modal.hide();
                 }
-                handler(title, dueDate, description, notes, priority, status, todoTitles);
-                const projectForm = document.getElementById('createProjectForm');
-                projectForm.reset();
-                this.clearTodoInputFields();
-                this.clearWarnings();
-                this.clearTodoWarning();
-                this.modalIDCounter = 1;
-                const form = document.getElementById('create-project-modal');
-                const modal = bootstrap.Modal.getInstance(form);
-                modal.hide();
-                */
             }
         });
     }
