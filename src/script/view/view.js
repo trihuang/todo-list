@@ -2,9 +2,18 @@ import { isSameDay, isSameYear, format } from 'date-fns';
 
 class View {
     constructor() {
+        this.modalIDCounter = 1;
         this.displayProjectsHeader();
         this.bindAddTodoBtnInCreateProjectModalEventListener();
         this.bindCloseBtnEventListenersInCreateProjectModal();
+    }
+
+    get modalIDCounter() {
+        return this._modalIDCounter;
+    }
+
+    set modalIDCounter(i) {
+        this._modalIDCounter = i;
     }
 
     // Add event listeners and bind handlers in the navbar
@@ -30,7 +39,7 @@ class View {
     }
 
     // Add event listeners and helpers for create project modal
-    // TODO: Change
+    
     bindAddTodoBtnInCreateProjectModalEventListener() {
         const addTodoBtn = document.getElementById('create-proj-addTodo');
         const btnDiv = addTodoBtn.parentNode;
@@ -56,14 +65,57 @@ class View {
     addTodoInputFieldsToCreateProjectModal() {
         const todoForm = document.createElement('div');
         todoForm.classList.add('mb-3');
-        let i = 1;
 
         // Create the title input
+        const titleDiv = this.makeTitleInput();
+        todoForm.appendChild(titleDiv);
+
+        // Create the due date input
+        const dueDateDiv = this.makeDueDateInput();
+        todoForm.appendChild(dueDateDiv);
+
+        // Create the description input
+        const descriptionDiv = this.makeDescriptionInput();
+        todoForm.appendChild(descriptionDiv);
+
+        // Create the notes input
+        const notesDiv = this.makeNotesInput();
+        todoForm.appendChild(notesDiv);
+
+        // Create the priority selections
+        const priorityDiv = this.makePrioritySelections();
+        todoForm.appendChild(priorityDiv);
+
+        // Create the status selections
+        const statusDiv = this.makeStatusSelections();
+        todoForm.appendChild(statusDiv);
+
+        // Create the subtodo section
+        const subTodosDiv = this.makeSubTodoLabel();
+        todoForm.appendChild(subTodosDiv);
+        const subTodoBtn = this.makeAddSubTodoBtn();
+        todoForm.appendChild(subTodoBtn);
+
+        // Insert remove button
+        const removeBtn = this.makeRemoveBtn();
+        todoForm.appendChild(removeBtn);
+        const divider = this.makeModalDivider();
+        todoForm.appendChild(divider);
+
+        this.modalIDCounter++;
+
+        // Insert the todo form into the modal
+        const addTodoBtnDiv = document.getElementById('create-proj-addTodo').parentNode;
+        const parent = addTodoBtnDiv.parentNode;
+        parent.insertBefore(todoForm, addTodoBtnDiv);
+    }
+
+    makeTitleInput() {
         const titleDiv = document.createElement('div');
         titleDiv.classList.add('mb-3');
         const titleLabel = document.createElement('label');
         titleLabel.classList.add('col-form-label');
-        titleLabel.setAttribute('for', `title-todo${i}`);
+        titleLabel.setAttribute('for', `title-todo${this.modalIDCounter}`);
         const labelText = document.createElement('span');
         labelText.textContent = 'Title';
         titleLabel.appendChild(labelText);
@@ -78,55 +130,267 @@ class View {
         const titleInput = document.createElement('input');
         titleInput.classList.add('form-control');
         titleInput.setAttribute('type', 'text');
-        titleInput.setAttribute('id', `title-todo${i}`);
-        i++;
+        titleInput.setAttribute('id', `title-todo${this.modalIDCounter}`);
         titleDiv.appendChild(titleLabel);
         titleDiv.appendChild(titleInput);
-        todoForm.appendChild(titleDiv);
-
-        // Create the due date input
-
-        // Insert remove button
-        const removeBtn = this.makeRemoveBtn();
-        todoForm.appendChild(removeBtn);
-        const divider = this.makeModalDivider();
-        todoForm.appendChild(divider);
-
-        // Insert the todo form into the modal
-        const addTodoBtnDiv = document.getElementById('create-proj-addTodo').parentNode;
-        const parent = addTodoBtnDiv.parentNode;
-        parent.insertBefore(todoForm, addTodoBtnDiv);
+        return titleDiv;
     }
 
-    // TODO: Change
-    addTodoInputField() {
-        const todoInputContainer = document.createElement('div');
-        todoInputContainer.classList.add('input-group');
-        todoInputContainer.classList.add('mb-3');
+    makeDueDateInput() {
+        const dueDateDiv = document.createElement('div');
+        dueDateDiv.classList.add('mb-3');
+        const dueDateLabel = document.createElement('label');
+        dueDateLabel.classList.add('col-form-label');
+        dueDateLabel.setAttribute('for', `dueDate-todo${this.modalIDCounter}`);
+        dueDateLabel.textContent = 'Due Date';
+        const dueDateInput = document.createElement('input');
+        dueDateInput.classList.add('form-control');
+        dueDateInput.setAttribute('type', 'date');
+        dueDateInput.setAttribute('id', `dueDate-todo${this.modalIDCounter}`);
+        dueDateDiv.appendChild(dueDateLabel);
+        dueDateDiv.appendChild(dueDateInput);
+        return dueDateDiv;
+    }
 
-        const todoInputField = document.createElement('input');
-        todoInputField.setAttribute('type', 'text');
-        todoInputField.classList.add('form-control');
-        todoInputContainer.appendChild(todoInputField);
+    makeDescriptionInput() {
+        const descriptionDiv = document.createElement('div');
+        descriptionDiv.classList.add('mb-3');
+        const descriptionLabel = document.createElement('label');
+        descriptionLabel.classList.add('col-form-label');
+        descriptionLabel.setAttribute('for', `description-todo${this.modalIDCounter}`);
+        descriptionLabel.textContent = 'Description';
+        const descriptionInput = document.createElement('textarea');
+        descriptionInput.classList.add('form-control');
+        descriptionInput.setAttribute('id', `description-todo${this.modalIDCounter}`);
+        descriptionDiv.appendChild(descriptionLabel);
+        descriptionDiv.appendChild(descriptionInput);
+        return descriptionDiv;
+    }
 
+    makeNotesInput() {
+        const notesDiv = document.createElement('div');
+        notesDiv.classList.add('mb-3');
+        const notesLabel = document.createElement('label');
+        notesLabel.classList.add('col-form-label');
+        notesLabel.setAttribute('for', `notes-todo${this.modalIDCounter}`);
+        notesLabel.textContent = 'Notes';
+        const notesInput = document.createElement('input');
+        notesInput.classList.add('form-control');
+        notesInput.setAttribute('type', 'text');
+        notesInput.setAttribute('id', `notes-todo${this.modalIDCounter}`);
+        notesDiv.appendChild(notesLabel);
+        notesDiv.appendChild(notesInput);
+        return notesDiv;
+    }
+
+    makePrioritySelections() {
+        const priorityDiv = document.createElement('div');
+        priorityDiv.classList.add('mb-3');
+        const label = document.createElement('label');
+        label.classList.add('col-form-label');
+        label.textContent = 'Select Priority';
+        priorityDiv.appendChild(label);
+        const lineBreak = document.createElement('br');
+        priorityDiv.appendChild(lineBreak);
+
+        const selectionOne = document.createElement('div');
+        selectionOne.classList.add('form-check');
+        selectionOne.classList.add('form-check-inline');
+        const noPriorityRadioBtn = document.createElement('input');
+        noPriorityRadioBtn.classList.add('form-check-input');
+        noPriorityRadioBtn.setAttribute('type', 'radio');
+        noPriorityRadioBtn.setAttribute('name', `priority-todo${this.modalIDCounter}`);
+        noPriorityRadioBtn.setAttribute('id', `no-priority-todo${this.modalIDCounter}`);
+        const noPriorityLabel = document.createElement('label');
+        noPriorityLabel.classList.add('form-check-label');
+        noPriorityLabel.setAttribute('for', `no-priority-todo${this.modalIDCounter}`);
+        const noPriorityButton = document.createElement('div');
+        noPriorityButton.classList.add('status');
+        noPriorityButton.classList.add('priority');
+        noPriorityButton.classList.add('rounded-pill');
+        noPriorityButton.classList.add('text-light');
+        noPriorityButton.classList.add('text-center');
+        noPriorityButton.classList.add('bg-secondary');
+        noPriorityButton.textContent = 'None';
+        noPriorityLabel.appendChild(noPriorityButton);
+        selectionOne.appendChild(noPriorityRadioBtn);
+        selectionOne.appendChild(noPriorityLabel);
+
+        const selectionTwo = document.createElement('div');
+        selectionTwo.classList.add('form-check');
+        selectionTwo.classList.add('form-check-inline');
+        const mdPriorityRadioBtn = document.createElement('input');
+        mdPriorityRadioBtn.classList.add('form-check-input');
+        mdPriorityRadioBtn.setAttribute('type', 'radio');
+        mdPriorityRadioBtn.setAttribute('name', `priority-todo${this.modalIDCounter}`);
+        mdPriorityRadioBtn.setAttribute('id', `medium-priority-todo${this.modalIDCounter}`);
+        const mdPriorityLabel = document.createElement('label');
+        mdPriorityLabel.classList.add('form-check-label');
+        mdPriorityLabel.setAttribute('for', `medium-priority-todo${this.modalIDCounter}`);
+        const mdPriorityButton = this.makePriorityButton('Medium');
+        mdPriorityLabel.appendChild(mdPriorityButton);
+        selectionTwo.appendChild(mdPriorityRadioBtn);
+        selectionTwo.appendChild(mdPriorityLabel);
+
+        const selectionThree = document.createElement('div');
+        selectionThree.classList.add('form-check');
+        selectionThree.classList.add('form-check-inline');
+        const hiPriorityRadioBtn = document.createElement('input');
+        hiPriorityRadioBtn.classList.add('form-check-input');
+        hiPriorityRadioBtn.setAttribute('type', 'radio');
+        hiPriorityRadioBtn.setAttribute('name', `priority-todo${this.modalIDCounter}`);
+        hiPriorityRadioBtn.setAttribute('id', `hi-priority-todo${this.modalIDCounter}`);
+        const hiPriorityLabel = document.createElement('label');
+        hiPriorityLabel.classList.add('form-check-label');
+        hiPriorityLabel.setAttribute('for', `hi-priority-todo${this.modalIDCounter}`);
+        const hiPriorityButton = this.makePriorityButton('High');
+        hiPriorityLabel.appendChild(hiPriorityButton);
+        selectionThree.appendChild(hiPriorityRadioBtn);
+        selectionThree.appendChild(hiPriorityLabel);
+
+        priorityDiv.appendChild(selectionOne);
+        priorityDiv.appendChild(selectionTwo);
+        priorityDiv.appendChild(selectionThree);
+        return priorityDiv;
+    }
+
+    makeStatusSelections() {
+        const statusDiv = document.createElement('div');
+        statusDiv.classList.add('mb-3');
+        const label = document.createElement('label');
+        label.classList.add('col-form-label');
+        label.textContent = 'Select Status';
+        statusDiv.appendChild(label);
+        const lineBreak = document.createElement('br');
+        statusDiv.appendChild(lineBreak);
+
+        const selectionOne = document.createElement('div');
+        selectionOne.classList.add('form-check');
+        selectionOne.classList.add('form-check-inline');
+        const noStatusRadioBtn = document.createElement('input');
+        noStatusRadioBtn.classList.add('form-check-input');
+        noStatusRadioBtn.setAttribute('type', 'radio');
+        noStatusRadioBtn.setAttribute('name', `status-todo${this.modalIDCounter}`);
+        noStatusRadioBtn.setAttribute('id', `no-status-todo${this.modalIDCounter}`);
+        const noStatusLabel = document.createElement('label');
+        noStatusLabel.classList.add('form-check-label');
+        noStatusLabel.setAttribute('for', `no-status-todo${this.modalIDCounter}`);
+        const noStatusButton = document.createElement('div');
+        noStatusButton.classList.add('status');
+        noStatusButton.classList.add('rounded-pill');
+        noStatusButton.classList.add('text-light');
+        noStatusButton.classList.add('text-center');
+        noStatusButton.classList.add('bg-secondary');
+        noStatusButton.textContent = 'None';
+        noStatusLabel.appendChild(noStatusButton);
+        selectionOne.appendChild(noStatusRadioBtn);
+        selectionOne.appendChild(noStatusLabel);
+
+        const selectionTwo = document.createElement('div');
+        selectionTwo.classList.add('form-check');
+        selectionTwo.classList.add('form-check-inline');
+        const inProgressRadioBtn = document.createElement('input');
+        inProgressRadioBtn.classList.add('form-check-input');
+        inProgressRadioBtn.setAttribute('type', 'radio');
+        inProgressRadioBtn.setAttribute('name', `status-todo${this.modalIDCounter}`);
+        inProgressRadioBtn.setAttribute('id', `in-progress-todo${this.modalIDCounter}`);
+        const inProgressLabel = document.createElement('label');
+        inProgressLabel.classList.add('form-check-label');
+        inProgressLabel.setAttribute('for', `in-progress-todo${this.modalIDCounter}`);
+        const inProgressButton = this.makeStatusButton('In Progress');
+        inProgressLabel.appendChild(inProgressButton);
+        selectionTwo.appendChild(inProgressRadioBtn);
+        selectionTwo.appendChild(inProgressLabel);
+
+        statusDiv.appendChild(selectionOne);
+        statusDiv.appendChild(selectionTwo);
+        return statusDiv;
+    }
+
+    makeSubTodoLabel() {
+        const div = document.createElement('div');
+        div.classList.add('mb-3');
+        div.setAttribute('id', `subtodoField${this.modalIDCounter}`);
+        const label = document.createElement('label');
+        label.classList.add('col-form-label');
+        const labelText = document.createElement('span');
+        labelText.textContent = 'Subtodos';
+        label.appendChild(labelText);
+        const warning = document.createElement('em');
+        warning.classList.add('text-danger');
+        label.appendChild(warning);
+        div.appendChild(label);
+        return div;
+    }
+
+    makeAddSubTodoBtn() {
+        const buttonDiv = document.createElement('div');
+        buttonDiv.classList.add('mb-3');
+        const btn = document.createElement('button');
+        btn.classList.add('btn');
+        btn.classList.add('btn-outline-secondary');
+        btn.setAttribute('type', 'button');
+        btn.setAttribute('data-id', this.modalIDCounter);
+        btn.textContent = 'Add Subtodo';
+        btn.addEventListener('click', event => {
+            const id = event.target.getAttribute('data-id');
+            const subtodoLabel = document.getElementById(`subtodoField${id}`);
+            if (subtodoLabel.nextElementSibling === event.target.parentNode) {
+                const input = this.makeSubTodoInputField();
+                event.target.parentNode.parentNode.insertBefore(input, event.target.parentNode);
+            } else {
+                let currentNode = subtodoLabel.nextElementSibling;
+                let allHaveTitle = true;
+                while (currentNode !== event.target.parentNode) {
+                    if (currentNode.children[0].value.trim() === '') {
+                        allHaveTitle = false;
+                        subtodoLabel.children[0].children[1].textContent = '* A subtodo must have a title.';
+                    }
+                    currentNode = currentNode.nextElementSibling;
+                }
+
+                if (allHaveTitle) {
+                    subtodoLabel.children[0].children[1].textContent = '';
+                    const newInput = this.makeSubTodoInputField();
+                    event.target.parentNode.parentNode.insertBefore(newInput, event.target.parentNode);
+                }
+            }
+        });
+        buttonDiv.appendChild(btn);
+        return buttonDiv;
+    }
+
+    makeSubTodoInputField() {
+        const div = document.createElement('div');
+        div.classList.add('mb-3');
+        div.classList.add('input-group');
+        const input = document.createElement('input');
+        input.classList.add('form-control');
+        input.setAttribute('type', 'text');
+        input.setAttribute('placeholder', 'Subtodo title');
         const buttonDiv = document.createElement('div');
         buttonDiv.classList.add('input-group-append');
-        const removeBtn = document.createElement('button');
-        removeBtn.setAttribute('type', 'button');
-        removeBtn.classList.add('btn');
-        removeBtn.classList.add('btn-danger');
-        removeBtn.textContent = 'Remove';
-        removeBtn.addEventListener('click', this.removeTodoInputField);
-        buttonDiv.appendChild(removeBtn);
-        todoInputContainer.appendChild(buttonDiv);
-
-        const addTodoBtnContainer = document.getElementById('addTodo').parentNode;
-        const prevTodoInputField = addTodoBtnContainer.previousSibling;
-        this.insertAfter(prevTodoInputField, todoInputContainer);
+        const xBtn = document.createElement('button');
+        xBtn.classList.add('btn');
+        xBtn.classList.add('btn-outline-secondary');
+        xBtn.setAttribute('type', 'button');
+        const icon = document.createElement('i');
+        icon.classList.add('bi');
+        icon.classList.add('bi-x-lg');
+        xBtn.appendChild(icon);
+        xBtn.addEventListener('click', this.removeSubTodoInputField);
+        buttonDiv.appendChild(xBtn);
+        div.appendChild(input);
+        div.appendChild(buttonDiv);
+        return div;
     }
 
-    removeTodoInputField(e) {
-        e.target.parentNode.parentNode.parentNode.removeChild(e.target.parentNode.parentNode);
+    removeSubTodoInputField = (e) => {
+        if (e.target.classList.contains('btn-outline-secondary')) {
+            this.removeTodoInputField(e);
+        } else if (e.target.classList.contains('bi-x-lg')) {
+            e.target.parentNode.parentNode.parentNode.parentNode.removeChild(e.target.parentNode.parentNode.parentNode);
+        }
     }
 
     makeRemoveBtn() {
@@ -142,6 +406,10 @@ class View {
         removeBtn.addEventListener('click', this.removeTodoInputField);
         buttonDiv.appendChild(removeBtn);
         return buttonDiv;
+    }
+
+    removeTodoInputField(e) {
+        e.target.parentNode.parentNode.parentNode.removeChild(e.target.parentNode.parentNode);
     }
 
     makeModalDivider() {
@@ -221,6 +489,7 @@ class View {
                 this.clearTodoInputFields();
                 this.clearWarnings();
                 this.clearTodoWarning();
+                this.modalIDCounter = 1;
                 const form = document.getElementById('create-project-modal');
                 const modal = bootstrap.Modal.getInstance(form);
                 modal.hide();
@@ -251,11 +520,13 @@ class View {
         const projectForm = document.getElementById('createProjectForm');
         xBtn.addEventListener('click', event => {
             projectForm.reset();
+            this.modalIDCounter = 1;
             this.clearTodoInputFieldsInCreateProjectModal();
             this.clearWarningsInCreateProjectModal();
         });
         closeBtn.addEventListener('click', event => {
             projectForm.reset();
+            this.modalIDCounter = 1;
             this.clearTodoInputFieldsInCreateProjectModal();
             this.clearWarningsInCreateProjectModal();
         });
