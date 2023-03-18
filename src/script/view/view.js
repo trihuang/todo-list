@@ -7,6 +7,7 @@ class View {
         this.displayProjectsHeader();
         this.bindAddTodoBtnInCreateProjectModalEventListener();
         this.bindCloseBtnEventListenersInCreateProjectModal();
+        this.bindCloseBtnEventListenersInEditProjectModal();
     }
 
     get modalIDCounter() {
@@ -451,10 +452,10 @@ class View {
                 titleLabel.textContent = ' A title is required.'
                 dueDateLabel.textContent = ' A due date is required.'
             } else if (title === '') {
-                this.clearWarnings();
+                this.clearWarningsInCreateProjectModal();
                 titleLabel.textContent = ' A title is required.'
             } else if (dueDate === '') {
-                this.clearWarnings();
+                this.clearWarningsInCreateProjectModal();
                 dueDateLabel.textContent = ' A due date is required.'
             } else {
                 // If there are todos, check that all todos have a title
@@ -920,6 +921,40 @@ class View {
         todoInputContainer.appendChild(buttonDiv);
 
         return todoInputContainer;
+    }
+
+    bindCloseBtnEventListenersInEditProjectModal() {
+        const xBtn = document.getElementById('edit-x-btn');
+        const closeBtn = document.getElementById('edit-proj-close-btn');
+        const editProjectForm = document.getElementById('editProjectForm');
+        xBtn.addEventListener('click', event => {
+            editProjectForm.reset();
+            this.clearTodoInputFieldsInEditProjectModal()
+            this.clearWarningsInEditProjectModal();
+        });
+        closeBtn.addEventListener('click', event => {
+            editProjectForm.reset();
+            this.clearTodoInputFieldsInEditProjectModal()
+            this.clearWarningsInEditProjectModal();
+        });
+    }
+
+    clearTodoInputFieldsInEditProjectModal() {
+        const addTodoBtnDiv = document.getElementById('edit-proj-addTodo').parentNode;
+        const parent = addTodoBtnDiv.parentNode;
+        const todosLabelDiv = document.getElementById('edit-proj-todo-field');
+        while (todosLabelDiv.nextElementSibling !== addTodoBtnDiv) {
+            parent.removeChild(todosLabelDiv.nextElementSibling);
+        }
+    }
+
+    clearWarningsInEditProjectModal() {
+        const titleLabel = document.getElementById('editProjRequireTitle');
+        const dueDateLabel = document.getElementById('editProjRequireDueDate');
+        const todosLabel = document.getElementById('edit-proj-todos-label');
+        titleLabel.textContent = '';
+        dueDateLabel.textContent = '';
+        todosLabel.textContent = '';
     }
 
     bindEditTodoBtnEventListener(handler) {
