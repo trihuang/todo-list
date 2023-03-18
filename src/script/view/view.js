@@ -9,6 +9,7 @@ class View {
         this.bindCloseBtnEventListenersInCreateProjectModal();
         this.bindCloseBtnEventListenersInEditProjectModal();
         this.bindDeleteBtnEventListenerInEditProjectModal();
+        this.bindAddTodoBtnInEditProjectModalEventListener();
     }
 
     get modalIDCounter() {
@@ -923,7 +924,7 @@ class View {
         removeBtn.classList.add('btn');
         removeBtn.classList.add('btn-danger');
         removeBtn.textContent = 'Remove';
-        //removeBtn.addEventListener('click', this.removeTodoInputField);
+        removeBtn.addEventListener('click', this.removeTodoInputField);
         buttonDiv.appendChild(removeBtn);
         todoInputContainer.appendChild(buttonDiv);
 
@@ -987,6 +988,182 @@ class View {
             const id = event.target.getAttribute('data-id');
             handler(id);
         });
+    }
+
+    bindSaveBtnEventListenerInEditProjectModal(handler) {
+        const saveBtn = document.getElementById('edit-proj-save-btn');
+        saveBtn.addEventListener('click', event => {
+
+            // Check that title, due date, and todo titles are all filled in
+            const titleLabel = document.getElementById('editProjRequireTitle');
+            const titleInput = document.getElementById('edit-proj-title');
+            const dueDateLabel = document.getElementById('editProjRequireDueDate');
+            const dueDateInput = document.getElementById('edit-proj-dueDate');
+            const todosLabel = document.getElementById('edit-proj-todos-label');
+            const todosLabelDiv = document.getElementById('edit-proj-todo-field');
+            const addTodoBtnDiv = document.getElementById('edit-proj-addTodo').parentNode;
+            let allTodosHaveTitles = true;
+
+            if (titleInput.value.trim() === '') {
+                titleLabel.textContent = ' A title is required.';
+            } else {
+                titleLabel.textContent = '';
+            }
+            
+            if (dueDateInput.value === '') {
+                dueDateLabel.textContent = ' A due date is required.';
+            } else {
+                dueDateLabel.textContent = '';
+            }
+            
+            if (todosLabelDiv.nextElementSibling !== addTodoBtnDiv) {
+                let currentNode = todosLabelDiv.nextElementSibling;
+                while (currentNode !== addTodoBtnDiv) {
+                    if (currentNode.children[0].value.trim() === '') {
+                        allTodosHaveTitles = false;
+                        todosLabel.textContent = '* All todos must have a title.';
+                    }
+                    currentNode = currentNode.nextElementSibling;
+                }
+            }
+
+            if (allTodosHaveTitles) {
+                todosLabel.textContent = '';
+            }
+
+            if (allTodosHaveTitles && titleInput.value.trim() !== '' && dueDateInput.value !== '') {
+                // Extract the information
+                const projectID = event.target.getAttribute('data-id');
+                const newTitle = titleInput.value.trim();
+                const newDueDate = parseISO(dueDateInput.value);
+                const newDescription = document.getElementById('edit-proj-description').value.trim();
+                const newNotes = document.getElementById('edit-proj-nts').value.trim();
+
+                let newPriority;
+                const noPriorityBtn = document.getElementById('edit-proj-no-priority');
+                const mdPriorityBtn = document.getElementById('edit-proj-medium-priority');
+
+                if (noPriorityBtn.checked) {
+                    newPriority = 'None';
+                } else if (mdPriorityBtn.checked) {
+                    newPriority = 'Medium';
+                } else {
+                    newPriority = 'High';
+                }
+
+                let newStatusToCheck;
+                const noStatusBtn = document.getElementById('edit-proj-not-yet-started');
+                const inProgressBtn = document.getElementById('edit-proj-in-progress');
+                const completedBtn = document.getElementById('edit-proj-completed');
+
+                if (noStatusBtn.checked) {
+                    newStatusToCheck = 'None';
+                } else if (inProgressBtn.checked) {
+                    newStatusToCheck = 'In Progress';
+                } else if (completedBtn.checked) {
+                    newStatusToCheck = 'Completed';
+                }
+
+                let markAllTodosAsComplete;
+                const markAllAsCompleteRadioBtn = document.getElementById('editFlexCheckDefault');
+                if (markAllAsCompleteRadioBtn.checked) {
+                    markAllTodosAsComplete = true;
+                } else {
+                    markAllTodosAsComplete = false;
+                }
+
+                let resetAllTodos;
+                const resetAllTodosRadioBtn = document.getElementById('markAsIncomplete');
+                if (resetAllTodosRadioBtn.checked) {
+                    resetAllTodos = true;
+                } else {
+                    resetAllTodos = false;
+                }
+
+                // Todos:
+                // If the remove button has 'data-id' attribute, save the todo id and new todo title
+                // If remove button does not have the 'data-id' attribute, save the todo as a new todo
+                let newTodos = [];
+                let todosToUpdate = [];
+                let obj;
+                let todoID;
+                let todoNewTitle;
+                let newTodoTitle;
+                let newTodo;
+                if (todosLabelDiv.nextElementSibling !== addTodoBtnDiv) {
+                    let currentNode = todosLabelDiv.nextElementSibling;
+                    while (currentNode !== addTodoBtnDiv) {
+                        if (currentNode.children[1].children[0].hasAttribute('data-id')) {
+                            todoID = currentNode.children[1].children[0].getAttribute('data-id');
+                            todoNewTitle = currentNode.children[0].value.trim();
+                            obj = {};
+                            obj['id'] = todoID;
+                            obj['title'] = todoNewTitle;
+                            todosToUpdate.push(obj);
+                        } else {
+                            newTodoTitle = currentNode.children[0].value.trim();
+                            newTodo = new Todo(newTodoTitle, '', '', 'None', 'None', '', undefined);
+                            newTodos.push(newTodo);
+                        }
+                        currentNode = currentNode.nextElementSibling;
+                    }
+                }
+
+                // Pass the information to the handler
+                handler(projectID, newTitle, newDueDate, newDescription, newNotes, newPriority, newStatusToCheck, markAllTodosAsComplete, resetAllTodos, todosToUpdate, newTodos);
+            }
+        });
+    }
+
+    bindAddTodoBtnInEditProjectModalEventListener() {
+        const addTodoBtn = document.getElementById('edit-proj-addTodo');
+        const btnDiv = addTodoBtn.parentNode;
+        const todosLabelDiv = document.getElementById('edit-proj-todo-field');
+        const todosLabel = document.getElementById('edit-proj-todos-label');
+        addTodoBtn.addEventListener('click', event => {
+            if (btnDiv.previousElementSibling === todosLabelDiv) {
+                this.addTodoInputFieldsToCreateProjectModal();
+            } else {
+                let currentNode = todosLabelDiv.nextElementSibling;
+                let allTodosHaveTitles = true;
+                while (currentNode !== btnDiv) {
+                    if (currentNode.children[0].value.trim() === '') {
+                        allTodosHaveTitles = false;
+                        todosLabel.textContent = '* A title is required for all todos.';
+                    } 
+                    currentNode = currentNode.nextElementSibling;
+                }
+
+                if (allTodosHaveTitles) {
+                    todosLabel.textContent = '';
+                    const todoInput = this.addTodoInputFieldsToEditProjectModal();
+                    btnDiv.parentNode.insertBefore(todoInput, btnDiv);
+                }
+            }
+        });
+    }
+
+    addTodoInputFieldsToEditProjectModal() {
+        const todoInputContainer = document.createElement('div');
+        todoInputContainer.classList.add('input-group');
+        todoInputContainer.classList.add('mb-3');
+
+        const todoInputField = document.createElement('input');
+        todoInputField.setAttribute('type', 'text');
+        todoInputField.classList.add('form-control');
+        todoInputContainer.appendChild(todoInputField);
+
+        const buttonDiv = document.createElement('div');
+        buttonDiv.classList.add('input-group-append');
+        const removeBtn = document.createElement('button');
+        removeBtn.setAttribute('type', 'button');
+        removeBtn.classList.add('btn');
+        removeBtn.classList.add('btn-danger');
+        removeBtn.textContent = 'Remove';
+        removeBtn.addEventListener('click', this.removeTodoInputField);
+        buttonDiv.appendChild(removeBtn);
+        todoInputContainer.appendChild(buttonDiv);
+        return todoInputContainer;
     }
 
     bindEditTodoBtnEventListener(handler) {

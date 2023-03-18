@@ -53,6 +53,7 @@ class Controller {
         this.handleEditProjectBtnEventListener();
         this.handleEditTodoBtnEventListener();
         this.handleDeleteBtnEventListener();
+        this.handleSaveBtnEventListenerInEditProjectModal();
 
         // TODO:
         // Update notifications for items due today and items that are overdue
@@ -664,6 +665,32 @@ class Controller {
         projectToDelete = projectToDelete[0];
         this.model.removeItem(projectToDelete);
         this.handleDisplayHomePage();
+    }
+
+    handleSaveBtnEventListenerInEditProjectModal() {
+        this.view.bindSaveBtnEventListenerInEditProjectModal(this.handleEditProject);
+    }
+
+    // TODO
+    handleEditProject = (projectID, newTitle, newDueDate, newDescription, newNotes, newPriority, newStatusToCheck, markAllTodosAsComplete, resetAllTodos, todosToUpdate, newTodos) => {
+        let projectToUpdate = this.model.findById(this.model.projects, projectID);
+        projectToUpdate = projectToUpdate[0];
+        projectToUpdate.title = newTitle;
+        projectToUpdate.dueDate = newDueDate;
+        projectToUpdate.description = newDescription;
+        projectToUpdate.notes = newNotes;
+        projectToUpdate.priority = newPriority;
+
+        // Check if status should be 'Overdue'
+
+        // Check if status is allowed to be 'Complete'
+        // If markAllTodosAsComplete, change the status to all todos and subtodos as completed.
+
+        // If resetAllTodos, change the status to all todos and subtodos to 'None'.
+
+        // Remove todos whose ID's are not found in todosToUpdate
+        // Update the todos
+        // Add new todos
     }
 
     handleEditTodoBtnEventListener() {

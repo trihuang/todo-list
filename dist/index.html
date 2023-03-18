@@ -294,16 +294,16 @@
                             <li class="nav-item dropdown">
                                 <a href="#" class="nav-link dropdown-toggle" id="sortDropdown" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Sort</a>
                                 <div class="dropdown-menu dropdown-menu-end" aria-labelledby="sortDropdown">
-                                    <a class="dropdown-item" href="#">Title - ascending</a>
-                                    <a class="dropdown-item" href="#">Title - descending</a>
-                                    <a class="dropdown-item" href="#">Priority - ascending</a>
-                                    <a class="dropdown-item" href="#">Priority - descending</a>
-                                    <a class="dropdown-item" href="#">Status - ascending</a>
-                                    <a class="dropdown-item" href="#">Status - descending</a>
-                                    <a class="dropdown-item" href="#">Due Date - ascending</a>
-                                    <a class="dropdown-item" href="#">Due Date - descending</a>
-                                    <a class="dropdown-item" href="#">Date Added - ascending</a>
-                                    <a class="dropdown-item" href="#">Date Added - descending</a>
+                                    <a class="dropdown-item" href="#">Title - A to Z</a>
+                                    <a class="dropdown-item" href="#">Title - Z to A</a>
+                                    <a class="dropdown-item" href="#">Priority - Low to High</a>
+                                    <a class="dropdown-item" href="#">Priority - High to Low</a>
+                                    <a class="dropdown-item" href="#">Status - None to Completed</a>
+                                    <a class="dropdown-item" href="#">Status - Completed to None</a>
+                                    <a class="dropdown-item" href="#">Due Date - Earliest to Latest</a>
+                                    <a class="dropdown-item" href="#">Due Date - Latest to Earliest</a>
+                                    <a class="dropdown-item" href="#">Date Added - Earliest to Latest</a>
+                                    <a class="dropdown-item" href="#">Date Added - Latest to Earliest</a>
                                 </div>
                             </li>
                         </ul>
@@ -421,9 +421,15 @@
                         </div>
                         <div class="mb-3">
                             <div class="form-check">
-                                <input class="form-check-input" type="checkbox" value="" id="editFlexCheckDefault">
+                                <input class="form-check-input" type="radio" name="markAsComplete" value="" id="editFlexCheckDefault">
                                 <label class="form-check-label" for="editFlexCheckDefault">
                                   Mark all todos and sub todos as complete.
+                                </label>
+                              </div>
+                              <div class="form-check">
+                                <input class="form-check-input" type="radio" name="markAsComplete" value="" id="markAsIncomplete">
+                                <label class="form-check-label" for="markAsIncomplete">
+                                  Reset the status of all todos and sub todos.
                                 </label>
                               </div>
                         </div>
