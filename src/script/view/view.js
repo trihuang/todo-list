@@ -8,6 +8,7 @@ class View {
         this.bindAddTodoBtnInCreateProjectModalEventListener();
         this.bindCloseBtnEventListenersInCreateProjectModal();
         this.bindCloseBtnEventListenersInEditProjectModal();
+        this.bindDeleteBtnEventListenerInEditProjectModal();
     }
 
     get modalIDCounter() {
@@ -882,15 +883,20 @@ class View {
             notYetStarted.checked = true;
         }
 
-        const todoField = document.getElementById('edit-proj-todo-field');
+        const addTodoBtnDiv = document.getElementById('edit-proj-addTodo').parentNode;
         let todo;
 
         if (project.todos !== undefined) {
             for (let i = 0; i < project.todos.length; i++) {
-                todo = this.makeEditProjTodoInputField(project.todos[i].title);
-                this.insertAfter(todoField, todo);
+                todo = this.makeEditProjTodoInputField(project.todos[i]);
+                addTodoBtnDiv.parentNode.insertBefore(todo, addTodoBtnDiv);
             }
         }
+
+        const delBtn = document.getElementById('alert-del-btn');
+        const saveBtn = document.getElementById('edit-proj-save-btn');
+        delBtn.setAttribute('data-id', project.id);
+        saveBtn.setAttribute('data-id', project.id);
 
         // Show the modal
         const editForm = document.getElementById('edit-project-modal');
@@ -898,7 +904,7 @@ class View {
         modal.show();
     }
 
-    makeEditProjTodoInputField(todoTitle) {
+    makeEditProjTodoInputField(todo) {
         const todoInputContainer = document.createElement('div');
         todoInputContainer.classList.add('input-group');
         todoInputContainer.classList.add('mb-3');
@@ -906,13 +912,14 @@ class View {
         const todoInputField = document.createElement('input');
         todoInputField.setAttribute('type', 'text');
         todoInputField.classList.add('form-control');
-        todoInputField.value = todoTitle;
+        todoInputField.value = todo.title;
         todoInputContainer.appendChild(todoInputField);
 
         const buttonDiv = document.createElement('div');
         buttonDiv.classList.add('input-group-append');
         const removeBtn = document.createElement('button');
         removeBtn.setAttribute('type', 'button');
+        removeBtn.setAttribute('data-id', todo.id);
         removeBtn.classList.add('btn');
         removeBtn.classList.add('btn-danger');
         removeBtn.textContent = 'Remove';
@@ -955,6 +962,31 @@ class View {
         titleLabel.textContent = '';
         dueDateLabel.textContent = '';
         todosLabel.textContent = '';
+    }
+
+    bindDeleteBtnEventListenerInEditProjectModal() {
+        const delBtn = document.getElementById('edit-proj-del-btn');
+        delBtn.addEventListener('click', event => {
+            //const id = event.target.getAttribute('data-id');
+            //handler(id);
+            const alert = document.querySelector('#DeleteAlertModal .modal-body');
+            alert.textContent = 'Are you sure you want to delete this project?'
+            const editProjectForm = document.getElementById('editProjectForm');
+            editProjectForm.reset();
+            this.clearTodoInputFieldsInEditProjectModal()
+            this.clearWarningsInEditProjectModal();
+            //const form = document.getElementById('edit-project-modal');
+            //const modal = bootstrap.Modal.getInstance(form);
+            //modal.hide();
+        });
+    }
+
+    bindFinalDeleteBtnEventListener(handler) {
+        const delBtn = document.getElementById('alert-del-btn');
+        delBtn.addEventListener('click', event => {
+            const id = event.target.getAttribute('data-id');
+            handler(id);
+        });
     }
 
     bindEditTodoBtnEventListener(handler) {

@@ -154,7 +154,7 @@
                                         <div class="status bg-secondary rounded-pill text-light text-center">None</div>
                                     </label>
                                   </div>
-                                  
+
                                   <div class="form-check form-check-inline">
                                     <input class="form-check-input" type="radio" name="status-todo" id="in-progress-todo" value="option2">
                                     <label class="form-check-label" for="in-progress-todo">
@@ -313,7 +313,7 @@
             </div>
 
             <!-- Toggle Check Circle Alert Modal -->
-            <div class="modal fade" id="markCompleteAlertModal" tabindex="-1" role="dialog" aria-labelledby="requireTitleAndDueDateModalLabel" aria-hidden="true">
+            <div class="modal fade" id="markCompleteAlertModal" tabindex="-1" role="dialog" aria-hidden="true">
                 <div class="modal-dialog" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
@@ -325,6 +325,25 @@
                     </div>
                     <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    </div>
+                </div>
+                </div>
+            </div>
+
+            <!-- Delete Alert Modal -->
+            <div class="modal fade" id="DeleteAlertModal" tabindex="-1" role="dialog" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                    <h5 class="modal-title" id="DeleteAlertModal"><i class="bi bi-exclamation-triangle text-danger"></i> Are you sure?</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+                    </button>
+                    </div>
+                    <div class="modal-body">
+                    </div>
+                    <div class="modal-footer">
+                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-danger" data-bs-dismiss="modal" id="alert-del-btn">Delete</button>
                     </div>
                 </div>
                 </div>
@@ -426,7 +445,7 @@
                     </div>
                     <div class="modal-footer">
                       <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="edit-proj-close-btn">Close</button>
-                      <button type="button" class="btn btn-danger" id="edit-proj-del-btn">Delete</button>
+                      <button type="button" class="btn btn-danger" id="edit-proj-del-btn" data-bs-dismiss="modal" data-bs-toggle="modal" data-bs-target="#DeleteAlertModal">Delete</button>
                       <button type="button" class="btn btn-primary" id="edit-proj-save-btn">Save Changes</button>
                     </div>
                   </div>

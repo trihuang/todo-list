@@ -29,7 +29,7 @@ class Model {
         const projectFour = new Project('Photography', 'Going on a trip to the national park to take photos!', new Date(2023, 3, 15), 'None', 'None', '', [projectFourTodoOne, projectFourTodoTwo]);
 
         const trashProjectTodoOne = new Todo('Buy seeds', '', '', 'None', 'None', '', undefined);
-        const trashProjectOne = new Project('Gardening', 'blah blah', new Date(2023, 2, 8), 'Medium', 'Completed', '', [trashProjectTodoOne]);
+        const trashProjectOne = new Project('Gardening', 'blah blah', new Date(2023, 2, 8), 'Medium', 'In Progress', '', [trashProjectTodoOne]);
 
         const trashProjectTwoTodoSubOne = new Todo('Take notes', '', '', 'Medium', 'None', '', undefined)
         const trashProjectTwoTodoOne = new Todo('Research topics', '', '', 'None', 'None', '', [trashProjectTwoTodoSubOne]);
