@@ -671,7 +671,6 @@ class Controller {
         this.view.bindSaveBtnEventListenerInEditProjectModal(this.handleEditProject);
     }
 
-    // TODO
     handleEditProject = (projectID, newTitle, newDueDate, newDescription, newNotes, newPriority, newStatusToCheck, markAllTodosAsComplete, resetAllTodos, todosToUpdate, newTodos) => {
         let projectToUpdate = this.model.findById(this.model.projects, projectID);
         projectToUpdate = projectToUpdate[0];
@@ -714,9 +713,22 @@ class Controller {
             projectToUpdate.status = newStatusToCheck;
         }
 
+        let found;
         // Remove todos whose ID's are not found in todosToUpdate
-        // Update the todos
-        // Add new todos
+        // Update the todos whose ID is found
+        for (let i = 0; i < projectToUpdate.todos.length; i++) {
+            found = todosToUpdate.find((obj) => obj.id === projectToUpdate.todos[i].id);
+            if (found === undefined) {
+                this.model.removeItem(projectToUpdate.todos[i]);
+            } else {
+                projectToUpdate.todos[i].title = found.title;
+            }
+        }
+
+        // Add the new todos
+        for (let j = 0; j < newTodos.length; j++) {
+            projectToUpdate.addTodo(newTodos[j]);
+        }
 
         this.handleProjectPageDisplay(projectID);
     }
