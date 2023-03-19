@@ -1,4 +1,4 @@
-import { parseISO } from 'date-fns';
+import { isSameDay, parseISO } from 'date-fns';
 
 class Controller {
     constructor(model, view) {
@@ -676,21 +676,49 @@ class Controller {
         let projectToUpdate = this.model.findById(this.model.projects, projectID);
         projectToUpdate = projectToUpdate[0];
         projectToUpdate.title = newTitle;
-        projectToUpdate.dueDate = newDueDate;
+
+        let dueDateChanged = false;
+        if (!isSameDay(projectToUpdate.dueDate, newDueDate)) {
+            dueDateChanged = true;
+            projectToUpdate.dueDate = newDueDate;
+        }
+
         projectToUpdate.description = newDescription;
         projectToUpdate.notes = newNotes;
         projectToUpdate.priority = newPriority;
 
         // Check if status should be 'Overdue'
+        if (dueDateChanged) {
+            this.model.updateOverdueStatus([projectToUpdate]);
+        }
 
-        // Check if status is allowed to be 'Complete'
         // If markAllTodosAsComplete, change the status to all todos and subtodos as completed.
+        if (markAllTodosAsComplete) {
+            this.model.changeAllTodosAndSubTodosStatus(projectToUpdate, 'Completed');
+        }
 
         // If resetAllTodos, change the status to all todos and subtodos to 'None'.
+        if (resetAllTodos) {
+            this.model.changeAllTodosAndSubTodosStatus(projectToUpdate, 'None');
+            if (projectToUpdate.status === 'Completed') {
+                projectToUpdate.status = 'None';
+            }
+        }
+
+        // Check if status is allowed to be 'Complete'
+        if (newStatusToCheck === 'Completed') {
+            if (this.model.allTodosAndSubTodosAreCompleted(projectToUpdate)) {
+                projectToUpdate.status = newStatusToCheck;
+            }
+        } else if (projectToUpdate.status !== 'Overdue') {
+            projectToUpdate.status = newStatusToCheck;
+        }
 
         // Remove todos whose ID's are not found in todosToUpdate
         // Update the todos
         // Add new todos
+
+        this.handleProjectPageDisplay(projectID);
     }
 
     handleEditTodoBtnEventListener() {

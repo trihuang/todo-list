@@ -121,6 +121,15 @@ class Model {
         return true;
     }
 
+    changeAllTodosAndSubTodosStatus(project, status) {
+        if (project.todos !== undefined) {
+            for (let i = 0; i < project.todos.length; i++) {
+                project.todos[i].changeAllTodosStatus(status);
+            }
+            project.changeAllTodosStatus(status);
+        }
+    }
+
     // Update the status to 'overdue' if the due date is past
     updateOverdueStatus(array) {
         const itemsWithDueDates = array.filter((item) => item.dueDate !== '');
@@ -128,6 +137,13 @@ class Model {
         for (let i = 0; i < overdue.length; i++) {
             if (overdue[i].status !== 'Completed') {
                 overdue[i].status = 'Overdue';
+            }
+        }
+
+        const notOverdue = itemsWithDueDates.filter((item) => !(compareAsc(item.dueDate, new Date()) === -1) && !isSameDay(item.dueDate, new Date()));
+        for (let k = 0; k < notOverdue.length; k++) {
+            if (notOverdue[k].status === 'Overdue') {
+                notOverdue[k].status = 'None';
             }
         }
 

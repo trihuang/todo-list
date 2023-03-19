@@ -1,4 +1,4 @@
-import { compareAsc, compareDesc } from 'date-fns';
+import { compareAsc, compareDesc, isSameDay } from 'date-fns';
 
 class Project {
     constructor(title, description, dueDate, priority, status, notes, todos) {
@@ -78,7 +78,7 @@ class Project {
         this._status = newStatus;
         if (this._status !== 'Completed' || newStatus !== 'Completed') {
             if (this._dueDate !== '') {
-                if (compareAsc(this._dueDate, new Date()) === -1) {
+                if ((compareAsc(this._dueDate, new Date()) === -1) && !isSameDay(this.dueDate, new Date())) {
                     this._status = 'Overdue';
                 }
             }
@@ -142,6 +142,18 @@ class Project {
             }
         }
         return true;
+    }
+
+    changeAllTodosStatus(status) {
+        if (this.todos !== undefined) {
+            for (let i = 0; i < this.todos.length; i++) {
+                if (status === 'Completed') {
+                    this.todos[i].status = status;
+                } else if (this.todos[i].status !== 'Overdue') {
+                    this.todos[i].status = status;
+                }
+            }
+        }
     }
 
     convertPriority() {

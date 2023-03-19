@@ -1111,6 +1111,13 @@ class View {
 
                 // Pass the information to the handler
                 handler(projectID, newTitle, newDueDate, newDescription, newNotes, newPriority, newStatusToCheck, markAllTodosAsComplete, resetAllTodos, todosToUpdate, newTodos);
+                const projectForm = document.getElementById('editProjectForm');
+                projectForm.reset();
+                this.clearTodoInputFieldsInEditProjectModal()
+                this.clearWarningsInEditProjectModal();
+                const form = document.getElementById('edit-project-modal');
+                const modal = bootstrap.Modal.getInstance(form);
+                modal.hide();
             }
         });
     }
