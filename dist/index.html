@@ -423,13 +423,13 @@
                             <div class="form-check">
                                 <input class="form-check-input" type="radio" name="markAsComplete" value="" id="editFlexCheckDefault">
                                 <label class="form-check-label" for="editFlexCheckDefault">
-                                  Mark all todos and sub todos as completed.
+                                  Mark all todos and subtodos as completed.
                                 </label>
                               </div>
                               <div class="form-check">
                                 <input class="form-check-input" type="radio" name="markAsComplete" value="" id="markAsIncomplete">
                                 <label class="form-check-label" for="markAsIncomplete">
-                                  Reset the status of all todos and sub todos.
+                                  Reset the status of all todos and subtodos.
                                 </label>
                               </div>
                         </div>
@@ -530,9 +530,15 @@
                         </div>
                         <div class="mb-3">
                             <div class="form-check">
-                                <input class="form-check-input" type="checkbox" value="" id="editTodoFlexCheckDefault">
-                                <label class="form-check-label" for="editTodoFlexCheckDefault">
-                                  Mark all sub todos as complete.
+                                <input class="form-check-input" type="radio" name="markAsComplete" value="" id="editSubtodoFlexCheckDefault">
+                                <label class="form-check-label" for="editsubTodoFlexCheckDefault">
+                                  Mark all subtodos as completed.
+                                </label>
+                              </div>
+                              <div class="form-check">
+                                <input class="form-check-input" type="radio" name="markAsComplete" value="" id="markSubtodoAsIncomplete">
+                                <label class="form-check-label" for="markSubtodoAsIncomplete">
+                                  Reset the status of all subtodos.
                                 </label>
                               </div>
                         </div>
@@ -540,9 +546,10 @@
                             <div class="divider w-100"></div>
                         </div>
                         <div id="edit-todo-todo-field">
-                            <label class="col-form-label">Sub Todos<span><em class="text-danger" id="edit-todo-todos-label"></em></span></label>
+                            <label class="col-form-label">Subtodos<span><em class="text-danger" id="edit-todo-todos-label"></em></span></label>
                         </div>
                         
+                        <!--
                         <div class="mb-3">
                             <div class="mb-3">
                                 <label for="edit-title-subtodo" class="col-form-label">Title<span class="text-danger">*<em id="editSubTodoRequireTitle"></em></span></label>
@@ -603,15 +610,16 @@
                                 <div class="divider w-100"></div>
                             </div>
                         </div>
+                    -->
                     
                         <div class="mb-3 text-light">
-                            <button id="edit-todo-addTodo" type="button" class="btn btn-dark">Add Todo</button>
+                            <button id="edit-todo-addTodo" type="button" class="btn btn-dark">Add Subtodo</button>
                         </div>
                       </form>
                     </div>
                     <div class="modal-footer">
                       <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="edit-todo-close-btn">Close</button>
-                      <button type="button" class="btn btn-danger" id="edit-todo-del-btn">Delete</button>
+                      <button type="button" class="btn btn-danger" id="edit-todo-del-btn" data-bs-dismiss="modal" data-bs-toggle="modal" data-bs-target="#DeleteAlertModal">Delete</button>
                       <button type="button" class="btn btn-primary" id="edit-todo-save-btn">Save Changes</button>
                     </div>
                   </div>

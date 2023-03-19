@@ -1080,7 +1080,6 @@ class View {
                     resetAllTodos = false;
                 }
 
-                // Todos:
                 // If the remove button has 'data-id' attribute, save the todo id and new todo title
                 // If remove button does not have the 'data-id' attribute, save the todo as a new todo
                 let newTodos = [];
@@ -1184,11 +1183,157 @@ class View {
         });
     }
 
+    // TODO
     showEditTodoModal(todo) {
+        // Fill in the fields
+        const title = document.getElementById('edit-todo-title');
+        title.value = todo.title;
+
+        const dueDate = document.getElementById('edit-todo-dueDate');
+        if (todo.dueDate !== '') {
+            dueDate.value = format(todo.dueDate, 'yyyy-MM-dd');
+        }
+
+        const description = document.getElementById('edit-todo-description');
+        description.value = todo.description;
+
+        const notes = document.getElementById('edit-todo-nts');
+        notes.value = todo.notes;
+
+        const noPriorityRadioBtn = document.getElementById('edit-todo-no-priority');
+        const mdPriorityRadioBtn = document.getElementById('edit-todo-medium-priority');
+        const hiPriorityRadioBtn = document.getElementById('edit-todo-hi-priority');
+
+        if (todo.priority === 'Medium') {
+            mdPriorityRadioBtn.checked = true;
+        } else if (todo.priority === 'High') {
+            hiPriorityRadioBtn.checked = true;
+        } else {
+            noPriorityRadioBtn.checked = true;
+        }
+
+        const notYetStarted = document.getElementById('edit-todo-not-yet-started');
+        const inProgress = document.getElementById('edit-todo-in-progress');
+        const completed = document.getElementById('edit-todo-completed');
+
+        if (todo.status === 'In Progress') {
+            inProgress.checked = true;
+        } else if (todo.status === 'Completed') {
+            completed.checked = true;
+        } else if (todo.status === 'None') {
+            notYetStarted.checked = true;
+        }
+
+        const addSubTodoBtnDiv = document.getElementById('edit-todo-addTodo').parentNode;
+
+        if (todo.todos !== undefined) {
+            for (let i = 0; i < todo.todos.length; i++) {
+                this.makeEditTodoSubTodoInpuField();
+                this.fillInSubTodoInputFields(todo.todos[i], addSubTodoBtnDiv.previousElementSibling);
+            }
+        }
+
+        const delBtn = document.getElementById('alert-del-btn');
+        const saveBtn = document.getElementById('edit-todo-save-btn');
+        delBtn.setAttribute('data-id', todo.id);
+        saveBtn.setAttribute('data-id', todo.id);
+
         // Show the modal
         const editForm = document.getElementById('edit-todo-modal');
         const modal = new bootstrap.Modal(editForm);
         modal.show();
+    }
+
+    // TODO
+    makeEditTodoSubTodoInpuField() {
+        const subTodoForm = document.createElement('div');
+        subTodoForm.classList.add('mb-3');
+
+        // Create the title input
+        const titleDiv = this.makeTitleInput();
+        subTodoForm.appendChild(titleDiv);
+
+        // Create the due date input
+        const dueDateDiv = this.makeDueDateInput();
+        subTodoForm.appendChild(dueDateDiv);
+
+        // Create the priority selections
+        const priorityDiv = this.makePrioritySelections();
+        subTodoForm.appendChild(priorityDiv);
+
+        // Create the status selections
+        const statusDiv = this.makeStatusSelections();
+
+        const selectionThree = document.createElement('div');
+        selectionThree.classList.add('form-check');
+        selectionThree.classList.add('form-check-inline');
+        const completedRadioBtn = document.createElement('input');
+        completedRadioBtn.classList.add('form-check-input');
+        completedRadioBtn.setAttribute('type', 'radio');
+        completedRadioBtn.setAttribute('name', `status-todo${this.modalIDCounter}`);
+        completedRadioBtn.setAttribute('id', `completed-todo${this.modalIDCounter}`);
+        const completedLabel = document.createElement('label');
+        completedLabel.classList.add('form-check-label');
+        completedLabel.setAttribute('for', `completed-todo${this.modalIDCounter}`);
+        const completedButton = this.makeStatusButton('Completed');
+        completedLabel.appendChild(completedButton);
+        selectionThree.appendChild(completedRadioBtn);
+        selectionThree.appendChild(completedLabel);
+
+        statusDiv.appendChild(selectionThree);
+        subTodoForm.appendChild(statusDiv);
+
+        // Insert remove button
+        const removeBtn = this.makeRemoveBtn();
+        subTodoForm.appendChild(removeBtn);
+        const divider = this.makeModalDivider();
+        subTodoForm.appendChild(divider);
+
+        this.modalIDCounter++;
+
+        // Insert the todo form into the modal
+        const addTodoBtnDiv = document.getElementById('edit-todo-addTodo').parentNode;
+        const parent = addTodoBtnDiv.parentNode;
+        parent.insertBefore(subTodoForm, addTodoBtnDiv);
+    }
+
+    // TODO
+    fillInSubTodoInputFields(subTodo, node) {
+        const titleInput = node.children[0].children[1];
+        titleInput.value = subTodo.title;
+
+        const dueDateInput = node.children[1].children[1];
+        if (subTodo.dueDate !== '') {
+            dueDateInput.value = format(subTodo.dueDate, 'yyyy-MM-dd');
+        }
+
+        const noPriorityBtn = node.children[2].children[2].children[0];
+        const mdPriorityBtn = node.children[2].children[3].children[0];
+        const hiPriorityBtn = node.children[2].children[4].children[0];
+
+        if (subTodo.priority === 'None') {
+            noPriorityBtn.checked = true;
+        } else if (subTodo.priority === 'Medium') {
+            mdPriorityBtn.checked = true;
+        } else {
+            hiPriorityBtn.checked = true;
+        }
+
+        const notYetStarted = node.children[3].children[2].children[0];
+        const inProgress = node.children[3].children[3].children[0];
+        const completed = node.children[3].children[4].children[0];
+
+        if (subTodo.status === 'None') {
+            notYetStarted.checked = true;
+        } else if (subTodo.status === 'In Progress') {
+            inProgress.checked = true;
+        } else if (subTodo.status === 'Completed') {
+            completed.checked = true;
+        } else if (subTodo.status === 'Overdue') {
+            notYetStarted.checked = false;
+            inProgress.checked = false;
+            completed.checked = false;
+        }
     }
 
     // TODO: CHANGE
