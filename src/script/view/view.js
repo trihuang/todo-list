@@ -10,6 +10,9 @@ class View {
         this.bindCloseBtnEventListenersInEditProjectModal();
         this.bindDeleteBtnEventListenerInEditProjectModal();
         this.bindAddTodoBtnInEditProjectModalEventListener();
+        this.bindEditTodoDelBtnEventListener();
+        this.bindEditTodoCloseBtnsEventListener();
+        this.bindAddSubTodoBtnInEditTodoModalEventListener();
     }
 
     get modalIDCounter() {
@@ -968,17 +971,12 @@ class View {
     bindDeleteBtnEventListenerInEditProjectModal() {
         const delBtn = document.getElementById('edit-proj-del-btn');
         delBtn.addEventListener('click', event => {
-            //const id = event.target.getAttribute('data-id');
-            //handler(id);
             const alert = document.querySelector('#DeleteAlertModal .modal-body');
             alert.textContent = 'Are you sure you want to delete this project?'
             const editProjectForm = document.getElementById('editProjectForm');
             editProjectForm.reset();
             this.clearTodoInputFieldsInEditProjectModal()
             this.clearWarningsInEditProjectModal();
-            //const form = document.getElementById('edit-project-modal');
-            //const modal = bootstrap.Modal.getInstance(form);
-            //modal.hide();
         });
     }
 
@@ -1082,8 +1080,8 @@ class View {
 
                 // If the remove button has 'data-id' attribute, save the todo id and new todo title
                 // If remove button does not have the 'data-id' attribute, save the todo as a new todo
-                let newTodos = [];
-                let todosToUpdate = [];
+                const newTodos = [];
+                const todosToUpdate = [];
                 let obj;
                 let todoID;
                 let todoNewTitle;
@@ -1183,7 +1181,6 @@ class View {
         });
     }
 
-    // TODO
     showEditTodoModal(todo) {
         // Fill in the fields
         const title = document.getElementById('edit-todo-title');
@@ -1228,7 +1225,7 @@ class View {
 
         if (todo.todos !== undefined) {
             for (let i = 0; i < todo.todos.length; i++) {
-                this.makeEditTodoSubTodoInpuField();
+                this.makeEditTodoSubTodoInpuField(todo.todos[i]);
                 this.fillInSubTodoInputFields(todo.todos[i], addSubTodoBtnDiv.previousElementSibling);
             }
         }
@@ -1244,8 +1241,7 @@ class View {
         modal.show();
     }
 
-    // TODO
-    makeEditTodoSubTodoInpuField() {
+    makeEditTodoSubTodoInpuField(subtodo) {
         const subTodoForm = document.createElement('div');
         subTodoForm.classList.add('mb-3');
 
@@ -1285,6 +1281,9 @@ class View {
 
         // Insert remove button
         const removeBtn = this.makeRemoveBtn();
+        if (subtodo !== undefined) {
+            removeBtn.children[0].setAttribute('data-id', subtodo.id);
+        }
         subTodoForm.appendChild(removeBtn);
         const divider = this.makeModalDivider();
         subTodoForm.appendChild(divider);
@@ -1297,7 +1296,6 @@ class View {
         parent.insertBefore(subTodoForm, addTodoBtnDiv);
     }
 
-    // TODO
     fillInSubTodoInputFields(subTodo, node) {
         const titleInput = node.children[0].children[1];
         titleInput.value = subTodo.title;
@@ -1334,6 +1332,292 @@ class View {
             inProgress.checked = false;
             completed.checked = false;
         }
+    }
+
+    bindEditTodoDelBtnEventListener() {
+        const delBtn = document.getElementById('edit-todo-del-btn');
+        delBtn.addEventListener('click', event => {
+            const alert = document.querySelector('#DeleteAlertModal .modal-body');
+            alert.textContent = 'Are you sure you want to delete this todo?'
+            const editTodoForm = document.getElementById('editTodoForm');
+            editTodoForm.reset();
+            this.clearWarningsInEditTodoModal();
+            this.clearSubTodoInputFieldsInEditTodoModal();
+        });
+    }
+
+    bindEditTodoCloseBtnsEventListener() {
+        const xBtn = document.getElementById('edit-todo-x-btn');
+        const closeBtn = document.getElementById('edit-todo-close-btn');
+        const projectForm = document.getElementById('editTodoForm');
+        xBtn.addEventListener('click', event => {
+            projectForm.reset();
+            this.modalIDCounter = 1;
+            this.clearWarningsInEditTodoModal();
+            this.clearSubTodoInputFieldsInEditTodoModal();
+        });
+        closeBtn.addEventListener('click', event => {
+            projectForm.reset();
+            this.modalIDCounter = 1;
+            this.clearWarningsInEditTodoModal();
+            this.clearSubTodoInputFieldsInEditTodoModal();
+        });
+    }
+
+    clearWarningsInEditTodoModal() {
+        const titleLabel = document.getElementById('editTodoRequireTitle');
+        titleLabel.textContent = '';
+    }
+
+    clearSubTodoInputFieldsInEditTodoModal() {
+        const addSubTodoBtnContainer = document.getElementById('edit-todo-addTodo').parentNode;
+        const parent = addSubTodoBtnContainer.parentNode;
+        const todosLabelDiv = document.getElementById('edit-todo-todo-field');
+        while (todosLabelDiv.nextElementSibling !== addSubTodoBtnContainer) {
+            parent.removeChild(todosLabelDiv.nextElementSibling);
+        }
+    }
+
+    bindAddSubTodoBtnInEditTodoModalEventListener() {
+        const addSubTodoBtn = document.getElementById('edit-todo-addTodo');
+        const btnDiv = addSubTodoBtn.parentNode;
+        const subTodosLabelDiv = document.getElementById('edit-todo-todo-field');
+        addSubTodoBtn.addEventListener('click', event => {
+            if (btnDiv.previousElementSibling === subTodosLabelDiv) {
+                this.makeEditTodoSubTodoInpuField();
+            } else {
+                let currentNode = subTodosLabelDiv.nextElementSibling;
+                let allTodosHaveTitles = true;
+                while (currentNode !== btnDiv) {
+                    if (currentNode.children[0].children[1].value.trim() === '') {
+                        allTodosHaveTitles = false;
+                        currentNode.children[0].children[0].children[1].children[1].textContent = ' A title is required.';
+                    } else {
+                        currentNode.children[0].children[0].children[1].children[1].textContent = '';
+                    }
+                    currentNode = currentNode.nextElementSibling;
+                }
+
+                if (allTodosHaveTitles) {
+                    currentNode = subTodosLabelDiv.nextElementSibling;
+                    while (currentNode !== btnDiv) {
+                        currentNode.children[0].children[0].children[1].children[1].textContent = '';
+                        currentNode = currentNode.nextElementSibling;
+                    }
+                    this.makeEditTodoSubTodoInpuField();
+                }
+            }
+        });
+    }
+
+    // TODO
+    bindEditTodoSaveBtnEventListener(handler) {
+        const saveBtn = document.getElementById('edit-todo-save-btn');
+        saveBtn.addEventListener('click', event => {
+
+            // Check that the title and subtodo titles are all filled in
+            const titleLabel = document.getElementById('editTodoRequireTitle');
+            const titleInput = document.getElementById('edit-todo-title');
+            const subTodosLabelDiv = document.getElementById('edit-todo-todo-field');
+            const addSubTodoBtnDiv = document.getElementById('edit-todo-addTodo').parentNode;
+            let allSubTodosHaveTitles = true;
+
+            if (titleInput.value.trim() === '') {
+                titleLabel.textContent = ' A title is required.';
+            } else {
+                titleLabel.textContent = '';
+            }
+            
+            if (subTodosLabelDiv.nextElementSibling !== addSubTodoBtnDiv) {
+                let currentNode = subTodosLabelDiv.nextElementSibling;
+                while (currentNode !== addSubTodoBtnDiv) {
+                    if (currentNode.children[0].children[1].value.trim() === '') {
+                        allSubTodosHaveTitles = false;
+                        currentNode.children[0].children[0].children[1].children[1].textContent = ' A title is required.';
+                    } else {
+                        currentNode.children[0].children[0].children[1].children[1].textContent = '';
+                    }
+                    currentNode = currentNode.nextElementSibling;
+                }
+            }
+
+            if (allSubTodosHaveTitles && titleInput.value.trim() !== '') {
+                // Extract the information
+                const todoID = event.target.getAttribute('data-id');
+                const newTitle = titleInput.value.trim();
+                const dueDateInput = document.getElementById('edit-todo-dueDate');
+                let newDueDate = dueDateInput.value;
+                if (newDueDate !== '') {
+                    newDueDate = parseISO(newDueDate);
+                }
+                const newDescription = document.getElementById('edit-todo-description').value.trim();
+                const newNotes = document.getElementById('edit-todo-nts').value.trim();
+
+                let newPriority;
+                const noPriorityBtn = document.getElementById('edit-todo-no-priority');
+                const mdPriorityBtn = document.getElementById('edit-todo-medium-priority');
+
+                if (noPriorityBtn.checked) {
+                    newPriority = 'None';
+                } else if (mdPriorityBtn.checked) {
+                    newPriority = 'Medium';
+                } else {
+                    newPriority = 'High';
+                }
+
+                let newStatusToCheck;
+                const noStatusBtn = document.getElementById('edit-todo-not-yet-started');
+                const inProgressBtn = document.getElementById('edit-todo-in-progress');
+                const completedBtn = document.getElementById('edit-todo-completed');
+
+                if (noStatusBtn.checked) {
+                    newStatusToCheck = 'None';
+                } else if (inProgressBtn.checked) {
+                    newStatusToCheck = 'In Progress';
+                } else if (completedBtn.checked) {
+                    newStatusToCheck = 'Completed';
+                }
+
+                let markAllTodosAsComplete;
+                const markAllAsCompleteRadioBtn = document.getElementById('editSubtodoFlexCheckDefault');
+                if (markAllAsCompleteRadioBtn.checked) {
+                    markAllTodosAsComplete = true;
+                } else {
+                    markAllTodosAsComplete = false;
+                }
+
+                let resetAllTodos;
+                const resetAllTodosRadioBtn = document.getElementById('markSubtodoAsIncomplete');
+                if (resetAllTodosRadioBtn.checked) {
+                    resetAllTodos = true;
+                } else {
+                    resetAllTodos = false;
+                }
+
+                // If the remove button has 'data-id' attribute, save the subtodo id and the information from the rest of the fields
+                // If remove button does not have the 'data-id' attribute, save the subtodo as a new todo
+                const newSubTodos = [];
+                const subTodosToUpdate = [];
+                let obj;
+                let subTodoID;
+                let subTodoNewTitle;
+                let subTodoDueDate;
+                let subTodoPriority;
+                let subTodoMedPriorityBtn;
+                let subTodoHiPriorityBtn;
+                let subTodoStatus;
+                let subTodoNoStatusBtn;
+                let subTodoInProgressBtn;
+                let subTodoCompletedBtn;
+                let newSubTodoTitle;
+                let newSubTodoDueDate;
+                let newSubTodoPriority;
+                let newSubTodoStatus;
+                let newSubTodo;
+
+                if (subTodosLabelDiv.nextElementSibling !== addSubTodoBtnDiv) {
+                    let currentNode = subTodosLabelDiv.nextElementSibling;
+                    while (currentNode !== addSubTodoBtnDiv) {
+                        if (currentNode.children[4].children[0].hasAttribute('data-id')) {
+                            subTodoID = currentNode.children[4].children[0].getAttribute('data-id');
+                            subTodoNewTitle = currentNode.children[0].children[1].value.trim();
+                            subTodoDueDate = currentNode.children[1].children[1].value;
+
+                            if (subTodoDueDate !== '') {
+                                subTodoDueDate = parseISO(subTodoDueDate);
+                            }
+
+                            subTodoMedPriorityBtn = currentNode.children[2].children[3].children[0];
+                            subTodoHiPriorityBtn = currentNode.children[2].children[4].children[0];
+
+                            if (subTodoMedPriorityBtn.checked) {
+                                subTodoPriority = 'Medium';
+                            } else if (subTodoHiPriorityBtn.checked) {
+                                subTodoPriority = 'High';
+                            } else {
+                                subTodoPriority = 'None';
+                            }
+
+                            subTodoNoStatusBtn = currentNode.children[3].children[2].children[0];
+                            subTodoInProgressBtn = currentNode.children[3].children[3].children[0];
+                            subTodoCompletedBtn = currentNode.children[3].children[4].children[0];
+
+                            if (markAllTodosAsComplete) {
+                                subTodoCompletedBtn.checked = true;
+                            } else if (resetAllTodos) {
+                                subTodoNoStatusBtn.checked = true;
+                            }
+
+                            if (subTodoInProgressBtn.checked) {
+                                subTodoStatus = 'In Progress';
+                            } else if (subTodoCompletedBtn.checked) {
+                                subTodoStatus = 'Completed';
+                            } else {
+                                subTodoStatus = 'None';
+                            }
+
+                            obj = {};
+                            obj['id'] = subTodoID;
+                            obj['title'] = subTodoNewTitle;
+                            obj['dueDate'] = subTodoDueDate;
+                            obj['priority'] = subTodoPriority;
+                            obj['status'] = subTodoStatus;
+                            subTodosToUpdate.push(obj);
+                        } else {
+                            newSubTodoTitle = currentNode.children[0].children[1].value.trim();
+                            newSubTodoDueDate = currentNode.children[1].children[1].value;
+                            if (newSubTodoDueDate !== '') {
+                                newSubTodoDueDate = parseISO(newSubTodoDueDate);
+                            }
+
+                            subTodoMedPriorityBtn = currentNode.children[2].children[3].children[0];
+                            subTodoHiPriorityBtn = currentNode.children[2].children[4].children[0];
+
+                            if (subTodoMedPriorityBtn.checked) {
+                                newSubTodoPriority = 'Medium';
+                            } else if (subTodoHiPriorityBtn.checked) {
+                                newSubTodoPriority = 'High';
+                            } else {
+                                newSubTodoPriority = 'None';
+                            }
+
+                            subTodoNoStatusBtn = currentNode.children[3].children[2].children[0];
+                            subTodoInProgressBtn = currentNode.children[3].children[3].children[0];
+                            subTodoCompletedBtn = currentNode.children[3].children[4].children[0];
+
+                            if (markAllTodosAsComplete) {
+                                subTodoCompletedBtn.checked = true;
+                            } else if (resetAllTodos) {
+                                subTodoNoStatusBtn.checked = true;
+                            }
+
+                            if (subTodoInProgressBtn.checked) {
+                                newSubTodoStatus = 'In Progress';
+                            } else if (subTodoCompletedBtn.checked) {
+                                newSubTodoStatus = 'Completed';
+                            } else {
+                                newSubTodoStatus = 'None';
+                            }
+
+                            newSubTodo = new Todo(newSubTodoTitle, '', newSubTodoDueDate, newSubTodoPriority, newSubTodoStatus, '', undefined);
+                            newSubTodos.push(newSubTodo);
+                        }
+                        currentNode = currentNode.nextElementSibling;
+                    }
+                }
+
+                // Pass the information to the handler
+                handler(todoID, newTitle, newDueDate, newDescription, newNotes, newPriority, newStatusToCheck, markAllTodosAsComplete, resetAllTodos, subTodosToUpdate, newSubTodos);
+                const todoForm = document.getElementById('editTodoForm');
+                todoForm.reset();
+                this.modalIDCounter = 1;
+                this.clearWarningsInEditTodoModal();
+                this.clearSubTodoInputFieldsInEditTodoModal();
+                const form = document.getElementById('edit-todo-modal');
+                const modal = bootstrap.Modal.getInstance(form);
+                modal.hide();
+            }
+        });
     }
 
     // TODO: CHANGE
@@ -1633,8 +1917,6 @@ class View {
         editIcon.classList.add('icon-size');
         editIcon.setAttribute('id', 'edit-project-btn');
         editIcon.setAttribute('data-id', project.id);
-        //editIcon.setAttribute('data-bs-toggle', 'modal');
-        //editIcon.setAttribute('data-bs-target', '#edit-project-modal');
         flexContainer.appendChild(editIcon);
         content.appendChild(flexContainer);
 

@@ -54,6 +54,7 @@ class Controller {
         this.handleEditTodoBtnEventListener();
         this.handleDeleteBtnEventListener();
         this.handleSaveBtnEventListenerInEditProjectModal();
+        this.handleSaveBtnEventListenerInEditTodoModal();
 
         // TODO:
         // Update notifications for items due today and items that are overdue
@@ -660,11 +661,15 @@ class Controller {
         this.view.bindFinalDeleteBtnEventListener(this.handleDeleteProject);
     }
 
-    handleDeleteProject = (projectID) => {
-        let projectToDelete = this.model.findById(this.model.projects, projectID);
-        projectToDelete = projectToDelete[0];
-        this.model.removeItem(projectToDelete);
-        this.handleDisplayHomePage();
+    handleDeleteProject = (id) => {
+        let itemToDelete = this.model.findById(this.model.projects, id);
+        itemToDelete = itemToDelete[0];
+        this.model.removeItem(itemToDelete);
+        if (itemToDelete.isProject) {
+            this.handleDisplayHomePage();
+        } else {
+            this.handleProjectPageDisplay(itemToDelete.projectParent);
+        }
     }
 
     handleSaveBtnEventListenerInEditProjectModal() {
@@ -741,6 +746,88 @@ class Controller {
         let todo = this.model.findById(this.model.projects, todoID);
         todo = todo[0];
         this.view.showEditTodoModal(todo);
+    }
+
+    handleSaveBtnEventListenerInEditTodoModal() {
+        this.view.bindEditTodoSaveBtnEventListener(this.handleEditTodo);
+    }
+
+    handleEditTodo = (todoID, newTitle, newDueDate, newDescription, newNotes, newPriority, newStatusToCheck, markAllTodosAsComplete, resetAllTodos, subTodosToUpdate, newSubTodos) => {
+        let todoToUpdate = this.model.findById(this.model.projects, todoID);
+        todoToUpdate = todoToUpdate[0];
+        todoToUpdate.title = newTitle;
+
+        let dueDateChanged = false;
+        if (todoToUpdate.dueDate !== '' && newDueDate !== '') {
+            if (!isSameDay(todoToUpdate.dueDate, newDueDate)) {
+                dueDateChanged = true;
+                todoToUpdate.dueDate = newDueDate;
+            }
+        } else if (todoToUpdate.dueDate === '' && newDueDate !== '') {
+            dueDateChanged = true;
+            todoToUpdate.dueDate = newDueDate;
+        } else if (todoToUpdate.dueDate !== '' && newDueDate === '') {
+            dueDateChanged = true;
+            todoToUpdate.dueDate = newDueDate;
+        }
+
+        todoToUpdate.description = newDescription;
+        todoToUpdate.notes = newNotes;
+        todoToUpdate.priority = newPriority;
+
+        // Check if status should be 'Overdue'
+        if (dueDateChanged) {
+            this.model.updateOverdueStatus([todoToUpdate]);
+        }
+        
+        // If markAllTodosAsComplete, change the status to all todos and subtodos as completed.
+        if (markAllTodosAsComplete) {
+            this.model.changeAllTodosAndSubTodosStatus(todoToUpdate, 'Completed');
+        }
+
+        // If resetAllTodos, change the status to all todos and subtodos to 'None'.
+        if (resetAllTodos) {
+            this.model.changeAllTodosAndSubTodosStatus(todoToUpdate, 'None');
+            if (todoToUpdate.status === 'Completed') {
+                todoToUpdate.status = 'None';
+            }
+        }
+
+        // Check if status is allowed to be 'Complete'
+        if (newStatusToCheck === 'Completed') {
+            if (this.model.allTodosAndSubTodosAreCompleted(todoToUpdate)) {
+                todoToUpdate.status = newStatusToCheck;
+            }
+        } else if (todoToUpdate.status !== 'Overdue') {
+            todoToUpdate.status = newStatusToCheck;
+        }
+
+        let found;
+        // Remove subTodos whose ID's are not found in subTodosToUpdate
+        // Update the subTodos whose ID is found
+        if (todoToUpdate.todos !== undefined) {
+            for (let i = 0; i < todoToUpdate.todos.length; i++) {
+                found = subTodosToUpdate.find((obj) => obj.id === todoToUpdate.todos[i].id);
+                if (found === undefined) {
+                    this.model.removeItem(todoToUpdate.todos[i]);
+                } else {
+                    todoToUpdate.todos[i].title = found.title;
+                    if (dueDateChanged) {
+                        todoToUpdate.todos[i].dueDate = found.dueDate;
+                    }
+                    todoToUpdate.todos[i].priority = found.priority;
+                    todoToUpdate.todos[i].status = found.status;
+                }
+            }
+        }
+
+        // Add the new subtodos
+        for (let j = 0; j < newSubTodos.length; j++) {
+            todoToUpdate.addTodo(newSubTodos[j]);
+        }
+
+        const projectID = todoToUpdate.projectParent;
+        this.handleProjectPageDisplay(projectID);
     }
 
     // Helpers
